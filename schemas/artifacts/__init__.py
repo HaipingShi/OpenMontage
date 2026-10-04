@@ -32,6 +32,7 @@ ARTIFACT_NAMES = [
     "character_qa_report",
     "video_analysis_brief",
     "song_map",
+    "artist_profile",
 ]
 
 

@@ -38,6 +38,9 @@ corpus/
 # User music library (personal royalty-free tracks — not part of repo)
 music_library/
 
+# Permanent personal artist voice exports — back up separately from source patches.
+artists/*/voice/*
+
 # Environment & credentials
 .env
 .env.local

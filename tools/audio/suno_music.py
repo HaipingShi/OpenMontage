@@ -57,6 +57,9 @@ class SunoMusic(BaseTool):
         "custom_lyrics": True,
         "style_control": True,
         "long_form": True,
+        "voice_reference": False,
+        "website_voice_binding": False,
+        "persona": False,
     }
     best_for = [
         "full song generation with vocals and lyrics",
@@ -144,6 +147,9 @@ class SunoMusic(BaseTool):
         return 0.05
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
+        unsupported = self._unsupported_voice_inputs(inputs)
+        if unsupported:
+            return ToolResult(success=False, error=unsupported)
         api_key = self._get_api_key()
         if not api_key:
             return ToolResult(
@@ -201,6 +207,9 @@ class SunoMusic(BaseTool):
 
     def _submit(self, inputs: dict[str, Any], api_key: str) -> str:
         """Submit a generation request and return the taskId."""
+        unsupported = self._unsupported_voice_inputs(inputs)
+        if unsupported:
+            raise ValueError(unsupported)
         import requests
 
         custom_mode = inputs.get("custom_mode", False)
@@ -238,6 +247,15 @@ class SunoMusic(BaseTool):
             raise RuntimeError(f"No taskId in Suno response: {data}")
 
         return task_id
+
+    @staticmethod
+    def _unsupported_voice_inputs(inputs: dict[str, Any]) -> str | None:
+        keys = {"persona_id", "personaId", "voice_id", "voiceId", "voice_url", "provider_binding",
+                "reference_audio", "reference_audio_path", "audio_reference", "audio_url", "audioUrl", "uploadUrl"}
+        if keys.intersection(inputs):
+            return ("suno_music does not support voice references or Suno website Persona/Voice bindings. "
+                    "Select the saved voice in Suno web and import the resulting audio; no request was sent.")
+        return None
 
     def _poll(self, task_id: str, api_key: str) -> dict:
         """Poll for task completion and return the result data."""

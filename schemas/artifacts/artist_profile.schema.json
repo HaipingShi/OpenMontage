@@ -1,0 +1,542 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artist_profile",
+  "title": "Artist Profile",
+  "description": "A persistent digital artist that outlives any single project. Lives at artists/<id>/artist.yaml. Pipelines read it to keep identity, voice, and canon consistent across every release. Paths are relative to the artist directory.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "status",
+    "names",
+    "persona",
+    "identity",
+    "music",
+    "voice",
+    "rights"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Directory name under artists/. Never changes once a release ships."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Identity version. Bump only on a deliberate, announced evolution (new era), never to paper over drift."
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "retired"
+      ]
+    },
+    "names": {
+      "type": "object",
+      "required": [
+        "stage"
+      ],
+      "properties": {
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "latin": {
+          "type": "string"
+        },
+        "pronunciation": {
+          "type": "string"
+        }
+      }
+    },
+    "persona": {
+      "type": "object",
+      "required": [
+        "one_liner",
+        "backstory",
+        "canon",
+        "lyric_rules",
+        "never"
+      ],
+      "properties": {
+        "one_liner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "backstory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "personality": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "themes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "canon": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Facts that no release, caption, or interview may contradict."
+        },
+        "lyric_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "never": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Hard brand limits. Agents refuse briefs that cross them."
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "prompt_core",
+        "locked_traits",
+        "negative_prompt",
+        "looks",
+        "bible"
+      ],
+      "properties": {
+        "prompt_core": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim identity description prepended to every image/video prompt."
+        },
+        "locked_traits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Traits checked on every keyframe. Any mismatch = reject and regenerate."
+        },
+        "negative_prompt": {
+          "type": "string"
+        },
+        "looks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "wardrobe"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_-]+$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "wardrobe": {
+                "type": "string"
+              },
+              "era": {
+                "type": "string"
+              },
+              "use_for": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "bible": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "look",
+              "view",
+              "canonical"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "look": {
+                "type": "string"
+              },
+              "view": {
+                "enum": [
+                  "front",
+                  "three_quarter",
+                  "profile",
+                  "back",
+                  "full_body",
+                  "turnaround",
+                  "expressions",
+                  "key_visual"
+                ]
+              },
+              "canonical": {
+                "type": "boolean",
+                "description": "Only canonical images are passed as identity references to generators."
+              },
+              "qc_note": {
+                "type": "string"
+              },
+              "reference_role": {
+                "enum": [
+                  "identity",
+                  "wardrobe_proportions",
+                  "mood"
+                ],
+                "description": "Only canonical identity references are attached for face matching. Supporting images are returned separately."
+              }
+            }
+          }
+        }
+      }
+    },
+    "music": {
+      "type": "object",
+      "required": [
+        "genres",
+        "bpm_range",
+        "production"
+      ],
+      "properties": {
+        "genres": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "bpm_range": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 30,
+            "maximum": 300
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "keys": {
+          "type": "string"
+        },
+        "production": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "sonic_signature": {
+          "type": "string"
+        },
+        "avoid": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "required": [
+        "source",
+        "provider",
+        "style_signature",
+        "lock_status"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "ai_generated",
+            "licensed_human",
+            "licensed_clone"
+          ]
+        },
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "style_signature": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Fixed prefix of the music generator's style field (Suno custom mode caps style at 200 chars)."
+        },
+        "duet_descriptor": {
+          "type": "string",
+          "maxLength": 45,
+          "description": "Short role-tagged voice description used when this artist shares a song (lib.artist_profile.duet_style)."
+        },
+        "vocal_traits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "audition_lyric": {
+          "type": "string"
+        },
+        "lock_status": {
+          "enum": [
+            "pending_audition",
+            "provider_bound",
+            "locked"
+          ],
+          "description": "provider_bound: user confirmed an existing Suno web binding; locked: approved audio also saved locally. Neither implies API reference support."
+        },
+        "canonical_tracks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "provider_track_id": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "duration_seconds": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "source_url": {
+                "type": "string"
+              },
+              "approved_on": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "persona_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Provider-side voice/persona id when the user's plan supports one."
+        },
+        "license_holder": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Required when source is licensed_human or licensed_clone."
+        },
+        "provider_binding": {
+          "type": "object",
+          "required": [
+            "kind",
+            "confirmed"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "persona",
+                "voice"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "pattern": "^$|^https://(www\\.)?suno\\.com/"
+            },
+            "source_song_url": {
+              "type": "string"
+            },
+            "confirmed": {
+              "type": "boolean"
+            },
+            "confirmed_on": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "visual_language": {
+      "type": "object",
+      "properties": {
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "hex"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "hex": {
+                "type": "string",
+                "pattern": "^#[0-9A-Fa-f]{6}$"
+              }
+            }
+          }
+        },
+        "camera": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "motifs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "collaborators": {
+      "type": "array",
+      "description": "Other artists in artists/ this artist releases with. Used for duets and shared frames.",
+      "items": {
+        "type": "object",
+        "required": [
+          "artist_id",
+          "relation",
+          "duet_style"
+        ],
+        "properties": {
+          "artist_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "relation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "duet_style": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Shared genre/arrangement prefix for joint songs; each artist's voice.duet_descriptor is appended."
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "required": [
+        "owner",
+        "likeness",
+        "disclosure_label",
+        "trademark",
+        "provider_terms"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "likeness": {
+          "enum": [
+            "original_ai_character",
+            "licensed_real_person"
+          ]
+        },
+        "likeness_statement": {
+          "type": "string"
+        },
+        "disclosure_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trademark": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "not_filed",
+                "searching",
+                "filed",
+                "registered"
+              ]
+            },
+            "classes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "provider_terms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "provider",
+              "requirement"
+            ],
+            "properties": {
+              "provider": {
+                "type": "string"
+              },
+              "requirement": {
+                "type": "string"
+              },
+              "checked_on": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

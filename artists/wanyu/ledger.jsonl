@@ -1,0 +1,5 @@
+{"date": "2026-04-10", "asset": "artist.yaml", "tool": "human", "human_input": "确定艺名、人设 canon、歌词规则、禁区、音乐方向与声线描述；选择华语 R&B 唱作人方向与 AI 固定声线方案。", "notes": "identity v1"}
+{"date": "2026-04-10", "asset": "bible/wanyu_harbor_front.png", "tool": "v0 GenerateImage", "human_input": "撰写身份描述与服装；以本图为身份基准，并据此把痣和耳饰位置统一修正为右侧。", "notes": "canonical identity reference"}
+{"date": "2026-04-10", "asset": "bible/wanyu_harbor_turnaround.png", "tool": "v0 GenerateImage", "human_input": "指定四视图同框生成以保证一致；审核服装与发型一致后定为 canonical。"}
+{"date": "2026-04-10", "asset": "bible/wanyu_harbor_expressions.png", "tool": "v0 GenerateImage", "human_input": "审核后标记第 2、3、6 格身份漂移，降级为非 canonical 表情参考。"}
+{"date": "2026-04-10", "asset": "promo/keyvisual_harbor_night.png", "tool": "v0 GenerateImage", "human_input": "设定港口夜景、钠灯色调与构图留白；记录鞋子与造型不符。"}

@@ -30,7 +30,9 @@ For pure `lyric_video` and `footage_cut`, collect only the approved fonts/backgr
 
 ### Step 1: Performer bible (cast shots only)
 
-Build it before any keyframe:
+**Persistent artist (`brief.metadata.artist_id` set): do not generate a bible.** Copy the artist's canonical images (`lib.artist_profile.bible_assets(profile, look)`) into `assets/images/bible/`, register them with `subtype: "performer_bible"` and `source_tool: "artist_profile"`, and build every cast keyframe prompt with `identity_prompt(profile, shot, look)` — use its `prompt`, `negative_prompt`, and `reference_images` as-is. Check each keyframe against its `locked_traits` list. `supporting_references` are wardrobe/proportion guides, never face references; use them only after masking/cropping their faces or as written wardrobe guidance. Do not flatten them into `reference_images`. A wardrobe the profile does not have is a new look added via `skills/meta/digital-artist.md`, not an improvised prompt. For `metadata.artist_ids`, copy every artist's canonical images; solo shots still use `identity_prompt`, and shots with several artists use `cast_prompt(profiles, shot, looks)`, which keeps each person's references separate (`reference_map`) and returns `locked_traits` per artist. Check every person in the frame against their own list; if the provider confuses them, generate each person separately and composite rather than accepting a blended face. Then skip to Step 2.
+
+Otherwise, build it before any keyframe:
 
 1. Write one locked **identity description** per cast member (age range, face shape, hair, skin, distinguishing features) and one **wardrobe description** per look. Reuse these strings verbatim in every later prompt.
 2. Generate references with `image_selector` using the approved provider: front, three-quarter, profile, full-body per look. Fix the seed where the provider supports it. For a real artist, use the user's photos as references instead and skip generation.

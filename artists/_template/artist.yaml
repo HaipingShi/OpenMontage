@@ -1,0 +1,73 @@
+# Copy this directory to artists/<id>/ and fill every field.
+# Process: skills/meta/digital-artist.md. Validate: python -m lib.artist_profile check <id>
+schema_version: "1.0"
+id: your-artist-id          # lowercase, matches the directory name, never changes after first release
+version: 1
+status: draft
+
+names:
+  stage: 艺名
+  latin: STAGE NAME
+  pronunciation: ""
+
+persona:
+  one_liner: 一句话说清这个艺人是谁、为什么唱歌。
+  backstory: >-
+    三到五句。给出能长出歌的具体生活细节，而不是形容词。
+  personality: []
+  themes: []
+  canon:
+    - 年龄、家乡、家庭等任何作品都不能违背的事实
+  lyric_rules:
+    - 语言、人称、意象偏好
+  never:
+    - 不模仿任何真实歌手
+    - 不宣称自己是真人
+
+identity:
+  prompt_core: >-
+    <NAME>, an original <ethnicity> <gender> in <age range> who does not resemble any real person,
+    <build>, <eyes>, <brows>, <one distinguishing mark with side>, <hair>, <skin/makeup>.
+  locked_traits:
+    - 发型
+    - 一个带左右方向的标志特征
+  negative_prompt: >-
+    different face, changing hairstyle, celebrity likeness, cartoon, text, watermark
+  looks:
+    - id: main
+      name: 主造型
+      era: era-1
+      wardrobe: >-
+        <top>, <bottom>, <shoes>, <one accessory>.
+  bible:
+    - path: bible/<id>_main_front.png
+      look: main
+      view: front
+      canonical: true
+
+music:
+  genres: [主风格]
+  bpm_range: [80, 110]
+  production:
+    - 人声处理方式
+    - 和声/律动的主要乐器
+
+voice:
+  source: ai_generated
+  provider: suno
+  model: V4_5
+  style_signature: <genre>, <vocal register and timbre>, <delivery>, <2-3 instruments>
+  vocal_traits: []
+  audition_lyric: ""
+  lock_status: pending_audition
+  canonical_tracks: []
+  persona_id: null
+  license_holder: null
+
+rights:
+  owner: 权利人全称
+  likeness: original_ai_character
+  disclosure_label: 本作品中的人物形象与演唱声音均由 AI 生成。
+  trademark:
+    status: not_filed
+  provider_terms: []

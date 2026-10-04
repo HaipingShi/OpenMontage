@@ -1,0 +1,5 @@
+{"date": "2026-04-10", "asset": "artist.yaml", "tool": "human", "human_input": "确定艺名 Amor（与 Fati 合为 amor fati）、数字游民人设、混血背景、普通话为主夹英文、民谣 + 律动电子方向、与 Fati 的挚友搭档关系。", "notes": "identity v1"}
+{"date": "2026-04-10", "asset": "bible/amor_road_front.png", "tool": "v0 GenerateImage", "human_input": "撰写身份描述与服装；生成图没有眉间疤痕，据此从 locked_traits 删除疤痕，以图为准。", "notes": "canonical identity reference"}
+{"date": "2026-04-10", "asset": "bible/amor_road_turnaround.png", "tool": "v0 GenerateImage", "human_input": "指定四视图同框生成；审核服装、发髻与斜挎包一致后定为 canonical。"}
+{"date": "2026-04-10", "asset": "promo/keyvisual_rooftop_dusk.png", "tool": "v0 GenerateImage", "human_input": "设定黄昏屋顶双人场景与构图；记录 Amor 面部与裤子偏离，降级为非 canonical。"}
+{"date": "2026-10-04", "asset": "voice.provider_binding", "tool": "suno_web", "human_input": "User confirmed existing Suno voice", "binding": {"kind": "voice", "name": "", "url": "https://suno.com/voice/d1ad9edd-9f5e-4221-ba18-5199b5749fcb", "source_song_url": "", "confirmed": true, "confirmed_on": "2026-10-04"}}

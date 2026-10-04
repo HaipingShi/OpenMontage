@@ -41,6 +41,21 @@ Draft per platform: title (`<Artist> — <Song> (Official Music Video)` unless t
 
 Write `publish_log` listing every file with path, duration, aspect, intended platform, and the metadata drafts. Present the package and **end your turn** for approval.
 
+For a persistent artist, put `rights.disclosure_label` verbatim in every description. After approval, record a mapping with actual values (never a set of field names), and call `record_ledger` for any new canonical asset: For a joint release, record it for every artist in `metadata.artist_ids` with the same `project_id` and add `"with": [<other ids>]`.
+
+```python
+from lib.artist_profile import load_artist, record_release
+
+# title, project_id and master_path are the approved release values.
+profile = load_artist(artist_id)
+record_release(artist_id, {
+    "title": title,
+    "project_id": project_id,
+    "identity_version": profile["version"],
+    "master_path": str(master_path),
+})
+```
+
 ## Common Pitfalls
 
 - Cutdowns that start mid-bar and loop with a hiccup.
