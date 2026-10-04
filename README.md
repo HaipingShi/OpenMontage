@@ -369,6 +369,7 @@ Each pipeline is a complete production workflow, from idea to finished video.
 | **Animation** | Motion graphics, kinetic typography, animated sequences | Social media, product demos, abstract concepts |
 | **Avatar Spokesperson** | Avatar-driven presenter videos | Corporate comms, training, announcements |
 | **Cinematic** | Trailer, teaser, and mood-driven edits | Brand films, teasers, promotional content |
+| **Music Video (MTV, beta)** | Song-first performance, narrative, concept, lyric videos, and beat-synced footage | Music releases, visualizers, concert edits |
 | **Clip Factory** | Batch of ranked short-form clips from one long source | Repurposing long content for social media |
 | **Documentary Montage** | Thematic montage cut from a CLIP-indexed corpus of free stock footage and open archives (Pexels, Archive.org, NASA, Wikimedia, Unsplash) | Video essays, mood pieces, retrieval-first B-roll edits, real-footage videos without paid generation APIs |
 | **Hybrid** | Source footage + AI-generated support visuals | Enhancing existing footage with graphics |
@@ -377,11 +378,13 @@ Each pipeline is a complete production workflow, from idea to finished video.
 | **Screen Demo** | Polished software screen recordings and walkthroughs | Product demos, tutorials, documentation |
 | **Talking Head** | Footage-led speaker videos | Presentations, vlogs, interviews |
 
-Every pipeline follows the same structured flow:
+Pipelines declare their own stage order. The common production flow is:
 
 ```
 research -> proposal -> script -> scene_plan -> assets -> edit -> compose
 ```
+
+The **Music Video** pipeline adds a song-analysis stage before proposal: `idea → song_analysis → proposal → script → scene_plan → assets → edit → compose → publish`. Its `song_map` anchors every shot, lyric and lip-sync window to the locked master. Install optional offline analysis dependencies with `python -m pip install -r requirements-music-video.txt` and have FFmpeg on PATH. Example: “Use my song and lyrics to make a music video, with narrative verses and performance choruses.”
 
 Each stage has a dedicated **director skill** — a markdown instruction file that teaches the agent exactly how to execute that stage. The agent reads the skill, uses the tools, self-reviews, checkpoints state, and asks for human approval at creative decision points.
 

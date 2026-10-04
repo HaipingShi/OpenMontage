@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "openmontage/artifacts/song_map",
+  "title": "Song Map",
+  "description": "Timing spine for the music-video pipeline: beat grid, song sections, cut grid, aligned lyrics, and cutdown windows. Produced by the song_beatmap tool and confirmed by the song-analysis director. The song master is never re-timed; every downstream artifact conforms to these times.",
+  "type": "object",
+  "required": ["version", "audio", "tempo", "grid", "sections", "lyrics"],
+  "properties": {
+    "version": { "type": "string" },
+    "summary": { "type": "string" },
+    "audio": {
+      "type": "object",
+      "required": ["path", "duration_seconds"],
+      "properties": {
+        "path": { "type": "string", "description": "The exact master file that will be muxed into the final render." },
+        "duration_seconds": { "type": "number", "minimum": 0 },
+        "source_type": { "type": "string", "enum": ["user_supplied", "music_library", "ai_generated"] },
+        "excerpt_of": {
+          "type": "object",
+          "description": "Set when this master is an approved excerpt of a longer song.",
+          "properties": {
+            "original_path": { "type": "string" },
+            "start_seconds": { "type": "number", "minimum": 0 },
+            "end_seconds": { "type": "number", "minimum": 0 }
+          }
+        },
+        "vocal_stem_path": { "type": "string", "description": "Isolated vocal used for transcription and lip-sync, when available." }
+      }
+    },
+    "tempo": {
+      "type": "object",
+      "required": ["bpm", "beats_per_bar", "rhythmic_confidence"],
+      "properties": {
+        "bpm": { "type": "number", "minimum": 0 },
+        "beats_per_bar": { "type": "integer", "minimum": 1 },
+        "beat_seconds": { "type": "number", "minimum": 0 },
+        "bar_seconds": { "type": "number", "minimum": 0 },
+        "rhythmic_confidence": {
+          "type": "string",
+          "enum": ["rhythmic", "loose", "free"],
+          "description": "rhythmic = cut on the beat grid; loose = cut on bars only; free = the grid is imposed, pace by phrase and energy."
+        }
+      }
+    },
+    "grid": {
+      "type": "object",
+      "required": ["beats_sec", "downbeats_sec"],
+      "properties": {
+        "beats_sec": { "type": "array", "items": { "type": "number" } },
+        "downbeats_sec": { "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "start_seconds", "end_seconds", "level", "pacing"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": {
+            "type": "string",
+            "enum": ["intro", "verse", "pre_chorus", "chorus", "post_chorus", "bridge", "breakdown", "drop", "instrumental", "outro", "other"]
+          },
+          "label_confidence": { "type": "string", "enum": ["heuristic", "confirmed"] },
+          "start_seconds": { "type": "number", "minimum": 0 },
+          "end_seconds": { "type": "number", "minimum": 0 },
+          "bars": { "type": "integer", "minimum": 0 },
+          "energy": { "type": "number", "minimum": 0, "maximum": 1 },
+          "level": { "type": "string", "enum": ["VOID", "LOW", "MEDIUM", "HIGH"] },
+          "pacing": { "type": "string", "enum": ["beat_cut", "phrase_flow"] },
+          "cut_unit_beats": { "type": ["integer", "null"], "minimum": 1 },
+          "cut_points_seconds": { "type": "array", "items": { "type": "number" } },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "key_moments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["t", "kind"],
+        "properties": {
+          "t": { "type": "number" },
+          "kind": { "type": "string" },
+          "delta": { "type": "number" }
+        }
+      }
+    },
+    "hard_stops": { "type": "array", "items": { "type": "number" } },
+    "silences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["start_seconds", "end_seconds"],
+        "properties": {
+          "start_seconds": { "type": "number" },
+          "end_seconds": { "type": "number" }
+        }
+      }
+    },
+    "lyrics": {
+      "type": "object",
+      "required": ["source", "lines"],
+      "properties": {
+        "source": { "type": "string", "enum": ["user_supplied", "transcribed", "generated", "none"] },
+        "language": { "type": ["string", "null"] },
+        "alignment_coverage": { "type": "number", "minimum": 0, "maximum": 1 },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "text", "start_seconds", "end_seconds", "aligned"],
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "start_seconds": { "type": ["number", "null"] },
+              "end_seconds": { "type": ["number", "null"] },
+              "aligned": { "type": "boolean" },
+              "section_id": { "type": ["string", "null"] },
+              "hook": { "type": "boolean", "description": "Marked by the director: the line the video's identity hangs on." }
+            }
+          }
+        }
+      }
+    },
+    "cutdown_windows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target_seconds", "start_seconds", "end_seconds"],
+        "properties": {
+          "target_seconds": { "type": "number" },
+          "start_seconds": { "type": "number" },
+          "end_seconds": { "type": "number" },
+          "section_id": { "type": "string" }
+        }
+      }
+    },
+    "analysis": { "type": "object" },
+    "metadata": { "type": "object" }
+  },
+  "additionalProperties": false
+}

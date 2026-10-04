@@ -100,6 +100,7 @@ Key capability families to look for in the output:
 | Video Editing | `creative/video-editing.md` | Cut decisions, pacing, rhythm | `ffmpeg`, `video-toolkit` |
 | Enhancement Strategy | `creative/enhancement-strategy.md` | Overlay placement and density | `ffmpeg` |
 | Data Visualization | `creative/data-visualization.md` | Chart type selection, animation, label placement | `d3-viz`, `remotion-best-practices` |
+| Beat-Sync Editing | `creative/beat-sync-editing.md` | Cutting picture to music: grid anchors, density contour, chorus escalation, frame math | `music-to-video`, `video-edit` |
 | Video Stitching | `creative/video-stitching.md` | Multi-clip assembly, AI clip chaining, spatial composition | `ffmpeg`, `video-toolkit` |
 | Video Gen Prompting | `creative/video-gen-prompting.md` | Universal video generation prompt vocabulary; **canonical 5-aspect spec** (Subject / Motion / Scene / Spatial / Camera); ~200 cinematography primitives | `ai-video-gen`, `ltx2`, `create-video` |
 | â†³ Seedance Prompting | `creative/prompting/seedance-prompting.md` | **Preferred premium default.** Seedance 2.0 8-component structure, multi-shot, lip-sync, reference-to-video | `seedance-2-0`, `ai-video-gen` |
@@ -224,6 +225,21 @@ Stage director skills teach the agent HOW to execute each pipeline stage. Each s
 | Edit Director | `pipelines/cinematic/edit-director.md` | `edit` | Emotion-first pacing, reveal timing, audio-driven rhythm |
 | Compose Director | `pipelines/cinematic/compose-director.md` | `compose` | Grade and mix finishing, frame-treatment judgment |
 | Publish Director | `pipelines/cinematic/publish-director.md` | `publish` | Hero vs teaser packaging, poster-frame concepts |
+
+### Music Video Pipeline (`pipelines/music-video/`) — v1.0 (beta)
+
+| Skill | File | Stage | Key Capabilities |
+|-------|------|-------|-----------------|
+| **Executive Producer** | `pipelines/music-video/executive-producer.md` | `all` | **9-stage serial orchestration; the song is the clock; sync, identity, and lip-sync gates** |
+| Idea Director | `pipelines/music-video/idea-director.md` | `idea` | Song source + rights, scope, platform/aspect, treatment hypothesis |
+| Song Analysis Director | `pipelines/music-video/song-analysis-director.md` | `song_analysis` | Lock the master, `song_beatmap` → `song_map`, confirm sections, align lyrics (incl. CJK) |
+| Proposal Director | `pipelines/music-video/proposal-director.md` | `proposal` | Treatments with per-section mode mix, performer bible, lip-sync scope, runtime, chorus sample |
+| Script Director | `pipelines/music-video/script-director.md` | `script` | Section-by-section treatment script, lyric-to-image relationship |
+| Scene Director | `pipelines/music-video/scene-director.md` | `scene_plan` | Grid-locked shot list, provider clip sizing, coverage reuse, lip-sync framing |
+| Asset Director | `pipelines/music-video/asset-director.md` | `assets` | Performer bible → keyframes → i2v clips → lip-sync from exact vocal slices |
+| Edit Director | `pipelines/music-video/edit-director.md` | `edit` | Frame-accurate sequential cuts, hard cuts, lyric timing from `song_map` |
+| Compose Director | `pipelines/music-video/compose-director.md` | `compose` | Runtime routing, grade unification, master mux, scene-detect sync proof |
+| Publish Director | `pipelines/music-video/publish-director.md` | `publish` | Hero master, downbeat-locked hook cutdowns, AI disclosure |
 
 ### Animation Pipeline (`pipelines/animation/`) — v2.0
 

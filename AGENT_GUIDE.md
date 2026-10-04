@@ -251,6 +251,7 @@ If the folder has tracks, the proposal and asset stages should present them as o
 | `clip-factory` | Many clips from one long source | beta |
 | `podcast-repurpose` | Podcast highlights and derivatives | beta |
 | `cinematic` | Trailer, teaser, and mood-led edits | production |
+| `music-video` | Song-first music videos (MTV): performance, narrative, concept, lyric video, beat-cut footage — locked to a `song_map` | beta |
 | `animation` | Motion-graphics and animation-first videos | production |
 | `character-animation` | Local rigged cartoon characters and reusable character acting | beta |
 | `hybrid` | Source footage plus support visuals | production |
@@ -259,6 +260,10 @@ If the folder has tracks, the proposal and asset stages should present them as o
 | `framework-smoke` | Test: minimal 2-stage smoke test | test |
 
 > **Beta pipelines** have not been fully audited. They work, but expect rough edges. Mention this when the user selects one.
+
+### Song-first music video routing
+
+When the user asks for an MV/MTV, lyric video, music visualizer, or footage cut to a finished song, select `music-video` and read `skills/pipelines/music-video/executive-producer.md`. Its order is `idea → song_analysis → proposal → script → scene_plan → assets → edit → compose → publish`. The canonical `song_map` locks the master, section boundaries, beat grid, lyrics, and cutdown windows. The song is the clock; a trailer or brand film that merely has background music still uses `cinematic`. Generation requirements depend on the selected section modes; pure `lyric_video` and `footage_cut` can run without video generation.
 
 ## Mandatory Preflight
 

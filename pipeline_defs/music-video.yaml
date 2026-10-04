@@ -1,0 +1,373 @@
+name: music-video
+version: "1.0"
+description: >
+  Song-first music video (MTV) pipeline. The finished song is the immovable spine:
+  it is analyzed once into a song_map (beat grid, sections, aligned lyrics), and
+  every treatment, shot, generated clip, lip-sync window, lyric graphic, and cut
+  conforms to that timeline. Supports performance, narrative, concept, lyric-video,
+  and footage-cut treatments — mixed per song section — with a locked performer
+  bible for character continuity across generated shots.
+category: cinematic
+stability: beta
+default_checkpoint_policy: guided
+
+reference_input:
+  supported: true
+  analysis_depth: deep
+  analysis_tools:
+    - video_analyzer
+    - video_downloader
+    - scene_detect
+    - frame_sampler
+    - audio_probe
+
+orchestration:
+  mode: executive-producer
+  skill: pipelines/music-video/executive-producer
+  budget_default_usd: 15.00
+  max_revisions_per_stage: 3
+  max_send_backs: 3
+  max_wall_time_minutes: 60
+
+extensions:
+  custom_scripts: true
+  custom_playbooks: true
+  custom_skills: true
+  custom_tools: false
+
+required_skills:
+  - pipelines/music-video/executive-producer
+  - pipelines/music-video/idea-director
+  - pipelines/music-video/song-analysis-director
+  - pipelines/music-video/proposal-director
+  - pipelines/music-video/script-director
+  - pipelines/music-video/scene-director
+  - pipelines/music-video/asset-director
+  - pipelines/music-video/edit-director
+  - pipelines/music-video/compose-director
+  - pipelines/music-video/publish-director
+  - creative/beat-sync-editing
+  - meta/reviewer
+  - meta/checkpoint-protocol
+  - meta/animation-runtime-selector
+
+compatible_playbooks:
+  recommended: []
+  also_works:
+    - anime-ghibli
+    - flat-motion-graphics
+    - premium-minimalist
+  custom_allowed: true
+
+production_modes:
+  - name: performance
+    description: The artist (real or generated) performs the song to camera; sung lines are lip-synced to the vocal.
+    required_tools: [video_selector, image_selector]
+    optional_tools: [kling_lip_sync, lip_sync, transcriber]
+    agent_skills: [ai-video-gen, avatar-video, kling-official]
+    best_for: [artist showcase, singer-songwriter, rap verses, chorus close-ups]
+  - name: narrative
+    description: A short story told across the song's sections with a locked cast; the chorus lands the emotional turns.
+    required_tools: [video_selector, image_selector]
+    optional_tools: [face_enhance]
+    agent_skills: [ai-video-gen, visual-style]
+    best_for: [ballads, story songs, cinematic singles]
+  - name: concept
+    description: Non-literal visual poem — motifs, worlds, transformations — cut hard to the beat grid.
+    required_tools: [video_selector]
+    optional_tools: [image_selector, threejs_world]
+    agent_skills: [ai-video-gen, visual-style]
+    best_for: [electronic, instrumental, experimental, high-BPM tracks]
+  - name: lyric_video
+    description: Typography-led; the lyrics are the picture. Kinetic type on the beat grid, optional background plates.
+    required_tools: [video_compose]
+    optional_tools: [hyperframes_compose, image_selector, video_selector]
+    agent_skills: [music-to-video, hyperframes, remotion-best-practices]
+    best_for: [release-day lyric videos, low-budget singles, streaming visualizers]
+  - name: footage_cut
+    description: User-supplied footage (live, rehearsal, BTS, phone clips) cut to the song's beat grid.
+    required_tools: [video_compose, scene_detect]
+    optional_tools: [video_trimmer, color_grade, auto_reframe]
+    agent_skills: [video-edit, ffmpeg]
+    best_for: [tour edits, concert recaps, fan-footage cuts]
+
+stages:
+  - name: idea
+    skill: pipelines/music-video/idea-director
+    produces:
+      - brief
+    optional_tools:
+      - music_library
+      - audio_probe
+      - suno_music
+      - music_gen
+    tools_available:
+      - music_library
+      - audio_probe
+      - suno_music
+      - music_gen
+      - video_analyzer
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - The song source is resolved (user master, library track, or approved generation brief) — never left implicit
+      - Rights and usage of the song are stated by the user, not assumed
+      - Full song vs excerpt and the target platform/aspect are explicit
+      - Treatment family is a hypothesis, not yet locked
+    success_criteria:
+      - Schema-valid brief artifact
+      - brief.metadata.song_source recorded with source_type and path or generation brief
+
+  - name: song_analysis
+    skill: pipelines/music-video/song-analysis-director
+    required_artifacts_in:
+      - brief
+    produces:
+      - song_map
+    required_tools:
+      - song_beatmap
+    optional_tools:
+      - transcriber
+      - audio_probe
+      - audio_energy
+      - suno_music
+      - music_gen
+    tools_available:
+      - song_beatmap
+      - transcriber
+      - audio_probe
+      - audio_energy
+      - suno_music
+      - music_gen
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - The song master is locked; its duration matches song_map.audio.duration_seconds
+      - Section labels were confirmed by listening and lyric content, not left heuristic
+      - Lyric alignment coverage is reported honestly; unaligned lines are fixed or flagged
+      - rhythmic_confidence matches what the song actually does (no hard cuts on an imposed grid)
+    success_criteria:
+      - Schema-valid song_map artifact
+      - Every section label_confidence is "confirmed"
+      - Lyric lines (when the song has vocals) cover every sung section
+
+  - name: proposal
+    skill: pipelines/music-video/proposal-director
+    required_artifacts_in:
+      - brief
+      - song_map
+    optional_artifacts_in:
+      - video_analysis_brief
+      - source_media_review
+    produces:
+      - proposal_packet
+      - decision_log
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - At least 3 treatments that differ in mode mix, visual world, and how the chorus pays off
+      - Section-by-section mode mix is explicit (e.g. verse=narrative, chorus=performance)
+      - Performer/cast plan is explicit — who appears, and how identity stays consistent
+      - Lip-sync scope and its cost are stated, including the vocal-stem situation
+      - Both render runtimes presented when available; render_runtime locked after approval
+      - Cost estimate is per section and per shot class, not a lump sum
+    success_criteria:
+      - Schema-valid proposal_packet artifact
+      - production_plan.render_runtime set and logged as render_runtime_selection
+      - production_plan.music_source reflects the locked song master
+    sub_stages:
+      - name: sample
+        description: "One chorus phrase (4-8 bars) produced end-to-end before batch generation"
+        human_approval_default: true
+        tools_available: [image_selector, video_selector, kling_lip_sync, lip_sync, video_compose, audio_mixer]
+        review_focus:
+          - "Performer identity and look match the approved bible"
+          - "Cuts land on the beat; lip-sync (if any) reads as singing, not talking"
+          - "Grade and texture match the approved treatment"
+
+  - name: script
+    skill: pipelines/music-video/script-director
+    required_artifacts_in:
+      - song_map
+      - proposal_packet
+    produces:
+      - script
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - One script section per song section, with timings copied from song_map
+      - Each section states its mode, story beat or motif, and what the chorus pays off
+      - Lyric-to-image relationship is deliberate (literal, counterpoint, or abstract) per section
+    success_criteria:
+      - Schema-valid script artifact
+      - script sections tile the full song duration with no gaps or overlaps
+
+  - name: scene_plan
+    skill: pipelines/music-video/scene-director
+    required_artifacts_in:
+      - script
+      - song_map
+    optional_artifacts_in:
+      - proposal_packet
+    produces:
+      - scene_plan
+    optional_tools:
+      - frame_sampler
+    tools_available:
+      - frame_sampler
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Every shot boundary is a song_map cut point (beat_cut) or phrase boundary (phrase_flow)
+      - Shot lengths respect provider clip limits with handles for trimming
+      - Performance shots needing lip-sync are flagged with exact vocal in/out times
+      - "Continuity — every shot featuring cast references the performer bible"
+      - Hero moments sit on the first downbeat of choruses, drops, and the final chorus
+    success_criteria:
+      - Schema-valid scene_plan artifact
+      - Shot list covers the full song duration
+
+  - name: assets
+    skill: pipelines/music-video/asset-director
+    required_artifacts_in:
+      - scene_plan
+      - song_map
+    optional_artifacts_in:
+      - script
+      - proposal_packet
+    produces:
+      - asset_manifest
+    optional_tools:
+      - video_selector
+      - image_selector
+      - kling_lip_sync
+      - lip_sync
+      - face_enhance
+      - bg_remove
+      - upscale
+      - subtitle_gen
+      - audio_probe
+    tools_available:
+      - video_selector
+      - image_selector
+      - kling_lip_sync
+      - lip_sync
+      - face_enhance
+      - bg_remove
+      - upscale
+      - subtitle_gen
+      - audio_probe
+      - video_trimmer
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Performer bible images exist and every cast shot was generated from them
+      - Generated clips are at least as long as their shot plus handles
+      - Lip-synced shots were driven by the exact song slice for their timeline window
+      - No still-image substitutes for motion shots unless the user approved it
+      - Budget gate honored; per-shot cost recorded
+    success_criteria:
+      - Schema-valid asset_manifest artifact
+      - All referenced asset files exist on disk
+      - The song master is registered as a music asset with its exact path
+
+  - name: edit
+    skill: pipelines/music-video/edit-director
+    required_artifacts_in:
+      - scene_plan
+      - asset_manifest
+      - song_map
+    optional_artifacts_in:
+      - script
+      - proposal_packet
+    produces:
+      - edit_decisions
+    tools_available:
+      - video_trimmer
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - Every cut lands within one frame of a song_map beat or phrase boundary
+      - The timeline runs exactly the song duration; the song is the only audio bed
+      - Lip-synced shots are placed at the timeline position their vocal slice came from
+      - Lyric graphics (if any) use song_map line times, not estimates
+      - Energy contour of the edit follows the song (density rises into choruses)
+    success_criteria:
+      - Schema-valid edit_decisions artifact
+      - edit_decisions.render_runtime equals proposal_packet.production_plan.render_runtime
+
+  - name: compose
+    skill: pipelines/music-video/compose-director
+    required_artifacts_in:
+      - edit_decisions
+      - asset_manifest
+    optional_artifacts_in:
+      - song_map
+      - proposal_packet
+    produces:
+      - render_report
+      - final_review
+    required_tools:
+      - video_compose
+    optional_tools:
+      - hyperframes_compose
+      - scene_detect
+      - frame_sampler
+      - remotion_caption_burn
+      - audio_mixer
+      - color_grade
+      - video_stitch
+      - video_trimmer
+      - audio_probe
+    tools_available:
+      - video_compose
+      - hyperframes_compose
+      - scene_detect
+      - frame_sampler
+      - remotion_caption_burn
+      - audio_mixer
+      - color_grade
+      - video_stitch
+      - video_trimmer
+      - audio_probe
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - "render_runtime in edit_decisions matches proposal_packet — silent swap is a CRITICAL governance violation"
+      - Rendered duration equals the song duration within one frame; audio is the untouched master
+      - Sync spot-checks pass at the first chorus downbeat, every hard stop, and the final hit
+      - Grade is consistent across generated shots from different providers
+    success_criteria:
+      - Schema-valid render_report artifact
+      - Output file exists and passes ffprobe validation
+      - final_review records sync checks at named song_map timestamps
+
+  - name: publish
+    skill: pipelines/music-video/publish-director
+    required_artifacts_in:
+      - render_report
+      - final_review
+    optional_artifacts_in:
+      - song_map
+      - proposal_packet
+    produces:
+      - publish_log
+    optional_tools:
+      - auto_reframe
+      - video_trimmer
+      - video_compose
+    tools_available:
+      - auto_reframe
+      - video_trimmer
+      - video_compose
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Hero 16:9 master plus hook cutdowns built from song_map.cutdown_windows
+      - Cutdowns start and end on downbeats; audio fades are musical, not truncated
+      - Metadata credits the artist, song, and any AI generation honestly
+    success_criteria:
+      - Schema-valid publish_log artifact
+      - Export package lists every deliverable with duration and aspect
