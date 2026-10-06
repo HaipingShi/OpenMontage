@@ -142,3 +142,17 @@ Validation after adding Qwen and unknown-cost propagation: **1352 contracts
 passed, 8 skipped**, including 23 mocked OpenRouter adapter contracts. Local
 registry discovery reports AVAILABLE with the configured key; this checks local
 configuration only, not live authentication or inference.
+
+## HTTP error diagnostics
+
+Non-200 responses now retain allowlisted, redacted provider error fields and
+request IDs, including structured upstream error details. HTTP-200 error
+envelopes are identified before model validation. ShotVerifier records these
+fields in `review_calls`; credentials, media data URLs and echoed request bodies
+are excluded. No automatic retries were added.
+
+On 2026-10-06, the user-authorized Qwen single-shot diagnosis succeeded with the
+same model, provider and media parameters after an earlier HTTP 400. The earlier
+response body was not retained, so its exact cause remains unknown; this is not
+evidence of a fixed request incompatibility. The diagnostic call reported
+$0.00318399. Relevant mock contracts: 53 passed (27 transport + 26 AutoMV).

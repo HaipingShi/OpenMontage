@@ -10,6 +10,7 @@ import base64
 import json
 import math
 import os
+import re
 from pathlib import Path
 
 import jsonschema
@@ -31,6 +32,49 @@ ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions'
 MIMES = {'.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.webp':'image/webp',
          '.mp4':'video/mp4', '.mov':'video/mov', '.webm':'video/webm', '.mpeg':'video/mpeg',
          '.wav':'audio/wav', '.mp3':'audio/mpeg'}
+
+
+def error_diagnostic(body, key):
+    """Allowlist error details; never persist echoed requests or media payloads."""
+    def clean(value):
+        if not isinstance(value, (str, int, float)):
+            return None
+        if not isinstance(value, str):
+            return value
+        value = value.replace(key, '[REDACTED]') if key else value
+        value = re.sub(r'data:[^\s\"<>]+', '[MEDIA REDACTED]', value)
+        value = re.sub(r'(?i)Bearer\s+\S+|sk-[\w-]+', '[CREDENTIAL REDACTED]', value)
+        value = re.sub(r'[A-Za-z0-9+/=_-]{150,}', '[LONG VALUE REDACTED]', value)
+        return value[:2048]
+
+    if not isinstance(body, dict):
+        return {}
+    result = {}
+    if isinstance(body.get('id'), str):
+        result['request_id'] = clean(body['id'])
+    error = body.get('error')
+    if not isinstance(error, dict):
+        return result
+    detail = {name: clean(error[name]) for name in ('code', 'message', 'type', 'param')
+              if name in error and isinstance(error[name], (str, int, float))}
+    metadata = error.get('metadata')
+    if isinstance(metadata, dict):
+        if isinstance(metadata.get('provider_name'), str):
+            detail['provider_name'] = clean(metadata['provider_name'])
+        raw = metadata.get('raw')
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw)
+            except ValueError:
+                # Unstructured raw data can echo the entire request. Do not log it.
+                raw = None
+        if isinstance(raw, dict):
+            upstream = raw.get('error', raw)
+            if isinstance(upstream, dict):
+                detail['upstream'] = {name: clean(upstream[name]) for name in ('code', 'message', 'type', 'param')
+                                      if isinstance(upstream.get(name), (str, int, float))}
+    result['provider_error'] = detail
+    return result
 
 
 class OpenRouterReview(BaseTool):
@@ -187,13 +231,24 @@ class OpenRouterReview(BaseTool):
             response = requests.post(ENDPOINT,json=payload,headers={'Authorization':f'Bearer {key}',
                 'Content-Type':'application/json'},timeout=(10,180),allow_redirects=False)
             if response.status_code!=200:
+                try:
+                    data.update(error_diagnostic(response.json(), key))
+                except ValueError:
+                    pass
                 return ToolResult(success=False,error=f'OpenRouter HTTP {response.status_code}; no retry or fallback',
                     data={**data,'http_status':response.status_code,'retry_after':response.headers.get('Retry-After')},cost_usd=cost)
             body = response.json()
+            data.update(error_diagnostic(body, key))
             actual_model = body.get('model')
             data['model']=actual_model
             usage = body.get('usage',{})
             data.update(usage=usage,request_id=body.get('id'))
+            if body.get('error'):
+                # An error envelope may omit model/usage; retain the actual error first.
+                charged = usage.get('cost')
+                if type(charged) in (int, float) and math.isfinite(charged) and charged >= 0:
+                    cost = float(charged)
+                raise ValueError('OpenRouter returned an error envelope; see provider_error')
             if quote > 0 and usage.get('cost') is None:
                 cost = None
                 raise ValueError('Paid review billing unknown: response lacks usage.cost; reconcile before continuing')
@@ -204,8 +259,6 @@ class OpenRouterReview(BaseTool):
                 cost=float(charged)
             if not isinstance(actual_model,str) or actual_model.removesuffix(':free')!=requested_model.removesuffix(':free'):
                 raise ValueError('Missing or unexpected model in response')
-            if body.get('error'):
-                raise ValueError('OpenRouter returned an error envelope')
             choice = body['choices'][0]
             if choice.get('finish_reason')!='stop':
                 raise ValueError('Review incomplete or refused')

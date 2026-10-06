@@ -237,3 +237,48 @@ def test_paid_timeout_and_judge_missing_cost_stay_unknown(inputs,monkeypatch):
         'model':QWEN_MODEL,'paid_call_approved':True,'approved_cost_usd':.16})
     assert result.success and result.cost_usd is None
     assert result.data['judge']['status']=='failed' and result.data['judge']['model']==QWEN_MODEL
+
+
+def test_http_error_preserves_safe_provider_diagnostic(inputs, monkeypatch):
+    body={'id':'error-request', 'error':{'code':400,'message':'Bad media mock-secret data:video/mp4;base64,AAAA',
+        'metadata':{'provider_name':'Alibaba','raw':json.dumps({'error':{'code':'InvalidParameter','message':'Unsupported media combination'}})},
+        'request':{'authorization':'mock-secret'}}}
+    call=post(monkeypatch,SimpleNamespace(status_code=400,headers={},json=lambda:body))
+    result=OpenRouterReview().execute(inputs)
+    assert result.data['request_id']=='error-request'
+    assert result.data['provider_error']['code']==400
+    assert result.data['provider_error']['upstream']['message']=='Unsupported media combination'
+    saved=json.dumps(result.data)
+    assert 'mock-secret' not in saved and 'base64,AAAA' not in saved and 'authorization' not in saved
+    assert call.call_count==1
+
+
+def test_http_200_error_envelope_not_misreported_as_model_mismatch(inputs, monkeypatch):
+    body={'error':{'code':502,'message':'Provider unavailable'}}
+    post(monkeypatch,SimpleNamespace(status_code=200,headers={},json=lambda:body))
+    result=OpenRouterReview().execute(inputs)
+    assert not result.success and 'error envelope' in result.error
+    assert result.data['provider_error']['code']==502
+
+
+def test_http_non_json_error_keeps_status(inputs, monkeypatch):
+    response=SimpleNamespace(status_code=400,headers={},json=Mock(side_effect=ValueError('html')))
+    post(monkeypatch,response)
+    result=OpenRouterReview().execute(inputs)
+    assert result.data['http_status']==400 and not result.success
+
+
+def test_verifier_preserves_http_error_evidence(inputs, monkeypatch):
+    tool=OpenRouterReview()
+    registry=SimpleNamespace(ensure_discovered=lambda:None,get_by_capability=lambda c:[tool])
+    verifier=ShotVerifier(registry)
+    monkeypatch.setattr(verifier,'_deterministic',lambda p:{'pass':True,'source_sha256':'mock'})
+    monkeypatch.setattr('tools.analysis.shot_verifier.FrameSampler.execute',lambda self,p:ToolResult(success=True,data={'frames':inputs['frames']}))
+    call=post(monkeypatch,SimpleNamespace(status_code=400,headers={},json=lambda:{
+        'id':'request-400','error':{'code':400,'message':'InvalidParameter'}}))
+    result=verifier.execute({'input_path':inputs['video_path'],'shot':{},'model':MODEL})
+    report=result.data['verification']
+    assert report['status']=='unreviewed' and report['score'] is None
+    assert report['review_calls'][0]['request_id']=='request-400'
+    assert report['review_calls'][0]['provider_error']['message']=='InvalidParameter'
+    assert call.call_count==1
