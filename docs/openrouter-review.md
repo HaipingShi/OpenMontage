@@ -2,7 +2,7 @@
 
 `openrouter_review` is an optional BaseTool provider for `multimodal_review`.
 It is discovered automatically and works with both shot_verifier and mv_judge.
-The only enabled model is the user-selected
+The default model is the user-selected
 `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`.
 
 ## Configure
@@ -50,7 +50,7 @@ Deterministic failures skip all OpenRouter calls; physical failures skip scoring
 MvJudge sends the complete final video plus the exact locked master audio and
 remains advisory. No returned score constitutes human approval.
 
-The adapter uses https://openrouter.ai/api/v1/chat/completions with NVIDIA pinned,
+The default Nemotron route uses https://openrouter.ai/api/v1/chat/completions with NVIDIA pinned,
 `allow_fallbacks: false`, zero maximum prices, reasoning enabled and 8192 output
 tokens by default. It never retries, selects a paid model or falls back to a
 frame-only review. Local video/images are encoded as data URLs; WAV/MP3 audio
@@ -64,7 +64,7 @@ can be specified directly on the adapter.
   raised up to 256 MiB. Base64 adds roughly one third to request size. Provider
   limits may be lower. Oversize input fails before upload; no automatic trimming,
   resampling or omission of the master/reference images occurs.
-- The endpoint has no enforced response_format/JSON-schema support. Only one
+- The Nemotron endpoint has no enforced response_format/JSON-schema support. Only one
   JSON object (optionally enclosed in a JSON code fence) is accepted. Partial,
   missing, nonfinite, invalid or per-artist-incomplete scores fail validation.
   Reasoning text is never interpreted as the review result.
@@ -101,3 +101,44 @@ Validation for this implementation: **1348 contracts passed, 8 skipped**;
 19 adapter contracts cover mocked transport. Registry discovery confirmed one
 multimodal_review provider; without the key it reports UNAVAILABLE. No live
 inference or authentication test was performed.
+
+## Explicit Qwen Omni selection
+
+The same key also enables optional `qwen/qwen3.8-omni-flash`. Nemotron remains
+the default; there is no implicit model switch or failure fallback. Qwen is paid,
+pinned to the `alibaba` endpoint and requests JSON-object output. It requires
+`paid_call_approved: true` and a finite `approved_cost_usd` envelope on each call.
+The directors must announce and reserve it using CostTracker first. Registering
+the model or setting a key does not grant paid-call permission.
+
+Verified public pricing on 2026-10-06: input $0.15/M tokens, output $0.47/M
+tokens, model context 1,000,000 tokens. Because local video token estimates are
+provider-specific, estimate_cost reserves the FULL context at these price caps
+plus max_tokens output. Default quote is $0.15385024 per review call; a two-layer
+shot review reserves $0.30770048. This is conservative, not a predicted invoice.
+Actual reported usage.cost is reconciled, including failed reviews. Missing paid
+cost is billing-unknown, never silently treated as free; resolve it before further
+paid review. Prices above the configured unit-price caps yield no eligible
+endpoint, not an unapproved higher-cost request.
+
+Example explicit routing fields for an announced, reserved **single** judge call:
+
+```json
+{
+  "preferred_tool": "openrouter_review",
+  "preferred_provider": "openrouter",
+  "model": "qwen/qwen3.8-omni-flash",
+  "paid_call_approved": true,
+  "approved_cost_usd": 0.16
+}
+```
+
+For shot_verifier, reserve both calls (e.g. $0.31 at default settings); the shared
+review helper forwards each transport's declared approval fields and deducts
+reported charges before the scoring call. No live Qwen inference was performed
+for this addition. Source: https://openrouter.ai/qwen/qwen3.8-omni-flash .
+
+Validation after adding Qwen and unknown-cost propagation: **1352 contracts
+passed, 8 skipped**, including 23 mocked OpenRouter adapter contracts. Local
+registry discovery reports AVAILABLE with the configured key; this checks local
+configuration only, not live authentication or inference.

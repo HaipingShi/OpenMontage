@@ -75,3 +75,8 @@ free Nemotron Omni model, NVIDIA pinned and fallback disabled. Setup and media
 limits: `docs/openrouter-review.md`. Missing OPENROUTER_API_KEY is UNAVAILABLE;
 configured status is an offline credential check, not proof of live quality.
 Read the adapter's get_info and announce the uploaded evidence before use.
+
+Explicit `model: qwen/qwen3.8-omni-flash` is also supported. This paid route pins
+Alibaba, requests JSON-object output and requires announced CostTracker reserve
+and a paid_call_approved/approved_cost_usd envelope for each call. Nemotron stays
+the default. Never switch from the free model to Qwen as an error fallback.

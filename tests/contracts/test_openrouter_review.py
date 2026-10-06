@@ -179,3 +179,61 @@ def test_empty_key_and_info_are_offline(inputs,monkeypatch):
     monkeypatch.setenv('OPENROUTER_API_KEY','mock-key')
     assert tool.get_info()['status']=='available'
     call.assert_not_called()
+
+
+def test_qwen_requires_paid_envelope_before_upload(inputs,monkeypatch):
+    from tools.analysis.openrouter_review import QWEN_MODEL
+    call=post(monkeypatch,reply(model=QWEN_MODEL))
+    tool=OpenRouterReview()
+    params={**inputs,'model':QWEN_MODEL}
+    assert tool.estimate_cost(params)==pytest.approx(.15385024)
+    for changes in ({},{'paid_call_approved':True,'approved_cost_usd':.01},
+                    {'paid_call_approved':True,'approved_cost_usd':float('nan')}):
+        assert not tool.execute({**params,**changes}).success
+    call.assert_not_called()
+    call.return_value=reply(model=QWEN_MODEL,cost=.001)
+    result=tool.execute({**params,'paid_call_approved':True,'approved_cost_usd':.2})
+    assert result.success and result.cost_usd==.001 and result.model==QWEN_MODEL
+    payload=call.call_args.kwargs['json']
+    assert payload['model']==QWEN_MODEL and payload['provider']['only']==['alibaba']
+    assert not payload['provider']['allow_fallbacks']
+    assert payload['provider']['max_price']['prompt']==.15
+    assert payload['response_format']=={'type':'json_object'}
+
+
+def test_paid_wrapper_forwards_approval_and_remaining_envelope(inputs,monkeypatch):
+    from tools.analysis.openrouter_review import QWEN_MODEL
+    from tools.analysis._review import call_reviewer
+    call=post(monkeypatch,reply(model=QWEN_MODEL,cost=.002))
+    params={'model':QWEN_MODEL,'paid_call_approved':True,'approved_cost_usd':.2}
+    result,review=call_reviewer(OpenRouterReview(),params,inputs)
+    assert result.success and review['pass'] and result.cost_usd==.002
+    assert call.call_args.kwargs['json']['model']==QWEN_MODEL
+
+
+def test_qwen_missing_usage_and_overbudget_fail_with_billing_evidence(inputs,monkeypatch):
+    from tools.analysis.openrouter_review import QWEN_MODEL
+    params={**inputs,'model':QWEN_MODEL,'paid_call_approved':True,'approved_cost_usd':.2}
+    post(monkeypatch,reply(model=QWEN_MODEL,cost=None))
+    result=OpenRouterReview().execute(params)
+    assert not result.success and result.cost_usd is None and 'unknown' in result.error
+    post(monkeypatch,reply(model=QWEN_MODEL,cost=.3))
+    result=OpenRouterReview().execute(params)
+    assert not result.success and result.cost_usd==.3
+
+
+def test_paid_timeout_and_judge_missing_cost_stay_unknown(inputs,monkeypatch):
+    from tools.analysis.openrouter_review import QWEN_MODEL
+    call=post(monkeypatch,reply())
+    call.side_effect=requests.Timeout('private details')
+    params={**inputs,'model':QWEN_MODEL,'paid_call_approved':True,'approved_cost_usd':.16}
+    result=OpenRouterReview().execute(params)
+    assert not result.success and result.cost_usd is None
+    post(monkeypatch,reply(model=QWEN_MODEL,cost=None))
+    tool=OpenRouterReview()
+    registry=SimpleNamespace(ensure_discovered=lambda:None,get_by_capability=lambda c:[tool])
+    result=MvJudge(registry).execute({'video_path':inputs['video_path'],
+        'audio_path':str(Path(inputs['video_path']).with_name('master.wav')),
+        'model':QWEN_MODEL,'paid_call_approved':True,'approved_cost_usd':.16})
+    assert result.success and result.cost_usd is None
+    assert result.data['judge']['status']=='failed' and result.data['judge']['model']==QWEN_MODEL

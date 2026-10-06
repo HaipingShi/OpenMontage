@@ -39,6 +39,10 @@ def call_reviewer(tool, inputs, request):
     this call. The director reconciles actual costs, including failed calls.
     """
     params = {**request, **{key: inputs[key] for key in ('model', 'model_id', 'model_name') if key in inputs}}
+    # Transports declaring their own paid guard receive the already announced envelope.
+    props = tool.input_schema.get('properties', {})
+    params.update({key:inputs[key] for key in ('paid_call_approved','approved_cost_usd')
+                   if key in props and key in inputs})
     estimate = tool.estimate_cost(params)
     if estimate is None or not math.isfinite(estimate) or estimate < 0:
         raise ValueError('reviewer needs a valid cost quote')
@@ -47,6 +51,9 @@ def call_reviewer(tool, inputs, request):
         if not inputs.get('paid_call_approved') or not math.isfinite(envelope) or envelope < estimate:
             raise ValueError('paid review requires an announced, reserved cost envelope')
     result = tool.execute(params)
+    if result.cost_usd is None:
+        result.error = result.error or 'Review cost unknown; reconcile billing before continuing'
+        return result, None
     if not result.success:
         return result, None
     content = result.data.get('review', result.data)

@@ -90,7 +90,7 @@ class MvJudge(BaseTool):
                 result, ratings = call_reviewer(tool, inputs, {'operation': 'mv_judge',
                     'prompt': (SKILLS/'mv-judge.md').read_text(), 'video_path': inputs['video_path'],
                     'audio_path': inputs['audio_path'], 'criteria': CRITERIA})
-                cost = result.cost_usd or 0.0
+                cost = result.cost_usd
                 judge['model'] = result.model or result.data.get('model') or judge['model']
                 if ratings is None:
                     judge.update(status='failed', reason=result.error)

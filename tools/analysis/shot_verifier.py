@@ -160,7 +160,7 @@ class ShotVerifier(BaseTool):
                 'locked_traits': inputs.get('locked_traits', {})}
             report.update(provider=tool.provider, model=inputs.get('model'), reviewer_tool=tool.name)
             result, physical = call_reviewer(tool, inputs, request)
-            cost += result.cost_usd or 0.0
+            cost = None if result.cost_usd is None else cost + result.cost_usd
             report['model'] = result.model or result.data.get('model') or report['model']
             if physical is None:
                 report.update(status='unreviewed', action='manual_review', reason=result.error)
@@ -174,7 +174,7 @@ class ShotVerifier(BaseTool):
                 return self._result(inputs, report, cost)
             remaining = {**inputs, 'approved_cost_usd': max(0.0, inputs.get('approved_cost_usd', 0)-cost)}
             result, ratings = call_reviewer(tool, remaining, {**request, 'operation': 'score'})
-            cost += result.cost_usd or 0.0
+            cost = None if result.cost_usd is None else cost + result.cost_usd
             if ratings is None:
                 report.update(status='unreviewed', action='manual_review', reason=result.error)
                 return self._result(inputs, report, cost)
