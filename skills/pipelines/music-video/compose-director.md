@@ -72,7 +72,22 @@ Write `projects/<id>/renders/final.mp4`.
 
 Record all of this in `final_review` with the exact timestamps checked.
 
-### Step 6: Render report
+### Step 6: Optional full-MV judge (advisory only)
+
+Read `skills/meta/mv-judge.md` and invoke optional `mv_judge` with `video_path`
+= final.mp4, `audio_path` = song_map.audio.path, approved preferred_tool/provider/
+model and reserved cost envelope. Use the whole video and master, not just frames.
+Save ToolResult.data.judge into `final_review.metadata.judge`, including actual
+model, provider and "仅供参考". All 12 criteria use 1–5; category weights are
+20/20/30/30. AI novelty is reported separately and excluded from totals by default
+(the two other art scores share 30%). UNAVAILABLE, provider failure or invalid
+scores are recorded as unavailable/failed and compose continues.
+
+NEVER derive final_review.status, recommended_action, publish eligibility or
+checkpoint approval from the judge score. Human/technical review remains the
+existing authority; this report is a reference, not a publish hard gate.
+
+### Step 7: Render report
 
 Recommended `metadata` keys: `render_runtime`, `composition_mode`, `grade_profile`, `lyric_mode` (`none | line | word | hyperframes`), `audio_master_path`, `sync_check` (cut match %, worst offset in frames), `variant_outputs`.
 

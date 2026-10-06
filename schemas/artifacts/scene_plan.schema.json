@@ -105,6 +105,58 @@
               },
               "required": ["type", "description", "source"]
             }
+          },
+          "segment_id": {
+            "type": "string"
+          },
+          "render_route": {
+            "type": "string",
+            "enum": [
+              "story_i2v",
+              "performance_lipsync",
+              "continuation",
+              "cast_multi_ref"
+            ]
+          },
+          "generation_context": {
+            "type": "object",
+            "properties": {
+              "artist_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "performance": {
+                "type": "boolean"
+              },
+              "lip_sync": {
+                "type": "boolean"
+              },
+              "vocal_in": {
+                "type": "number",
+                "minimum": 0
+              },
+              "vocal_out": {
+                "type": "number",
+                "minimum": 0
+              },
+              "handles_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "generation_duration_seconds": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "continuation_of": {
+                "type": "string"
+              },
+              "first_frame": {
+                "type": "object"
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false

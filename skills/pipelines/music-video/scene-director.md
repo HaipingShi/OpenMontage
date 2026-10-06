@@ -16,7 +16,20 @@ Fifth stage of `music-video`. You turn the section script into a **grid-locked s
 
 ## Process
 
-### Step 1: Place shot boundaries on the grid
+### Step 1: Narrative segments, then beat-grid cuts
+
+Use `lib.timeline.build_segments(song_map, min_s=3, max_s=15)` with approved
+user limits and `song_map.metadata.fps` = the delivery fps. Section transitions
+are mandatory boundaries, lyric boundaries preferred; duration-limited splits
+cover long lyric gaps. Sections shorter than min_s record a constraint exception
+for director confirmation. Save segments in scene_plan.metadata.segments.
+A segment is ONE visual intention, not one cut: cut within it using the existing
+song_beatmap cut unit. Each scene carries optional `segment_id` pointing to its
+containing segment; no cut may cross two segment intents. Quantize times once
+with `quantize(t, fps)`, including section ends, with final frame equal to
+`round(song_duration * fps)`. Frame-quantization can move a grid point by at most
+half a frame. Never shorten or retime the master to match the picture.
+
 
 For each script section, take its song_map section:
 
@@ -45,7 +58,7 @@ One `scene_plan.scenes[]` entry per shot:
 | `required_assets` | What must exist: bible refs, keyframe, clip, lip-sync pass (see below) |
 | `overlay_notes` | On-screen lyric line ids, if any |
 
-Encode lip-sync and generation details in `required_assets[].description` (the schema has no dedicated fields), e.g.:
+Record generation details in optional `generation_context` and `render_route`; retain `required_assets[].description` for older consumers, e.g.:
 
 ```json
 "required_assets": [
@@ -55,7 +68,29 @@ Encode lip-sync and generation details in `required_assets[].description` (the s
 ]
 ```
 
-### Step 3: Size generation to provider limits
+### Step 3: Per-shot route and provider sizing
+
+Set `render_route` on every generated shot:
+- `story_i2v`: ordinary narrative; bible-conditioned keyframe then i2v.
+- `performance_lipsync`: scoped singing, prioritizing section onsets, chorus
+  entries and hook lines; exact vocal_in/vocal_out in generation_context.
+- `cast_multi_ref`: multiple artists in frame; use `cast_prompt` and transmit
+  EACH artist's references, keeping reference_map in submitted generation logs.
+- `continuation`: use the verified predecessor's exact last decoded frame.
+
+`lib.mv_routes.plan_render_routes` sizes an already approved intent plan, using
+provider max_clip_s and 0.5s handles each side. A long segment can contain many
+beat cuts; when a generation shot itself exceeds the provider maximum, split it:
+first subclip uses its keyframe; subsequent clips use continuation and record
+`generation_context.continuation_of`. Keep segment_id across these clips.
+Continuation with `generation_context.lip_sync: true` STILL needs its own vocal
+slice and lip-sync pass; route is not permission to omit singing requirements.
+If the provider only offers discrete lengths, round generation duration UP to a
+supported duration and reconcile costs. No provider change without approval.
+The helper does not pick framing: director must ensure singing shots remain
+near-frontal close-ups. Non-generated lyric/footage scenes may retain a legacy
+plan without generation routes; do not generate unnecessary candidates.
+
 
 - Most providers generate fixed lengths (commonly 5 s or 10 s). Plan each generated clip ≥ shot length + **0.5 s handles** on both ends.
 - **Coverage reuse:** a single 10 s performance clip can supply 3–4 shots in a chorus, and chorus coverage can be re-cut for later choruses (with an escalation insert per repeat). Mark reuse in `required_assets[].description` (`"reuse: clip of sh-s04-01, in=3.2s"`). This is the main lever that keeps a 3-minute video on budget.
@@ -73,7 +108,7 @@ Only for shots selected under the approved lip-sync scope:
 
 - Framing: medium close-up or close-up, face ≥ ~30 % of frame height, near-frontal (≤ 30° yaw), mouth unoccluded (no mic in front of lips, no hair across the mouth).
 - Movement: slow or static camera; avoid whip pans and heavy motion blur.
-- Record `vocal_in`/`vocal_out` = the shot's own song-timeline window. The lip-sync audio slice will be cut from the master at exactly these times.
+- Record `vocal_in`/`vocal_out` = the shot's own song-timeline window. The lip-sync audio slice will be cut from song_map.audio.stems.vocals when available, otherwise the master. Include both generation handles in the derived slice; frame 0 maps to vocal_in minus the leading handle.
 
 ### Step 6: Budget reconcile
 
@@ -81,7 +116,10 @@ Total the generation plan (bible images, keyframes, clips, lip-sync passes) usin
 
 ### Step 7: Validate and gate
 
-Validate `scene_plan` (`additionalProperties: false`). Check shots tile `[0, song duration]` with no gaps. Present: shot count per section, average shot length per section vs song energy, number of generated clips after reuse, lip-sync shot list, and the cost total. Checkpoint `awaiting_human` and **end your turn**.
+Before writing the artifact call `lib.timeline.validate_timeline(scene_plan,
+song_map, fps)` (mandatory), then schema validation. Off-grid, zero-frame shots,
+gaps/overlaps or total-frame mismatch must be fixed in the picture. Verify
+segment_id references and render routes, and reconcile ALL candidates. Present: shot count per section, average shot length per section vs song energy, number of generated clips after reuse, lip-sync shot list, and the cost total. Checkpoint `awaiting_human` and **end your turn**.
 
 ## Common Pitfalls
 

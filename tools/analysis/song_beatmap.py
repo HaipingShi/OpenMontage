@@ -165,6 +165,9 @@ class SongBeatmap(BaseTool):
                     "transcript_path is given; otherwise lines are returned untimed."
                 ),
             },
+            "suno_lyrics_text": {"type": "string", "description": "Lyrics from the approved Suno generation record, preferred over user lyrics."},
+            "lyrics_confidence_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.6},
+            "stems": {"type": "object", "properties": {k: {"type": "string"} for k in ("vocals", "accompaniment", "model")}, "additionalProperties": False},
             "language": {"type": "string", "description": "ISO 639-1 code for the lyrics."},
             "phrase_bars": {
                 "type": "integer",
@@ -194,7 +197,7 @@ class SongBeatmap(BaseTool):
         cpu_cores=1, ram_mb=1024, vram_mb=0, disk_mb=50, network_required=False
     )
     retry_policy = RetryPolicy(max_retries=0, retryable_errors=[])
-    idempotency_key_fields = ["input_path", "transcript_path", "lyrics_text", "phrase_bars"]
+    idempotency_key_fields = ["input_path", "transcript_path", "lyrics_text", "suno_lyrics_text", "lyrics_confidence_threshold", "stems", "phrase_bars"]
     side_effects = ["writes song_map.json and audiomap.json"]
     user_visible_verification = [
         "Listen at each section boundary and confirm the label matches the song",
@@ -268,6 +271,9 @@ class SongBeatmap(BaseTool):
                 source_type=inputs.get("source_type", "user_supplied"),
                 transcript=transcript,
                 lyrics_text=inputs.get("lyrics_text"),
+                suno_lyrics_text=inputs.get("suno_lyrics_text"),
+                lyrics_confidence_threshold=inputs.get("lyrics_confidence_threshold", 0.6),
+                stems=inputs.get("stems"),
                 language=inputs.get("language"),
                 audiomap_path=str(audiomap_path),
             )
@@ -309,6 +315,9 @@ def build_song_map(
     transcript: Optional[dict[str, Any]] = None,
     lyrics_text: Optional[str] = None,
     language: Optional[str] = None,
+    suno_lyrics_text: Optional[str] = None,
+    lyrics_confidence_threshold: float = 0.6,
+    stems: Optional[dict[str, str]] = None,
     audiomap_path: Optional[str] = None,
 ) -> dict[str, Any]:
     duration = float(audiomap.get("audio", {}).get("duration_sec", 0.0))
@@ -331,7 +340,13 @@ def build_song_map(
     for section in sections:
         _assign_cut_grid(section, rhythm, beats, downbeats, beat_seconds)
 
-    lyrics = _build_lyrics(transcript, lyrics_text, language, sections)
+    if not 0 <= lyrics_confidence_threshold <= 1:
+        raise ValueError("lyrics_confidence_threshold must be between 0 and 1")
+    authoritative = suno_lyrics_text or lyrics_text
+    lyrics = _build_lyrics(transcript, authoritative, language, sections)
+    if suno_lyrics_text:
+        lyrics["source"] = "suno_record"
+    lyrics["confidence_threshold"] = lyrics_confidence_threshold
     cutdowns = _cutdown_windows(sections, downbeats, duration)
 
     summary = (
@@ -348,6 +363,7 @@ def build_song_map(
             "path": audio_path,
             "duration_seconds": round(duration, 3),
             "source_type": source_type,
+            **({"stems": stems} if stems else {}),
         },
         "tempo": {
             "bpm": round(bpm, 1),
@@ -371,6 +387,10 @@ def build_song_map(
             for s in audiomap.get("silences", [])
         ],
         "lyrics": lyrics,
+        "review_flags": [{"line_id": line["id"], "confidence": line["confidence"],
+                          "reason": "low_alignment_confidence" if line["aligned"] else "unaligned"}
+                         for line in lyrics["lines"]
+                         if not line["aligned"] or line["confidence"] < lyrics_confidence_threshold],
         "cutdown_windows": cutdowns,
         "analysis": {
             "tool": "song_beatmap",
@@ -587,6 +607,29 @@ def _assign_cut_grid(
     section["cut_points_seconds"] = points
 
 
+def _tagged_lyric_lines(text: str) -> list[dict[str, Any]]:
+    lines, singer, tag = [], None, None
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        if re.fullmatch(r"\[.*\]", line):
+            tag = line
+            singer = line[1:-1].split(":", 1)[1].strip() if ":" in line else None
+        elif not re.fullmatch(r"\(.*\)", line):
+            lines.append({"text": line, "singer": singer, "section_tag": tag})
+    return lines
+
+
+def _transcribed_confidence(segment: dict[str, Any]) -> float:
+    # Timing is not evidence of lyric accuracy. Match segment tokens against
+    # timed words; absent word evidence is explicitly low confidence.
+    tokens = _tokens(str(segment.get("text", "")))
+    words = [token for word in segment.get("words", []) for token in _tokens(str(word.get("word", "")))]
+    matched = sum(block.size for block in difflib.SequenceMatcher(a=tokens, b=words, autojunk=False).get_matching_blocks())
+    return round(matched / len(tokens), 4) if tokens else 0.0
+
+
 def _parse_lyric_lines(lyrics_text: str) -> list[str]:
     lines = []
     for raw in lyrics_text.splitlines():
@@ -626,9 +669,12 @@ def _build_lyrics(
     lang = language or (transcript or {}).get("language")
 
     if lyrics_text:
-        lines_text = _parse_lyric_lines(lyrics_text)
+        tagged_lines = _tagged_lyric_lines(lyrics_text)
+        lines_text = [item["text"] for item in tagged_lines]
         words = _transcript_words(transcript) if transcript else []
         lines = _align_lines(lines_text, words)
+        for line, tagged in zip(lines, tagged_lines):
+            line.update({"singer": tagged["singer"], "section_tag": tagged["section_tag"]})
         source = "user_supplied"
     elif transcript:
         lines = []
@@ -641,6 +687,7 @@ def _build_lyrics(
                         "start_seconds": round(float(seg["start"]), 3),
                         "end_seconds": round(float(seg["end"]), 3),
                         "aligned": True,
+                        "confidence": _transcribed_confidence(seg),
                     }
                 )
         source = "transcribed"
@@ -689,13 +736,14 @@ def _align_lines(lines_text: list[str], words: list[dict[str, Any]]) -> list[dic
             lines.append(
                 {
                     "text": text,
+                    "confidence": round(len(hits) / n_tokens, 4),
                     "start_seconds": round(min(h[0] for h in hits), 3),
                     "end_seconds": round(max(h[1] for h in hits), 3),
                     "aligned": True,
                 }
             )
         else:
-            lines.append({"text": text, "start_seconds": None, "end_seconds": None, "aligned": False})
+            lines.append({"text": text, "start_seconds": None, "end_seconds": None, "aligned": False, "confidence": round(len(hits) / n_tokens, 4)})
     return lines
 
 

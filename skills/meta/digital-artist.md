@@ -81,6 +81,20 @@ Each artist keeps a complete solo profile; a pairing is a `collaborators` entry 
 - `check_artist` fails if a collaborator has no profile or the artist has no `duet_descriptor`.
 - CLI: `python -m lib.artist_profile cast amor,fati "<shot>"` and `python -m lib.artist_profile duet-style amor,fati "<additions>"`.
 
+
+### Duet / multi-artist candidate verification
+
+For each multi-person shot use cast_prompt.reference_map and locked_traits per
+artist. Actual submitted generation logs must prove EVERY official identity
+reference was transmitted. shot_verifier compares each face to that artist's own
+identity image; `identity` is keyed by artist id, and the identity dimension is
+its minimum score, not a mean. One accurate singer cannot mask another's drift.
+Keep [Verse 1: Amor] / [Verse 2: Fati] / [Chorus: Amor & Fati] tags and song_map
+lyrics.lines[].singer. Use separated vocals for exact lip-sync slices when
+available, master otherwise; record vocal_source. A shared vocal stem does not
+isolate singers, and singer tags do not enforce a saved voice. Manual verification
+remains necessary when the optional multimodal provider is unavailable.
+
 ## Evolution
 
 Eras are allowed; drift is not. A new hairstyle or era is a deliberate decision: add a look, regenerate canonical images, bump `version`, and log it. Never edit `locked_traits` mid-project to excuse a bad generation.

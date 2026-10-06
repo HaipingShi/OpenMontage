@@ -50,6 +50,50 @@
               "review_notes": { "type": "string" }
             },
             "additionalProperties": false
+          },
+          "candidates": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "required": [
+                "path",
+                "attempt",
+                "verification"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "attempt": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3
+                },
+                "verification": {
+                  "type": "object"
+                },
+                "cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "generation_log": {
+                  "type": "object"
+                },
+                "first_frame": {
+                  "type": "object"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "selected_candidate": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 2
           }
         },
         "additionalProperties": false
