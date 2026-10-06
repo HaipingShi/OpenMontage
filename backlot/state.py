@@ -423,6 +423,20 @@ def _build_storyboard(
         entry = _asset_entry(project_dir, asset)
         assets_by_scene.setdefault(scene_key(entry.get("scene_id")), []).append(entry)
 
+    # Explicit reuse routes share visual takes with their original source.
+    routes = {str(r.get("shot_id")): r for r in (scene_plan.get("metadata") or {}).get("routing", [])
+              if isinstance(r, dict) and r.get("shot_id") is not None}
+
+    def visual_source(sid: str) -> str:
+        seen = set()
+        while sid not in seen:
+            seen.add(sid)
+            reuse = routes.get(sid, {}).get("reuse_of")
+            if reuse is None:
+                break
+            sid = str(reuse)
+        return sid
+
     # A scene is "generating" if its most recent top-level event is an
     # unfinished start. Nested (depth>0) provider events inside a selector
     # call are skipped — the outer call's finish is the real completion.
@@ -444,7 +458,8 @@ def _build_storyboard(
         sid = scene_key(scene.get("id"))
         section = _find_script_section(scene, sections)
         scene_assets = assets_by_scene.get(sid, [])
-        visuals = [a for a in scene_assets if a["type"] in ("image", "video", "diagram", "animation")]
+        source_assets = assets_by_scene.get(visual_source(sid), scene_assets)
+        visuals = [a for a in source_assets if a["type"] in ("image", "video", "diagram", "animation")]
         audio = [a for a in scene_assets if a["type"] in ("audio", "narration", "music", "sfx")]
         # Only files that can actually be shown (raster/video) are takes; a
         # bespoke composition asset (.tsx animation) is real but not showable.

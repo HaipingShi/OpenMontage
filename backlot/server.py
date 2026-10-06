@@ -2,7 +2,7 @@
 
 The watcher observes ``projects/`` with watchfiles; on any change it bumps a
 per-project version and wakes SSE subscribers, who tell the browser to
-refetch state. The server never writes to project directories.
+refetch state. User shot reviews are written separately under reviews/.
 """
 
 from __future__ import annotations
@@ -18,6 +18,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
+from backlot.reviews import ShotReview, load_reviews, save_review
 from backlot.state import PROJECTS_DIR, REPO_ROOT, list_projects, load_board_state, summarize_project
 
 UI_DIR = Path(__file__).resolve().parent / "ui"
@@ -179,6 +180,21 @@ def create_app() -> FastAPI:
     async def project_state(project_id: str) -> dict:
         project_dir = _safe_project_dir(project_id)
         return await asyncio.to_thread(load_board_state, project_dir)
+
+    @app.get("/api/project/{project_id}/reviews")
+    async def project_reviews(project_id: str) -> dict:
+        return await asyncio.to_thread(load_reviews, _safe_project_dir(project_id))
+
+    @app.put("/api/project/{project_id}/reviews")
+    async def update_review(project_id: str, review: ShotReview, request: Request) -> dict:
+        # Local writes must originate from this board, not a foreign web page.
+        origin = request.headers.get("origin")
+        if origin and origin.rstrip("/") != str(request.base_url).rstrip("/"):
+            raise HTTPException(403, "cross-origin review write denied")
+        result = await asyncio.to_thread(save_review, _safe_project_dir(project_id), review)
+        _invalidate_summary(project_id)
+        hub.publish(project_id)
+        return result
 
     @app.get("/api/project/{project_id}/events")
     async def project_events(project_id: str, request: Request) -> StreamingResponse:

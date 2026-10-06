@@ -203,3 +203,58 @@ class TestFindingsFixes:
         fake_video.write_bytes(b"\x00" * 4096)
         res = client.get("/thumb/vid/renders/final.mp4")
         assert res.status_code == 404  # never the raw video bytes (F-03)
+
+class TestShotReviews:
+    def setup_shots(self, root):
+        project = _make_project(root)
+        (project / 'assets/video/source.mp4').write_bytes(b'video')
+        _write_json(project / 'artifacts/scene_plan.json', {
+            'scenes': [{'id': 'sc1'}, {'id': 'sc2'}],
+            'metadata': {'routing': [{'shot_id': 'sc2', 'reuse_of': 'sc1'}]},
+        })
+        _write_json(project / 'artifacts/asset_manifest.json', {'assets': [
+            {'id': 'a1', 'scene_id': 'sc1', 'type': 'video', 'path': 'assets/video/source.mp4'}
+        ]})
+        return project
+
+    def payload(self, **changes):
+        return {**{'scene_id': 'sc2', 'media_path': 'assets/video/source.mp4',
+                  'status': 'rejected', 'revision': 0,
+                  'issues': [{'scene_id': 'sc2', 'start_seconds': 1.2,
+                              'end_seconds': 2.4, 'reasons': ['lip_sync'], 'note': '口型错位'}]}, **changes}
+
+    def test_save_reload_reuse_and_fix_list(self, client, projects_root):
+        project = self.setup_shots(projects_root)
+        response = client.put('/api/project/film/reviews', json=self.payload())
+        assert response.status_code == 200
+        assert response.json()['linked_scene_ids'] == ['sc1', 'sc2']
+        assert response.json()['revision'] == 1
+        saved = json.loads((project / 'reviews/shot_reviews.json').read_text())
+        assert saved['sources']['assets/video/source.mp4']['issues'][0]['note'] == '口型错位'
+        body = client.get('/api/project/film/reviews').json()
+        assert len(body['fix_list']) == 1
+        assert body['sources'][0]['issues'][0]['scene_id'] == 'sc2'
+        assert client.put('/api/project/film/reviews', json=self.payload()).status_code == 409
+        assert client.put('/api/project/film/reviews', json=self.payload(revision=1, status='approved', issues=[])).status_code == 200
+        assert client.get('/api/project/film/reviews').json()['fix_list'] == []
+
+    @pytest.mark.parametrize('changes,status', [
+        ({'media_path': '../outside.mp4'}, 403),
+        ({'scene_id': 'unknown'}, 422),
+        ({'status': 'bogus'}, 422),
+        ({'issues': [{'scene_id': 'sc2', 'start_seconds': 3, 'end_seconds': 2, 'note': 'bad'}]}, 422),
+        ({'issues': [{'scene_id': 'unknown', 'note': 'bad'}]}, 422),
+        ({'issues': [{'scene_id': 'sc2', 'start_seconds': -1, 'note': 'bad'}]}, 422),
+    ])
+    def test_invalid_reviews(self, client, projects_root, changes, status):
+        project = self.setup_shots(projects_root)
+        assert client.put('/api/project/film/reviews', json=self.payload(**changes)).status_code == status
+        assert not (project / 'reviews/shot_reviews.json').exists()
+
+    def test_cross_origin_and_corrupt_storage(self, client, projects_root):
+        project = self.setup_shots(projects_root)
+        assert client.put('/api/project/film/reviews', json=self.payload(), headers={'Origin': 'https://other.example'}).status_code == 403
+        (project / 'reviews').mkdir()
+        (project / 'reviews/shot_reviews.json').write_text('broken')
+        assert client.put('/api/project/film/reviews', json=self.payload()).status_code == 409
+        assert (project / 'reviews/shot_reviews.json').read_text() == 'broken'
