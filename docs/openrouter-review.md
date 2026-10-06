@@ -156,3 +156,19 @@ same model, provider and media parameters after an earlier HTTP 400. The earlier
 response body was not retained, so its exact cause remains unknown; this is not
 evidence of a fixed request incompatibility. The diagnostic call reported
 $0.00318399. Relevant mock contracts: 53 passed (27 transport + 26 AutoMV).
+
+ShotVerifier now loads separate model-facing prompts from
+`skills/meta/shot-verifier-physical.md` and `shot-verifier-score.md`. Physical
+review excludes native generated audio; singing scores assess visible
+articulation and do not establish synchronization to an unsubmitted master.
+Malformed or truncated answers retain a redacted final-answer excerpt (4096
+characters maximum) and finish reason in `response_diagnostic` / `review_calls`.
+Reasoning is not persisted and failed answers are never accepted as scores.
+
+The first live Nemotron retest with these prompts returned an HTTP-200 error
+envelope: upstream code 502, NVIDIA ResourceExhausted (worker limit 16/16).
+No model answer or score was produced; cost was zero. This validates the improved
+error reporting but does not establish that prompt changes resolve the earlier
+malformed answer, whose original text was not retained.
+
+Validation after phase-prompt isolation: **1359 contracts passed, 8 skipped**.

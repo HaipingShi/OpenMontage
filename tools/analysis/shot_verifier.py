@@ -153,7 +153,7 @@ class ShotVerifier(BaseTool):
                 frames = samples.data['frames']
             else:
                 frames = [{'path': inputs['input_path'], 'index': 0}]
-            prompt = (SKILLS / 'shot-verifier.md').read_text()
+            prompt = (SKILLS / 'shot-verifier-physical.md').read_text()
             request = {'operation': 'physical', 'prompt': prompt, 'frames': frames,
                 'video_path': inputs['input_path'] if inputs.get('kind', 'clip') == 'clip' else None,
                 'shot': inputs['shot'], 'reference_map': inputs.get('reference_map', {}),
@@ -174,7 +174,8 @@ class ShotVerifier(BaseTool):
             if not physical['pass']:
                 return self._result(inputs, report, cost)
             remaining = {**inputs, 'approved_cost_usd': max(0.0, inputs.get('approved_cost_usd', 0)-cost)}
-            result, ratings = call_reviewer(tool, remaining, {**request, 'operation': 'score'})
+            result, ratings = call_reviewer(tool, remaining, {**request, 'operation': 'score',
+                'prompt': (SKILLS / 'shot-verifier-score.md').read_text()})
             report['review_calls'].append(self._review_call('score', result))
             cost = None if result.cost_usd is None else cost + result.cost_usd
             if ratings is None:
@@ -202,7 +203,7 @@ class ShotVerifier(BaseTool):
     def _review_call(operation, result):
         return {'operation': operation, 'success': result.success, 'model': result.model,
                 'cost_usd': result.cost_usd, 'error': result.error,
-                **{key: result.data[key] for key in ('request_id', 'http_status', 'provider_error')
+                **{key: result.data[key] for key in ('request_id', 'http_status', 'provider_error', 'response_diagnostic')
                    if key in result.data}}
 
     def _result(self, inputs, report, cost):

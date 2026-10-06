@@ -260,9 +260,18 @@ class OpenRouterReview(BaseTool):
             if not isinstance(actual_model,str) or actual_model.removesuffix(':free')!=requested_model.removesuffix(':free'):
                 raise ValueError('Missing or unexpected model in response')
             choice = body['choices'][0]
+            answer = choice['message'].get('content')
+            # Preserve only the final answer, never reasoning, for failed validation.
+            if isinstance(answer, str):
+                safe = answer.replace(key, '[REDACTED]') if key else answer
+                safe = re.sub(r'data:[^\s\"<>]+', '[MEDIA REDACTED]', safe)
+                safe = re.sub(r'(?i)Bearer\s+\S+|sk-[\w-]+', '[CREDENTIAL REDACTED]', safe)
+                safe = re.sub(r'[A-Za-z0-9+/=_-]{150,}', '[LONG VALUE REDACTED]', safe)
+                data['response_diagnostic'] = {'operation': inputs['operation'],
+                    'finish_reason': choice.get('finish_reason'), 'answer_excerpt': safe[:4096],
+                    'truncated': len(safe) > 4096, 'original_characters': len(answer)}
             if choice.get('finish_reason')!='stop':
                 raise ValueError('Review incomplete or refused')
-            answer = choice['message'].get('content')
             if not isinstance(answer,str):
                 raise ValueError('Review response has no text content')
             answer=answer.strip()
@@ -277,6 +286,7 @@ class OpenRouterReview(BaseTool):
             if quote > 0 and cost > inputs['approved_cost_usd']:
                 raise ValueError('Review exceeded reserved envelope; stop and reconcile billing')
             data['review']=review
+            data.pop('response_diagnostic', None)
             return ToolResult(success=True,data=data,cost_usd=cost,model=actual_model)
         except requests.RequestException as exc:
             return ToolResult(success=False,data=data,error=f'OpenRouter transport failed ({type(exc).__name__}); no retry or fallback',cost_usd=cost,model=actual_model)

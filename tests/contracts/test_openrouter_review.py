@@ -282,3 +282,44 @@ def test_verifier_preserves_http_error_evidence(inputs, monkeypatch):
     assert report['review_calls'][0]['request_id']=='request-400'
     assert report['review_calls'][0]['provider_error']['message']=='InvalidParameter'
     assert call.call_count==1
+
+
+def test_failed_answer_kept_redacted_without_reasoning(inputs, monkeypatch):
+    answer=json.dumps({'physical':{'pass':True},'note':'mock-secret data:image/png;base64,AAAA'})
+    response=reply(answer)
+    body=response.json();body['choices'][0]['message']['reasoning']='private reasoning'
+    response.json=lambda:body
+    post(monkeypatch,response)
+    r=OpenRouterReview().execute(inputs)
+    assert not r.success
+    diagnostic=r.data['response_diagnostic']
+    assert 'physical' in diagnostic['answer_excerpt']
+    assert 'mock-secret' not in json.dumps(diagnostic) and 'base64,AAAA' not in json.dumps(diagnostic)
+    assert 'private reasoning' not in json.dumps(r.data)
+    assert diagnostic['finish_reason']=='stop'
+
+
+def test_invalid_json_and_truncated_answer_kept_bounded(inputs, monkeypatch):
+    post(monkeypatch,reply('not json '+('word '*3000),finish='length'))
+    r=OpenRouterReview().execute(inputs)
+    assert not r.success
+    assert len(r.data['response_diagnostic']['answer_excerpt'])<=4096
+    assert r.data['response_diagnostic']['truncated'] is True
+
+
+def test_verifier_uses_separate_phase_prompts(inputs, monkeypatch):
+    tool=OpenRouterReview()
+    registry=SimpleNamespace(ensure_discovered=lambda:None,get_by_capability=lambda c:[tool])
+    verifier=ShotVerifier(registry)
+    monkeypatch.setattr(verifier,'_deterministic',lambda p:{'pass':True,'source_sha256':'mock'})
+    monkeypatch.setattr('tools.analysis.shot_verifier.FrameSampler.execute',lambda self,p:ToolResult(success=True,data={'frames':inputs['frames']}))
+    call=post(monkeypatch,reply())
+    call.side_effect=[reply(),reply(json.dumps({'script_lyrics':4,'locked_traits':4,'identity':{},'reasons':[]}))]
+    result=verifier.execute({'input_path':inputs['video_path'],'shot':{},'model':MODEL})
+    assert result.data['verification']['status']=='pass'
+    physical=call.call_args_list[0].kwargs['json']['messages'][0]['content']
+    scoring=call.call_args_list[1].kwargs['json']['messages'][0]['content']
+    assert '"pass"' in physical and '"script_lyrics"' not in physical
+    assert '"script_lyrics"' in scoring and '"pass"' not in scoring
+    assert 'CostTracker' not in physical+scoring
+    assert 'native audio' in physical and 'master' in scoring

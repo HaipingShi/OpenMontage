@@ -60,6 +60,14 @@ budget. Never silently downgrade to a still, alter the song, or loop generation.
 
 ## Provider contract
 
+Model-facing phase prompts live in `shot-verifier-physical.md` and
+`shot-verifier-score.md`. Send only the current phase's prompt, not this complete
+director guide. Native generated audio is not the locked master: visual physical
+review must not reject audio/phoneme mismatch, and the singing score assesses
+visible singing articulation only. Precise master synchronization needs separate
+audio-grounded review. Failed output validation retains a bounded redacted final
+answer in `review_calls[].response_diagnostic`; never treat it as an accepted score.
+
 An optional BaseTool with capability `multimodal_review` consumes `operation`
 (physical / score / mv_judge), `prompt`, shot evidence, `frames`, official
 `reference_map`, `locked_traits`, and media paths. It returns ToolResult with
