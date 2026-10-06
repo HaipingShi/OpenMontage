@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-05",
+  "tool": "builtin image_gen",
+  "model": "not exposed by built-in tool",
+  "identity_version": 2,
+  "status": "candidate_pending_user_review",
+  "assets": [
+    {
+      "artist": "fati",
+      "path": "bible/fati_road_front_v2.png",
+      "source": "/Users/geesh/.codex/generated_images/01a10739-d278-7ef3-9dbd-8b6ce2178ea3/exec-e299048a-24c8-4340-adf5-25417fe62bd2.png",
+      "prompt": "Use case: photorealistic-natural. Asset: FATI v2 original virtual artist front identity portrait. Input image1 is v1 portrait EDIT TARGET: preserve its high curly bun, wardrobe, tiny jewelry, front pose, framing, warm gray background and soft natural lighting. Deliberately redesign face to approved v2 direction, maintaining continuity: original woman26, predominantly East Asian facial appearance; softly oval face, gentle cheekbones, dark brown almond eyes with subtle natural eyelid crease, softly arched dark brows, natural low-to-medium nasal bridge with softly rounded tip, naturally full lips, warm light-medium golden skin, calm open expression. IMPORTANT remove almost all existing freckles: retain only a few tiny faint irregular freckles at nose bridge and immediately adjacent upper cheeks; most cheek skin clear, no dense mask. Keep voluminous naturally curly dark brown hair in loose high bun and framing curls. Keep tiny gold hoop on subject's LEFT nostril (viewer RIGHT), several small gold hoops on subject LEFT ear, one hoop on right ear. Minimal natural makeup. Keep saffron-yellow rib-knit vest over white linen open shirt. Genealogy7/8 Chinese1/8 Moroccan is fictional background, follow explicit visible features rather than percentages. Realistic photographic pores and fabrics, no glamour smoothing. No real-person likeness, large dark freckle clusters, dense freckles, exaggerated facial features, cartoon,3D render,text or watermark. Output one portrait,no collage.",
+      "qc": "正面候选：雀斑显著减少、卷发、左鼻翼金圈与不对称耳饰保留；人工身份确认待完成。"
+    },
+    {
+      "artist": "fati",
+      "path": "bible/fati_road_turnaround_v2.png",
+      "source": "/Users/geesh/.codex/generated_images/01a10739-d278-7ef3-9dbd-8b6ce2178ea3/exec-fea0e441-01f4-4cd8-911e-f876b4738cc4.png",
+      "prompt": "Asset: FATI v2 four-view full-body photographic character reference sheet. Input1 is NEW v2 FACE REFERENCE, match this specific original woman's face precisely: softly oval East Asian facial appearance, dark almond eyes, natural eyelid crease, soft nose, full lips, warm golden skin, only a FEW tiny faint freckles localized to bridge of nose. Input2 is OLD v1 turnaround EDIT TARGET for clothing, body proportions and composition ONLY, replace old faces with input1 and replace old 3D/plastic texture with natural photography. One landscape sheet, same slim26-year-old166cm woman shown four times at identical scale: front, three-quarter, profile, back. High loose curly dark brown bun and loose framing curls in every view. Tiny gold LEFT nostril hoop (viewer right in front view), stacked little gold hoops LEFT ear, one hoop right ear. Cropped saffron-yellow ribbed knit vest over open white linen rolled-sleeve shirt, high-waisted wide-leg faded indigo jeans, white canvas sneakers, braided leather wrist strap with small brass compass charm on RIGHT wrist consistently. Warm gray seamless studio, neutral soft even lighting, natural quiet relaxed posture. Photorealistic pores, curly hair, cloth and denim. No text, labels, watermarks, extra people, illustration,3D render, heavy makeup, dense freckles, jewelry side swaps, anatomy errors or face drift. One woman, four camera angles.",
+      "qc": "四视图候选：摄影质感、服装及比例参考；小尺寸鼻圈细节需使用正面图核对。"
+    },
+    {
+      "artist": "both",
+      "path": "promo/keyvisual_rooftop_dusk_v2.png",
+      "source": "/Users/geesh/.codex/generated_images/01a10739-d278-7ef3-9dbd-8b6ce2178ea3/exec-b2ac4574-b609-4d76-8bf3-d2a9c3004902.png",
+      "prompt": "Use case: compositing / photorealistic-natural. Asset: AMOR and FATI v2 shared rooftop-at-dusk promo key visual. Input1 is OLD rooftop photo EDIT TARGET for setting, composition, lighting, guitar,laptop, terrace,string lights,seaside town,mood. Input2 is NEW AMOR v2 face reference; input3 is NEW FATI v2 face reference. Replace both old characters' faces with matching new identity references, accurately retaining their distinct faces without blending. AMOR man28 predominantly East Asian face from input2, lighter short stubble, shoulder-length wavy dark hair half-up knot, olive linen shirt cream tee leathercordnecklace; correct his trousers from black to stone-gray cargo pants. FATI woman26 predominantly East Asian face from input3, dark curly high bun, tiny left-nostril gold hoop, asymmetric gold earrings, only few tiny faint nose freckles and mostly clear cheeks, saffron knit vest white linen shirt indigo wideleg jeans, braided wriststrap brasscompass on right wrist. Preserve the original scene: man seated cross-legged left with nylon-string guitar, woman standing right with headphones at neck, friends and creative collaborators, candid relaxed warmth, NOT romantic posing. Natural photographic skin and materials, warm dusk sky and ocean, cinematic horizontal16:9 composition. Maintain coherent anatomy and guitar geometry. No added people, no dense freckles, no heavy beard, no celebrity likeness, no titles,logos,watermark. One wide photo.",
+      "qc": "双人宣传氛围图，永不作为人脸身份参考。Fati 指南针出现在左腕，和四视图右腕不同，后续有连续性要求的镜头需纠正。"
+    }
+  ]
+}

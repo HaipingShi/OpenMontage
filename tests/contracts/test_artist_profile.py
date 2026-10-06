@@ -125,16 +125,28 @@ def test_shipped_ledger_is_valid_jsonl():
 
 
 @pytest.mark.parametrize("artist_id", ["amor", "fati"])
-def test_amor_fati_profiles_are_ready_except_voice(artist_id):
+def test_amor_fati_profiles_preserve_current_identity_review_state(artist_id):
     profile = ap.load_artist(artist_id)
     assert any("voice local reference not ready" in issue for issue in ap.check_artist(profile))
-    assert ap.check_artist(profile, voice_route="visual_only") == []
+    visual_issues = ap.check_artist(profile, voice_route="visual_only")
+    if artist_id == "amor":
+        assert visual_issues == ["look 'road' has no canonical bible image"]
+        assert profile["identity"]["visual_lock_status"] == "pending_v2_reference_review"
+    else:
+        assert visual_issues == []
+        assert profile["identity"]["visual_lock_status"] == "v3_user_approved"
     assert profile["voice"]["lock_status"] == "provider_bound"
-    assert ap.check_artist(profile, voice_route="suno_web") == []
+    assert ap.check_artist(profile, voice_route="suno_web") == visual_issues
     assert profile["voice"]["provider_binding"]["confirmed"]
     refs = [Path(p).name for p in ap.identity_prompt(profile, "walking at dusk")["reference_images"]]
-    assert refs[0] == f"{artist_id}_road_front.png"
+    assert refs == ([] if artist_id == "amor" else ["fati_road_front_v3-no-nose-ring.png"])
     assert "keyvisual_rooftop_dusk.png" not in refs
+
+
+def test_permanent_fati_profile_has_no_song_test_dependencies():
+    profile = ap.load_artist("fati")
+    assert [look["id"] for look in profile["identity"]["looks"]] == ["road"]
+    assert all("zhenjiao" not in entry["path"] for entry in profile["identity"]["bible"])
 
 
 def test_amor_and_fati_reference_each_other():

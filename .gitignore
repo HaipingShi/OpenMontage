@@ -28,6 +28,11 @@ tests/qa/output/
 # Project workspaces (generated assets, renders — all regenerable)
 projects/
 
+# Zhenjiao MV acceptance test: keep song, shots, renders and run logs local.
+/projects/test-zhenjiao-fati/
+# Song-specific Fati look sheets copied outside the generated workspace.
+/artists/fati/bible/fati_zhenjiao_*.png
+
 # Corpus directories (downloaded stock clips, thumbnails, embeddings —
 # regenerable from source APIs via corpus_builder). Explicit rule even
 # though most corpora live under projects/ since agents sometimes

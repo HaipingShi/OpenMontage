@@ -23,6 +23,13 @@ def library(tmp_path):
     p["voice"].pop("provider_binding", None)
     p["voice"]["lock_status"] = "pending_audition"
     p["voice"]["canonical_tracks"] = []
+    # Voice contracts use a reviewed identity fixture, independently of the
+    # shipped Amor v2 candidate's pending human visual review.
+    front = next(e for e in p["identity"]["bible"]
+                 if e.get("identity_version") == 2 and e["view"] == "front")
+    front["canonical"] = True
+    front["reference_role"] = "identity"
+    front["review_status"] = "fixture_approved"
     ap._save_artist(p)
     return root
 
@@ -92,10 +99,12 @@ def test_profile_asset_traversal_and_reference_symlink_rejected(library, tmp_pat
 def test_fati_supporting_turnaround_never_becomes_a_face_reference():
     p = ap.load_artist("fati")
     result = ap.identity_prompt(p, "close-up")
-    assert [Path(ref).name for ref in result["reference_images"]] == ["fati_road_front.png"]
+    assert [Path(ref).name for ref in result["reference_images"]] == ["fati_road_front_v3-no-nose-ring.png"]
     assert result["supporting_references"][0]["reference_role"] == "wardrobe_proportions"
     # Even accidentally marking a supporting reference canonical cannot mix it into faces.
-    p["identity"]["bible"][1]["canonical"] = True
+    for entry in p["identity"]["bible"]:
+        if entry.get("reference_role") == "wardrobe_proportions":
+            entry["canonical"] = True
     assert len(ap.identity_prompt(p, "x")["reference_images"]) == 1
     group = ap.cast_prompt([ap.load_artist("amor"), p], "two singers")
     assert len(group["reference_map"]["fati"]) == 1
