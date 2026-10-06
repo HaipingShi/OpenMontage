@@ -67,3 +67,11 @@ JSON `data.review`, actual `model`, `cost_usd`, and success. Declare `supports`
 with `video_input` for motion assessment and `audio_input` for full-MV review.
 Transport/upload belongs in the selected provider; registering a provider never
 silently uploads files. Providers must declare get_status and cost quotes.
+
+### OpenRouter backend
+
+Optional `openrouter_review` implements this transport with the user-selected
+free Nemotron Omni model, NVIDIA pinned and fallback disabled. Setup and media
+limits: `docs/openrouter-review.md`. Missing OPENROUTER_API_KEY is UNAVAILABLE;
+configured status is an offline credential check, not proof of live quality.
+Read the adapter's get_info and announce the uploaded evidence before use.

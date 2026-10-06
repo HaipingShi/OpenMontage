@@ -56,9 +56,11 @@ execution errors never select another provider. A video reviewer must declare
 video_input; full MV review also requires audio_input. Actual model and charged
 usage are retained, including malformed responses and failed calls.
 
-This repository currently has no registered live backend for that capability.
-Thus both reviewers report UNAVAILABLE by default; manual review at the assets
-checkpoint remains available, and mv_judge absence never stops publishing.
+An optional `openrouter_review` backend is registered for the explicitly chosen
+free NVIDIA Nemotron Omni model. It reports UNAVAILABLE without
+OPENROUTER_API_KEY; manual review at the assets checkpoint remains available,
+and mv_judge absence never stops publishing. See
+[OpenRouter setup](openrouter-review.md).
 No new credential/configuration dependency is imposed. Demucs is also optional;
 real separation may require provisioned model weights. There is no SongFormer
 requirement, model training, lyric scraping or replacement beat analyzer.
