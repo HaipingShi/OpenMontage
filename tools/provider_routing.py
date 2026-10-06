@@ -21,7 +21,13 @@ def filter_explicit_route(inputs, candidates):
             models.update(getattr(tool, "_MODELS", {}))
             models.update(getattr(tool, "_MODEL_ALIASES", {}))
             models.update(tool.get_info().get("model_catalog", {}))
-            if model not in models:
+            # Local providers such as Piper accept a model file path rather
+            # than a closed model catalog. Preserve that declared input.
+            accepts_open_model = any(
+                field in props and "enum" not in props[field]
+                for field in ("model", "model_id", "model_name")
+            )
+            if (models and model not in models) or (not models and not accepts_open_model):
                 continue
         operation = inputs.get("generation_mode") or inputs.get("operation")
         routes = getattr(tool, "routes", None) or getattr(tool, "models", None)
