@@ -21,7 +21,7 @@ Second stage of `music-video`. You **lock the song master** and produce the `son
 - **User file / library track:** copy it to `projects/<id>/assets/music/master.<ext>` unchanged (no transcoding). Keep the original extension; WAV/FLAC preferred.
 - **Generate:** announce tool/provider/model/cost first. With `suno_music`, use `custom_mode: true`, `instrumental: false`, the approved lyrics as `prompt` (with `[Verse] [Chorus] [Bridge]` tags), `style`, and `title`; prefer `V4_5`/`V5` for songs longer than 4 minutes. Each call returns 2 takes — let the user listen and pick (`track_index`). Write to `projects/<id>/assets/music/master.mp3`.
 - **Persistent artist:** set `style` to `lib.artist_profile.music_style(profile, "<song-specific additions>")` — never hand-write it — and use `voice.model`. If an existing Suno Persona/Voice is bound, use the approved Suno web workflow and manually select that binding; import the downloaded result. The current `suno_music` tool cannot transmit that binding or reference audio, so do not generate a replacement voice with it. Text style and singer tags do not enforce timbre. Before the user picks, compare each take against the artist's canonical voice track (register, breathiness, vibrato, accent) and flag drifted takes.
-- **Joint release:** set `style` to `lib.artist_profile.duet_style(profiles, "<song-specific additions>")` and mark every lyric section with its singer (`[Verse 1: Amor]`, `[Verse 2: Fati]`, `[Chorus: Amor & Fati]`). Compare each singer's parts against that singer's own canonical track. Do not assume one web voice selection or a duet style prompt enforces two saved voices. If the current Suno interface cannot select both, explain that limitation and obtain approval for separately generated singer parts and an assembled duet.
+- **Joint release:** set `style` to `lib.artist_profile.duet_style(profiles, "<song-specific additions>")` and mark every lyric section with its singer (`[Verse 1: Singer A]`, `[Verse 2: Singer B]`, `[Chorus: Singer A & Singer B]`). Compare each singer's parts against that singer's own canonical track. Do not assume one web voice selection or a duet style prompt enforces two saved voices. If the current Suno interface cannot select both, explain that limitation and obtain approval for separately generated singer parts and an assembled duet.
 
 Record a `music_source` decision in `decision_log` (category `music_source`, subject `Song master`).
 
@@ -44,7 +44,7 @@ use the master for transcription; do not install dependencies or crash silently.
 Lyrics precedence is Suno generation-record lyrics (`suno_lyrics_text`) > user
 lyrics (`lyrics_text`) > transcription. Pass both sources to song_beatmap so it
 records the real source. Do not fetch lyrics from the internet. Preserve singer
-tags such as `[Verse 1: Amor]` and `[Chorus: Amor & Fati]`; the analyzer records
+tags such as `[Verse 1: Singer A]` and `[Chorus: Singer A & Singer B]`; the analyzer records
 the tag and singer for every following line. Never infer singer from timbre.
 
 

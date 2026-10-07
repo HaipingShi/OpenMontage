@@ -4,18 +4,13 @@ Suno 中的 Persona/Voice 是账户内保存的生成选择。本地 WAV/MP3 是
 
 ## 保存已有声音
 
-已按用户确认绑定：
-
-| 艺人 | Suno Voice | 本地样本 |
-| --- | --- | --- |
-| Fati | https://suno.com/voice/43a8e729-d9eb-4e6c-9f84-0c940d55b33b | 待导入 |
-| Amor | https://suno.com/voice/d1ad9edd-9f5e-4221-ba18-5199b5749fcb | 待导入 |
+每部作品使用其本地艺人档案；实际账户 Voice/Persona 链接保存在用户数据中，软件文档不预设人物或声音。导入的共享身份先创建私有 fork，再修改该作品的声音证据。
 
 先确认链接对应的艺人。不要从链接顺序推断归属。记录后无需重做试音：
 
 ```bash
-python -m lib.artist_profile bind-suno amor --kind voice --url https://suno.com/voice/<voice-id> --confirm
-python -m lib.artist_profile check amor --voice-route suno_web
+python -m lib.artist_profile --project <project> bind-suno <alias> --kind voice --url https://suno.com/voice/<voice-id> --confirm
+python -m lib.artist_profile --project <project> check <alias> --voice-route suno_web
 ```
 
 也可用 `--name` 保存账户内可识别的名称，用 `--source-song-url` 保存源歌曲链接。`--confirm` 只用于用户已经确认的对应关系。网页绑定保存在 `voice.provider_binding`，不会写入旧的 `persona_id` API 字段。
@@ -28,11 +23,11 @@ python -m lib.artist_profile check amor --voice-route suno_web
 4. 将下载文件导入对应艺人。只有已选定、已听过的声音才使用 `--approve`：
 
 ```bash
-python -m lib.artist_profile import-voice amor /Users/geesh/Downloads/amor.wav --approve --notes "用户选定的 Amor 声音参考"
-python -m lib.artist_profile check amor
+python -m lib.artist_profile --project <project> import-voice <alias> /absolute/path/approved-voice.wav --approve --notes "用户选定的声音参考"
+python -m lib.artist_profile --project <project> check <alias>
 ```
 
-导入器使用 ffprobe 检查音频，按内容哈希保存文件，记录时长、SHA-256、批准日期及来源；拒绝覆盖不同内容的已有参考。`--source-url` 可记录源歌曲。请备份 `artists/<id>/voice/`，导出的公共增量补丁不携带这些个人音频。
+导入器使用 ffprobe 检查音频，按内容哈希保存文件，记录时长、SHA-256、批准日期及来源；拒绝覆盖不同内容的已有参考。`--source-url` 可记录源歌曲。请备份 项目本地 `assets/artists/<alias>/voice/` 及独立用户资产库，导出的公共增量补丁不携带这些个人音频。
 
 ## 生成时怎么传递
 

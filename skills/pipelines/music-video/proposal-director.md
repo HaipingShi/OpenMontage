@@ -71,7 +71,7 @@ Fill `concept_options[]` per the schema; use `narrative_structure: "story"` for 
 For the selected treatment, specify what `assets` will build first:
 
 - Per cast member: 1 front, 1 three-quarter, 1 profile reference, plus 1 full-body per wardrobe look, all generated from one locked description and seed (or from user-supplied photos of the real artist).
-- Persistent artist: the bible already exists in `artists/<id>/bible/` — cost $0. Plan only new looks, and treatments must stay inside `persona.never`, `visual_language`, and `music` from the profile.
+- Persistent artist: the bible already exists in the project’s private or explicitly imported `assets/artists/<alias>/bible/` snapshot — cost $0. Plan only new looks, and treatments must stay inside `persona.never`, `visual_language`, and `music` from the profile.
 - Which video provider will carry the cast (one provider per cast for identity consistency).
 - Keyframe-first rule: every cast shot = bible-referenced keyframe image → image-to-video. No text-only video generation for cast shots.
 

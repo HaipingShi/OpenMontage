@@ -1,0 +1,29 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_migration_conflict_from_other_library_is_found_before_any_copy ______
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-192/test_migration_conflic...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-192/test_migration_conflict_from_o0/user-data'))
+
+    def test_migration_conflict_from_other_library_is_found_before_any_copy(legacy):
+        from lib import asset_migration
+        from lib.project_assets import publish_asset, import_asset
+        source, data = legacy
+        plan = asset_migration.inventory(source, data)
+        version = plan["artists"][0]["version"]
+        outside_library = source.parent / "outside-library"
+        publish_asset(source / "artists/solo", "solo", version, library=outside_library)
+        target_project = data / "projects/first-film"
+        target_project.mkdir(parents=True)
+        import_asset(target_project, "solo", version, "solo", library=outside_library)
+        # Destination migration library has a different identity from the existing snapshot.
+        publish_asset(source / "artists/solo", "solo", version, library=data / "library")
+        with pytest.raises(asset_migration.MigrationError) as failure:
+            asset_migration.apply_plan(plan)
+>       assert failure.value.report["copied_files"] == 0, "Cross-library alias conflict was found after copying unrelated files"
+E       AssertionError: Cross-library alias conflict was found after copying unrelated files
+E       assert 12 == 0
+
+/tmp/test_asset_functional_review.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/test_asset_functional_review.py::test_migration_conflict_from_other_library_is_found_before_any_copy
+1 failed, 1 deselected in 0.64s

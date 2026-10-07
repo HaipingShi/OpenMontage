@@ -62,6 +62,9 @@ Each tool's `agent_skills[]` field bridges Layer 1 → Layer 3. See `skills/INDE
 |------|---------|
 | `config.yaml` | Global configuration |
 | `lib/config_model.py` | Runtime config loader (Pydantic) |
+| `lib/paths.py` | Configurable user data, project and library roots independent of the application checkout |
+| `lib/project_assets.py` | Explicit versioned library publication/import, project snapshots and private forks |
+| `lib/asset_migration.py` | Verified copy migration of legacy user assets and workspaces |
 | `lib/checkpoint.py` | Checkpoint writer/reader |
 | `lib/pipeline_loader.py` | Pipeline manifest loader + helpers |
 | `lib/media_profiles.py` | Platform-specific render profiles |

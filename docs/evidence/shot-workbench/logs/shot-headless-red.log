@@ -1,0 +1,109 @@
+...............FFFF                                                      [100%]
+=================================== FAILURES ===================================
+____________ test_steal_cannot_interrupt_persisted_render[running] _____________
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-50/test_steal_cannot_interrupt_pe0/film')
+state = 'running'
+
+    @pytest.mark.parametrize('state', ['running','unknown'])
+    def test_steal_cannot_interrupt_persisted_render(project, state):
+        initialize(project,'s1')
+        acquire(project,'s1','user',reason='editing')
+        directory=project/'shots/s1.requests'
+        directory.mkdir()
+        (directory/'request1.json').write_text(json.dumps({'shot_id':'s1','status':state}))
+>       with pytest.raises(ShotError,match='in-flight'):
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_shot_spec.py:143: Failed
+____________ test_steal_cannot_interrupt_persisted_render[unknown] _____________
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-50/test_steal_cannot_interrupt_pe1/film')
+state = 'unknown'
+
+    @pytest.mark.parametrize('state', ['running','unknown'])
+    def test_steal_cannot_interrupt_persisted_render(project, state):
+        initialize(project,'s1')
+        acquire(project,'s1','user',reason='editing')
+        directory=project/'shots/s1.requests'
+        directory.mkdir()
+        (directory/'request1.json').write_text(json.dumps({'shot_id':'s1','status':state}))
+>       with pytest.raises(ShotError,match='in-flight'):
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_shot_spec.py:143: Failed
+__________________ test_maximum_length_shot_id_can_initialize __________________
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-50/test_maximum_length_shot_id_ca0/film')
+
+    def test_maximum_length_shot_id_can_initialize(project):
+        shot_id='s' * 128
+        path=project/'artifacts/scene_plan.json'
+        plan=json.loads(path.read_text())
+        plan['scenes'][0]['id']=shot_id
+        path.write_text(json.dumps(plan))
+>       assert initialize(project,shot_id)['shot_id']==shot_id
+
+tests/contracts/test_shot_spec.py:153:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/shot_workbench.py:41: in initialize
+    with transaction(project, f'shot-{shot_id}'):
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+lib/shot_spec.py:98: in transaction
+    mutex = safe_path(project, f'shots/.mutex/{identifier(name)}.guard')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = 'shot-ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss'
+
+    def identifier(value: str) -> str:
+        if not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', value):
+>           raise ShotError('UNSAFE_ID', 'Expected a project or shot identifier', 400)
+E           lib.shot_spec.ShotError: Expected a project or shot identifier
+
+lib/shot_spec.py:35: ShotError
+______________ test_cli_edit_compile_and_dry_run_without_browser _______________
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-50/test_cli_edit_compile_and_dry_0/film')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1099d3f10>
+capsys = <_pytest.capture.CaptureFixture object at 0x1099d3e80>
+
+    def test_cli_edit_compile_and_dry_run_without_browser(project, monkeypatch, capsys):
+        from lib.shot_workbench import main
+        import lib.shot_execution as execution
+        import lib.shot_spec as shot_spec
+        monkeypatch.setattr(shot_spec,'PROJECTS_DIR',project.parent)
+        lock=acquire(project,'s1','agent',reason='headless')
+        data=load(project,'s1')
+        data['notes']='A warm window highlights the closed drawer.'
+        file=project/'edit.json';file.write_text(json.dumps(data))
+        assert main(['edit',project.name,'s1','--file',str(file),'--revision','0','--lease-id',lock['lease_id']])==0
+        assert json.loads(capsys.readouterr().out)['revision']==1
+        def preview(spec,tool_name=None,project=None):
+            assert project.name=='film' and spec['revision']==1
+            return {'compiled_hash':'stable','estimated_cost':0,'dry_run':True,'tool_name':tool_name}
+        monkeypatch.setattr(execution,'preview',preview)
+        for command in ['compile','dry-run']:
+>           assert main([command,project.name,'s1','--tool','mock-tool'])==0
+
+tests/contracts/test_shot_spec.py:172:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/shot_workbench.py:202: in main
+    result=preview(project,spec,args.tool)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+spec = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-50/test_cli_edit_compile_and_dry_0/film')
+tool_name = {'shot_id': 's1', 'scene_id': 's1', 'revision': 1, 'updated_by': 'agent', ...}
+project = 'mock-tool'
+
+    def preview(spec,tool_name=None,project=None):
+>       assert project.name=='film' and spec['revision']==1
+E       AttributeError: 'str' object has no attribute 'name'
+
+tests/contracts/test_shot_spec.py:168: AttributeError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_spec.py::test_steal_cannot_interrupt_persisted_render[running]
+FAILED tests/contracts/test_shot_spec.py::test_steal_cannot_interrupt_persisted_render[unknown]
+FAILED tests/contracts/test_shot_spec.py::test_maximum_length_shot_id_can_initialize
+FAILED tests/contracts/test_shot_spec.py::test_cli_edit_compile_and_dry_run_without_browser
+4 failed, 15 passed in 1.14s

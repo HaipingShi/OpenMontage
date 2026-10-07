@@ -1,6 +1,6 @@
 """User music library — local royalty-free track discovery.
 
-Surfaces the tracks a user has dropped into ``music_library/`` so the agent can
+Surfaces tracks in the independent user library so the agent can
 present them at the *proposal* stage, before creative direction is approved.
 
 AGENT_GUIDE.md requires the music decision to be made at the proposal stage, but
@@ -33,9 +33,6 @@ from tools.base_tool import (
     ToolTier,
 )
 
-# Repository root: tools/audio/music_library.py -> parents[2]
-_PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
 # Common royalty-free audio container extensions a user might drop in.
 _AUDIO_EXTENSIONS = {
     ".mp3",
@@ -63,7 +60,7 @@ class MusicLibrary(BaseTool):
 
     dependencies = []  # pure filesystem scan; ffprobe is used opportunistically
     install_instructions = (
-        "Create a 'music_library/' folder in the project root and drop "
+        "Create a 'music/' folder in the configured user library and add "
         "royalty-free audio tracks into it (e.g. .mp3, .wav, .m4a, .flac, .ogg). "
         "Sources: your own files, YouTube Audio Library, Jamendo, Freesound, etc. "
         "Override the location with the MUSIC_LIBRARY_DIR environment variable."
@@ -94,7 +91,7 @@ class MusicLibrary(BaseTool):
                 "type": "string",
                 "description": (
                     "Optional override for the library folder. Defaults to the "
-                    "MUSIC_LIBRARY_DIR env var, then '<project root>/music_library'."
+                    "MUSIC_LIBRARY_DIR env var, then '<user library>/music'."
                 ),
             },
         },
@@ -137,7 +134,8 @@ class MusicLibrary(BaseTool):
         env_dir = os.environ.get("MUSIC_LIBRARY_DIR")
         if env_dir:
             return Path(env_dir).expanduser()
-        return _PROJECT_ROOT / "music_library"
+        from lib.paths import LIBRARY_DIR
+        return LIBRARY_DIR / "music"
 
     def _list_tracks(self, library_dir: Path) -> list[Path]:
         if not library_dir.is_dir():

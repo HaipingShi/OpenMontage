@@ -67,6 +67,14 @@ class VeoVideo(BaseTool):
         "dialogue_generation": True,
         "ambient_sound": True,
     }
+    limits = {
+        "max_reference_images": 3, "max_prompt_chars": None,
+        "negative_prompt_field": "negative_prompt", "durations": [4, 6, 8],
+        "first_last_frame": True, "control_inputs": [],
+        "routes": ["t2v", "i2v", "first_last", "multi_ref"],
+        "durations_by_route": {"multi_ref": [8], "first_last": [8]},
+        "durations_by_resolution": {"1080p": [8], "4k": [8]},
+    }
     best_for = [
         "videos with synchronized dialogue and audio",
         "cutting-edge quality from Google DeepMind",

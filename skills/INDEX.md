@@ -306,7 +306,7 @@ Cross-cutting skills that apply to all pipelines:
 | Reviewer | `meta/reviewer.md` | Self-review protocol after every stage |
 | Checkpoint Protocol | `meta/checkpoint-protocol.md` | When/how to checkpoint and request human approval |
 | Skill Creator | `meta/skill-creator.md` | Dynamically create new skills during pipeline runs |
-| Digital Artist | `meta/digital-artist.md` | Create and maintain a persistent AI artist in `artists/<id>/` (identity bible, locked voice, canon, rights ledger) reused across every release |
+| Digital Artist | `meta/digital-artist.md` | Project-owned identities and explicitly imported user-library versions (identity bible, approved voice, canon, project ledger) |
 | Animation Runtime Selector | `meta/animation-runtime-selector.md` | Choose render runtime + animation library per scene |
 | Taste Direction | `meta/taste-direction.md` | Convert a brief into taste dials, anti-patterns, and reference strategy for proposal/playbook/atelier work |
 | Bespoke Composition (Atelier) | `meta/bespoke-composition.md` | Hand-author a composition from scratch (hero work) — no stock scene-types; routes art-direction → motion principles → engine mechanics → atelier render |
@@ -344,3 +344,7 @@ Claude Code accesses them via symlinks in `.claude/skills/`.
 | **AI Video/Image/TTS/Avatar (Kling Official)** | `kling-official` - official direct API auth, Classic/Turbo/Omni task protocols, multi-reference Omni syntax, internal Elements/Account Usage helpers, callback notes, TTS voice parameters, avatar/lip-sync face selection, error handling, and cost governance for `kling_official_video` / `kling_official_image` / `kling_tts` / `kling_avatar` / `kling_lip_sync` | Local OpenMontage skill |
 | **AI Video (Premium)** | `seedance-2-0` — preferred premium default (cinematic, trailer, multi-shot, lip-sync, synced audio); accessed via `seedance_video` (fal.ai) or `heygen_video` Avatar Shots; `seedance-2-5` — 4–30 s clips, 50 multimodal references, prompt contract (section order, `Hard cut` breakdown, continuity locks, asset method) | Local OpenMontage skill |
 | **Infrastructure** | `acestep`, `ltx2`, `playwright-recording` | `digitalsamba/claude-code-video-toolkit` |
+
+## Shot Workbench
+
+[`meta/shot-workbench.md`](meta/shot-workbench.md) — shared structured shot specs, lease handoff, compiler lint, references and budget-safe render for complex generated shots; available in six production pipelines.

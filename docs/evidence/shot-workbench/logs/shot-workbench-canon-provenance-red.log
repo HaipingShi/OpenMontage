@@ -1,0 +1,64 @@
+...FF                                                                    [100%]
+=================================== FAILURES ===================================
+________ test_official_reference_provenance_cannot_be_downgraded[save] _________
+
+api = (<starlette.testclient.TestClient object at 0x1090de320>, <tests.contracts.test_shot_workbench_api.MockGenerator objec.../folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-96/test_official_reference_proven0/projects/film'))
+operation = 'save'
+
+    @pytest.mark.parametrize("operation", ["save", "upload"])
+    def test_official_reference_provenance_cannot_be_downgraded(api, operation):
+        from lib.shot_spec import atomic_json
+        client, tool, lease, project = api
+        spec = read_spec(client)
+        uploaded = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+            "lease_id": lease, "role": "identity", "data": png_uri()}).json()
+        spec = uploaded["spec"]
+        spec["references"][0].update(read_only=True, source_artist="fati", parent_asset="artists/fati/face.png")
+        atomic_json(project / "shots" / "shot1.json", spec)
+        original = copy.deepcopy(spec)
+        if operation == "save":
+            for key in ("read_only", "source_artist", "parent_asset"):
+                spec["references"][0].pop(key)
+            response = client.put("/api/shot/film/shot1", json={"spec": spec,
+                "revision": spec["revision"], "lease_id": lease})
+        else:
+            response = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+                "lease_id": lease, "role": "identity", "data": png_uri()})
+>       assert response.status_code == 403
+E       assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:760: AssertionError
+_______ test_official_reference_provenance_cannot_be_downgraded[upload] ________
+
+api = (<starlette.testclient.TestClient object at 0x1091339a0>, <tests.contracts.test_shot_workbench_api.MockGenerator objec.../folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-96/test_official_reference_proven1/projects/film'))
+operation = 'upload'
+
+    @pytest.mark.parametrize("operation", ["save", "upload"])
+    def test_official_reference_provenance_cannot_be_downgraded(api, operation):
+        from lib.shot_spec import atomic_json
+        client, tool, lease, project = api
+        spec = read_spec(client)
+        uploaded = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+            "lease_id": lease, "role": "identity", "data": png_uri()}).json()
+        spec = uploaded["spec"]
+        spec["references"][0].update(read_only=True, source_artist="fati", parent_asset="artists/fati/face.png")
+        atomic_json(project / "shots" / "shot1.json", spec)
+        original = copy.deepcopy(spec)
+        if operation == "save":
+            for key in ("read_only", "source_artist", "parent_asset"):
+                spec["references"][0].pop(key)
+            response = client.put("/api/shot/film/shot1", json={"spec": spec,
+                "revision": spec["revision"], "lease_id": lease})
+        else:
+            response = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+                "lease_id": lease, "role": "identity", "data": png_uri()})
+>       assert response.status_code == 403
+E       assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:760: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_official_reference_provenance_cannot_be_downgraded[save]
+FAILED tests/contracts/test_shot_workbench_api.py::test_official_reference_provenance_cannot_be_downgraded[upload]
+2 failed, 3 passed, 49 deselected in 1.57s

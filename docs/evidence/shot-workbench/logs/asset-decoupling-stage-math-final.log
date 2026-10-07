@@ -1,0 +1,28 @@
+✔ 36×24 sensor is cropped for both landscape and portrait, with a real focal length (1.542ms)
+✔ camera basis handles rotated and vertically pointing cameras (0.865667ms)
+✔ projection is camera-relative, centered, and rejects behind-camera and clipped joints (0.200833ms)
+✔ placements derive left/right and near/far from the camera, with per-subject facing (0.77475ms)
+✔ five preset poses are deterministic, editable and transformed in metres (1.926333ms)
+✔ pose export groups two people and marks hidden/clipped keypoints rather than inventing visibility (0.647792ms)
+✔ normalised linear depth is near-white, far-black and bounded (0.186875ms)
+✔ resolution and object construction are bounded and reject unsupported primitives (0.375875ms)
+✔ schema-optional transforms and vector joint rotations can be reconstructed from files (0.233708ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.720708
+ℹ start of coverage report
+ℹ -----------------------------------------------------------------
+ℹ file             | line % | branch % | funcs % | uncovered lines
+ℹ -----------------------------------------------------------------
+ℹ backlot          |        |          |         |
+ℹ  ui              |        |          |         |
+ℹ   stage-math.mjs | 100.00 |    90.91 |  100.00 |
+ℹ -----------------------------------------------------------------
+ℹ all files        | 100.00 |    90.91 |  100.00 |
+ℹ -----------------------------------------------------------------
+ℹ end of coverage report

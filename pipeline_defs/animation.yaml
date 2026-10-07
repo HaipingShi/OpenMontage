@@ -28,6 +28,7 @@ extensions:
   custom_tools: false
 
 required_skills:
+  - meta/shot-workbench
   - pipelines/animation/executive-producer
   - pipelines/animation/research-director
   - pipelines/animation/proposal-director
@@ -147,6 +148,8 @@ stages:
       - Total duration matches selected concept target within 10%
 
   - name: scene_plan
+    required_tools:
+      - shot_compiler
     skill: pipelines/animation/scene-director
     required_artifacts_in:
       - script
@@ -154,10 +157,12 @@ stages:
       - proposal_packet
     produces:
       - scene_plan
-    tools_available: []
+    tools_available:
+      - shot_compiler
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Scene system is coherent and follows reuse strategy from proposal
       - Animation mode specified per scene, consistent with proposal
       - Transition logic is limited and meaningful
@@ -167,6 +172,8 @@ stages:
       - Every scene includes animation mode and visual treatment
 
   - name: assets
+    required_tools:
+      - shot_compiler
     skill: pipelines/animation/asset-director
     required_artifacts_in:
       - scene_plan
@@ -190,6 +197,7 @@ stages:
       - music_gen
       - fal_elevenlabs_music
     tools_available:
+      - shot_compiler
       - tts_selector
       - image_selector
       - video_selector
@@ -206,6 +214,7 @@ stages:
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Asset production path is explicit per scene
       - Reusable motifs and templates are prepared and referenced
       - Missing tool paths are surfaced honestly

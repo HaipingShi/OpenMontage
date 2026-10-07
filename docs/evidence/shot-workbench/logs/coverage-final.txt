@@ -1,0 +1,10 @@
+Name                              Stmts   Miss Branch BrPart  Cover
+-------------------------------------------------------------------
+backlot/workbench.py                308     14     74     15    92%
+lib/shot_compiler.py                338      4    190      9    98%
+lib/shot_execution.py               587     79    260     47    83%
+lib/shot_spec.py                    263     27    104     18    85%
+lib/shot_workbench.py               165     14     60      9    88%
+tools/analysis/shot_compiler.py      17      0      0      0   100%
+-------------------------------------------------------------------
+TOTAL                              1678    138    688     98    89%

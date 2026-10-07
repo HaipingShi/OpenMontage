@@ -1,0 +1,116 @@
+..........................................F                              [100%]
+=================================== FAILURES ===================================
+______ test_provider_graph_links_are_preserved_with_manual_review_warning ______
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-190/test_provider_graph_li...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-190/test_provider_graph_links_are_0/user-data'))
+
+    def test_provider_graph_links_are_preserved_with_manual_review_warning(legacy):
+        source, data = legacy
+        path = source / "projects/first-film/integrations/workflow.json"
+        path.parent.mkdir()
+        original = b'{"7":{"class_type":"ProviderGenerator","inputs":{"first_frame":["20",0]}},"20":{"class_type":"LoadImage","inputs":{"image":"remote-input.png"}}}\n'
+        path.write_bytes(original)
+>       report = migration.migrate(source, data, apply=True)
+
+tests/contracts/test_asset_migration.py:419:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/asset_migration.py:510: in migrate
+    raise failure from error
+lib/asset_migration.py:499: in migrate
+    plan = inventory(source_repo, data_dir)
+lib/asset_migration.py:369: in inventory
+    return _prepare(source_repo, data_dir)[0]
+lib/asset_migration.py:339: in _prepare
+    normalised = document if archived else _normalise(document, source=source, owner=owner, kind=kind, artist_ids=names,
+lib/asset_migration.py:276: in _normalise
+    return visit(document)
+lib/asset_migration.py:272: in visit
+    return {name: visit(child, str(name), f"{pointer}/{str(name).replace('~', '~0').replace('/', '~1')}", group or name == "reference_map", artist_scope)
+lib/asset_migration.py:272: in <dictcomp>
+    return {name: visit(child, str(name), f"{pointer}/{str(name).replace('~', '~0').replace('/', '~1')}", group or name == "reference_map", artist_scope)
+lib/asset_migration.py:272: in visit
+    return {name: visit(child, str(name), f"{pointer}/{str(name).replace('~', '~0').replace('/', '~1')}", group or name == "reference_map", artist_scope)
+lib/asset_migration.py:272: in <dictcomp>
+    return {name: visit(child, str(name), f"{pointer}/{str(name).replace('~', '~0').replace('/', '~1')}", group or name == "reference_map", artist_scope)
+lib/asset_migration.py:272: in visit
+    return {name: visit(child, str(name), f"{pointer}/{str(name).replace('~', '~0').replace('/', '~1')}", group or name == "reference_map", artist_scope)
+lib/asset_migration.py:272: in <dictcomp>
+    return {name: visit(child, str(name), f"{pointer}/{str(name).replace('~', '~0').replace('/', '~1')}", group or name == "reference_map", artist_scope)
+lib/asset_migration.py:264: in visit
+    return [visit(child, key, f"{pointer}/{index}", group, artist_scope) for index, child in enumerate(value)]
+lib/asset_migration.py:264: in <listcomp>
+    return [visit(child, key, f"{pointer}/{index}", group, artist_scope) for index, child in enumerate(value)]
+lib/asset_migration.py:262: in visit
+    return map_path(value, key, pointer, group, artist_scope)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = '20', key = 'first_frame', pointer = '/7/inputs/first_frame/0'
+group = False, artist_scope = None
+
+    def map_path(value: str, key: str, pointer: str, group: bool, artist_scope: str | None) -> str:
+        expected = key in _PATH_FIELDS or group
+        provenance = key in _PROVENANCE_FIELDS
+        legacy = value == str(source) or value.startswith((str(source) + "/", "artists/", "projects/"))
+        if not expected and not provenance:
+            if legacy or _legacy_text(value, source):
+                warn(pointer)
+            return value
+        if re.match(r"^(?:https?|s3|gs)://", value) or value.startswith("data:"):
+            return value
+        if "\\" in value or ".." in PurePosixPath(value).parts or value.startswith("file:"):
+            if provenance:
+                warn(pointer)
+                return value
+            raise MigrationError("UNSAFE_REFERENCE", f"Unsafe reference in {relative_file}{pointer}")
+        replacement = value
+        target = None
+        if value == str(owner) or value.startswith(str(owner) + "/"):
+            target = Path(value)
+            replacement = target.relative_to(owner).as_posix()
+        elif kind == "artist" and value.startswith(f"artists/{owner.name}/"):
+            replacement = value[len(f"artists/{owner.name}/"):]
+            target = owner / replacement
+        elif kind == "project" and value.startswith(f"projects/{owner.name}/"):
+            replacement = value[len(f"projects/{owner.name}/"):]
+            target = owner / replacement
+        else:
+            artist_relative = value[len(str(source)) + 1:] if value.startswith(str(source) + "/") else value
+            if kind == "project" and artist_relative.startswith("artists/"):
+                parts = PurePosixPath(artist_relative).parts
+                if len(parts) < 2 or parts[1] not in artist_ids:
+                    if provenance:
+                        warn(pointer)
+                        return value
+                    raise MigrationError("UNKNOWN_ARTIST_REFERENCE", f"Unknown artist reference in {relative_file}{pointer}")
+                bound.add(parts[1])
+                target = source / artist_relative
+                replacement = "assets/" + artist_relative
+            elif legacy or value.startswith("/"):
+                if provenance:
+                    warn(pointer)
+                    return value
+                raise MigrationError("UNMAPPABLE_REFERENCE", f"Reference is outside this asset/project in {relative_file}{pointer}")
+            elif kind == "project" and artist_scope and key == "path" and value and not value.startswith(("assets/", "artifacts/", "renders/", "shots/")):
+                bound.add(artist_scope)
+                target = source / "artists" / artist_scope / value
+                replacement = f"assets/artists/{artist_scope}/{value}"
+            elif expected and value and (kind == "artist" or key not in {"output_path", "project_dir"}):
+                target = owner / value
+        if target is not None:
+            if target.is_dir():
+                _check_path(target, directory=True)
+            else:
+                try:
+                    _check_path(target)
+                except MigrationError as error:
+                    if provenance:
+                        warn(pointer)
+                        return value
+                    if error.code == "MISSING_SOURCE":
+>                       raise MigrationError("DANGLING_REFERENCE", f"Missing referenced source in {relative_file}{pointer}") from error
+E                       lib.asset_migration.MigrationError: DANGLING_REFERENCE: Missing referenced source in projects/first-film/integrations/workflow.json/7/inputs/first_frame/0
+
+lib/asset_migration.py:254: MigrationError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_asset_migration.py::test_provider_graph_links_are_preserved_with_manual_review_warning
+1 failed, 42 passed in 2.72s

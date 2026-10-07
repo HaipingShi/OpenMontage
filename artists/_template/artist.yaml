@@ -1,5 +1,5 @@
-# Copy this directory to artists/<id>/ and fill every field.
-# Process: skills/meta/digital-artist.md. Validate: python -m lib.artist_profile check <id>
+# Copy into <project>/assets/artists/<alias>/ or the user library catalog.
+# Process: skills/meta/digital-artist.md. Validate: python -m lib.artist_profile --project <project> check <alias>
 schema_version: "1.0"
 id: your-artist-id          # lowercase, matches the directory name, never changes after first release
 version: 1

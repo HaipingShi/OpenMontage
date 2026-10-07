@@ -274,6 +274,9 @@ class BaseTool(ABC):
     artifact_schema: dict = {}
     progress_schema: Optional[dict] = None
     supports: dict[str, Any] = {}
+    # Optional current-input bounds, including model-specific variants. This is
+    # descriptive metadata; existing provider request logic remains unchanged.
+    limits: dict[str, Any] = {}
     best_for: list[str] = []
     not_good_for: list[str] = []
     provider_matrix: dict[str, Any] = {}
@@ -366,6 +369,7 @@ class BaseTool(ABC):
             "output_schema": self.output_schema,
             "artifact_schema": self.artifact_schema,
             "supports": self.supports,
+            "limits": self.limits,
             "best_for": self.best_for,
             "not_good_for": self.not_good_for,
             "provider_matrix": self.provider_matrix,

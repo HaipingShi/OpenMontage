@@ -24,6 +24,7 @@ extensions:
   custom_tools: false
 
 required_skills:
+  - meta/shot-workbench
   - pipelines/hybrid/executive-producer
   - pipelines/hybrid/idea-director
   - pipelines/hybrid/script-director
@@ -87,6 +88,8 @@ stages:
       - Script sections map to a feasible hybrid structure
 
   - name: scene_plan
+    required_tools:
+      - shot_compiler
     skill: pipelines/hybrid/scene-director
     required_artifacts_in:
       - script
@@ -98,11 +101,13 @@ stages:
       - frame_sampler
       - scene_detect
     tools_available:
+      - shot_compiler
       - frame_sampler
       - scene_detect
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Source content remains visually primary where intended
       - Overlay and support layers do not overload the frame
       - Platform or aspect-ratio variants are planned deliberately
@@ -111,6 +116,8 @@ stages:
       - Every scene has a defined source/support treatment
 
   - name: assets
+    required_tools:
+      - shot_compiler
     skill: pipelines/hybrid/asset-director
     required_artifacts_in:
       - scene_plan
@@ -129,6 +136,7 @@ stages:
       - music_gen
       - audio_enhance
     tools_available:
+      - shot_compiler
       - subtitle_gen
       - tts_selector
       - image_selector
@@ -140,6 +148,7 @@ stages:
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Support assets clearly map to real narrative gaps
       - Shared template assets are reused
       - Optional generated inserts do not eclipse source truth

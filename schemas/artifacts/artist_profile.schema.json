@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "artist_profile",
   "title": "Artist Profile",
-  "description": "A persistent digital artist that outlives any single project. Lives at artists/<id>/artist.yaml. Pipelines read it to keep identity, voice, and canon consistent across every release. Paths are relative to the artist directory.",
+  "description": "An artist profile owned by a project or user library. Projects consume private profiles or explicitly imported fixed-version snapshots under assets/artists/<alias>/artist.yaml. Media paths are relative to this profile directory; the application ships no user identities.",
   "type": "object",
   "required": [
     "schema_version",
@@ -23,7 +23,7 @@
     "id": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*$",
-      "description": "Directory name under artists/. Never changes once a release ships."
+      "description": "Artist directory name or project-local alias. Stable once a release ships; library provenance identifies the original asset separately."
     },
     "version": {
       "type": "integer",
@@ -434,7 +434,7 @@
     },
     "collaborators": {
       "type": "array",
-      "description": "Other artists in artists/ this artist releases with. Used for duets and shared frames.",
+      "description": "Other artist aliases in the same project or explicitly selected library catalog. Used for duets and shared frames.",
       "items": {
         "type": "object",
         "required": [

@@ -27,6 +27,7 @@ extensions:
   custom_tools: false
 
 required_skills:
+  - meta/shot-workbench
   - pipelines/explainer/executive-producer
   - pipelines/explainer/research-director
   - pipelines/explainer/proposal-director
@@ -138,6 +139,8 @@ stages:
       - Total duration matches selected concept target within 10%
 
   - name: scene_plan
+    required_tools:
+      - shot_compiler
     skill: pipelines/explainer/scene-director
     required_artifacts_in:
       - script
@@ -145,10 +148,12 @@ stages:
       - proposal_packet
     produces:
       - scene_plan
-    tools_available: []
+    tools_available:
+      - shot_compiler
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Full script duration covered with no gaps
       - "Visual variety: no 3+ consecutive scenes of same type"
       - Asset feasibility - every required_asset uses a tool from the production plan
@@ -167,6 +172,7 @@ stages:
     produces:
       - asset_manifest
     required_tools:
+      - shot_compiler
       - tts_selector
       - image_selector
     optional_tools:
@@ -176,6 +182,7 @@ stages:
       - code_snippet
       - music_gen
     tools_available:
+      - shot_compiler
       - tts_selector
       - image_selector
       - video_selector
@@ -186,6 +193,7 @@ stages:
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - All asset files exist on disk
       - Narration covers all script sections
       - Narration assets apply the approved voice performance plan and sample settings

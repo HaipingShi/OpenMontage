@@ -2,15 +2,15 @@
 
 ## When to Use
 
-The user wants an AI artist/virtual idol/虚拟歌手 that appears across many releases, or names an existing one in `artists/`. A digital artist is a long-term asset: its value is that every song, MV, cover, and caption is recognizably the same person. This skill creates the profile once; production pipelines (`music-video` and others) then read it instead of inventing a new performer per project.
+The user wants an AI artist/virtual idol/虚拟歌手 that appears across many releases, or names an existing asset in the user library. A digital artist is a long-term asset: its value is that every song, MV, cover, and caption is recognizably the same person. This skill creates the profile once; production pipelines (`music-video` and others) then read it instead of inventing a new performer per project.
 
-Run `python -m lib.artist_profile list` first. If the artist already exists, do not re-create anything — go straight to the production pipeline with `artist_id` set.
+Run `python -m lib.artist_profile --project <project> list` to inspect project-local identities. Select reusable identities from the separate user library and explicitly import a fixed version with `lib.project_assets` before production. An artist name alone never selects a global asset. New project-only identities need no library publication.
 
 ## Prerequisites
 
 | Layer | Resource | Purpose |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/artist_profile.schema.json` | Validates `artists/<id>/artist.yaml` |
+| Schema | `schemas/artifacts/artist_profile.schema.json` | Validates a project or user-library `artist.yaml` |
 | Library | `lib/artist_profile.py` | `load_artist`, `identity_prompt`, `music_style`, `cast_prompt`, `duet_style`, `check_artist`, `record_ledger`, `record_release` |
 | Template | `artists/_template/artist.yaml` | Starting point |
 | Tools | `image_selector` (reference-image capable provider), `suno_music` | Identity bible and voice audition |
@@ -30,7 +30,7 @@ Run `python -m lib.artist_profile list` first. If the artist already exists, do 
 
 ### Step 1: Concept (gate)
 
-Collect or propose: stage name (Chinese + Latin), one-liner, genre lane, 3-5 canon facts, lyric rules, and the `never` list. Push for specifics that generate songs (a job, a place, an object) over adjectives. Copy `artists/_template/` to `artists/<id>/`, fill the persona, and present it. **End your turn** — the name and canon are the hardest things to change later.
+Collect or propose: stage name (Chinese + Latin), one-liner, genre lane, 3-5 canon facts, lyric rules, and the `never` list. Push for specifics that generate songs (a job, a place, an object) over adjectives. Copy the neutral `artists/_template/` to `<project>/assets/artists/<alias>/`, fill the persona, and present it. **End your turn** — the name and canon are the hardest things to change later.
 
 ### Step 2: Identity lock
 
@@ -48,13 +48,13 @@ Collect or propose: stage name (Chinese + Latin), one-liner, genre lane, 3-5 can
 - `provider_bound`: existing website Persona/Voice recorded and confirmed; local audio may still be absent.
 - `locked`: user-approved audio exported and saved locally for A/B comparison. This does not imply any generator can ingest it.
 
-For an existing binding, use Suno web's saved selection. Download the source song or vocal stem from its song menu, not from the Voice profile URL. Import via `python -m lib.artist_profile import-voice <id> <absolute-audio-path> --approve`. This copies verified audio into `artists/<id>/voice/`, records duration, SHA-256, approval and provenance, then locks the local voice evidence. The user must have selected that recording; an agent must not approve an unheard take. Local reference files are permanent assets: back them up separately; they are excluded from patches by the exporter.
+For an existing binding, use Suno web's saved selection. Download the source song or vocal stem from its song menu, not from the Voice profile URL. Import via `python -m lib.artist_profile --project <project> import-voice <alias> <absolute-audio-path> --approve`. This copies verified audio into the selected project or user-library profile’s `voice/` directory, records duration, SHA-256, approval and provenance, then locks the local voice evidence. The user must have selected that recording; an agent must not approve an unheard take. Local reference files are permanent assets: back them up separately; they are excluded from patches by the exporter.
 
 Only if there is no existing selected voice: write `style_signature`, audition using the chosen approved tool path, announce cost, then have the user choose a take. Save the approved recording through the same importer. For a licensed human/clone, record `license_holder`.
 
 ### Step 4: Readiness by actual route
 
-`python -m lib.artist_profile check <id>` is strict local-reference readiness, so an unimported voice never reports ready. The report separately shows external binding, local evidence and generation routes.
+`python -m lib.artist_profile --project <project> check <alias>` is strict local-reference readiness, so an unimported voice never reports ready. The report separately shows external binding, local evidence and generation routes.
 
 - `--voice-route suno_web`: needs a confirmed saved binding; generation still requires manual selection in the user's Suno account. Local audio is recommended for independent QC but is not required to locate the selection.
 - `--voice-route local_reference`: needs a locked, existing local canonical recording.
@@ -69,8 +69,8 @@ Present these limits with the profile. Missing local audio does not erase the us
 - Lyrics follow `persona.lyric_rules` and must not contradict `persona.canon`.
 - Song generation: `style = music_style(profile, "<song-specific additions>")`. A/B every new take against the canonical track for register, breathiness, vibrato, and accent; reject drifted takes.
 - Visuals: `identity_prompt(profile, shot, look)` returns the prompt, negative prompt, canonical identity reference images, separate `supporting_references`, and the `locked_traits` checklist. Supporting wardrobe/proportion images must not be used to match faces. Every cast keyframe uses a reference-image capable provider; check each keyframe against `locked_traits`.
-- New wardrobe for one release is a new `looks` entry with its own canonical images — added to the profile, not improvised in the project.
-- At publish: use `rights.disclosure_label` in every description, then `record_release` and `record_ledger` for new assets.
+- New wardrobe for one release belongs to that project. Fork an imported identity into a private alias first, then add a reviewed `looks` entry and its images to the private profile. Publish a new shared version only when the user explicitly asks for reuse; never alter another project’s pinned identity.
+- At publish: use `rights.disclosure_label` in every description, then `record_release` and `record_ledger` for new assets with the explicit project artist root. Reusable-library consumption remains read-only.
 
 ## Artists Who Release Together
 
@@ -79,7 +79,7 @@ Each artist keeps a complete solo profile; a pairing is a `collaborators` entry 
 - Song: `duet_style(profiles, extra)` = shared `duet_style` + each artist's `voice.duet_descriptor` + additions, capped at 200 chars. Tag lyric sections by singer.
 - Frames with several artists: `cast_prompt(profiles, shot, looks)`. A group key visual is never canonical for either artist — faces drift when two people share a generation.
 - `check_artist` fails if a collaborator has no profile or the artist has no `duet_descriptor`.
-- CLI: `python -m lib.artist_profile cast amor,fati "<shot>"` and `python -m lib.artist_profile duet-style amor,fati "<additions>"`.
+- CLI: `python -m lib.artist_profile --project <project> cast <alias-a>,<alias-b> "<shot>"` and `python -m lib.artist_profile --project <project> duet-style <alias-a>,<alias-b> "<additions>"`.
 
 
 ### Duet / multi-artist candidate verification
@@ -89,7 +89,7 @@ artist. Actual submitted generation logs must prove EVERY official identity
 reference was transmitted. shot_verifier compares each face to that artist's own
 identity image; `identity` is keyed by artist id, and the identity dimension is
 its minimum score, not a mean. One accurate singer cannot mask another's drift.
-Keep [Verse 1: Amor] / [Verse 2: Fati] / [Chorus: Amor & Fati] tags and song_map
+Keep [Verse 1: Singer A] / [Verse 2: Singer B] / [Chorus: Singer A & Singer B] tags and song_map
 lyrics.lines[].singer. Use separated vocals for exact lip-sync slices when
 available, master otherwise; record vocal_source. A shared vocal stem does not
 isolate singers, and singer tags do not enforce a saved voice. Manual verification
@@ -107,7 +107,7 @@ Eras are allowed; drift is not. A new hairstyle or era is a deliberate decision:
 
 ## Common Pitfalls
 
-- Writing a new performer description inside a project instead of using `identity_prompt` — the artist forks.
+- Looking up a project performer in the global library by name, or replacing its pinned version with the library’s latest. Use the project-local profile and `identity_prompt`.
 - Passing non-canonical images (expression grids, key visuals) as identity references.
 - Text-to-video for artist shots — identity drifts every shot.
 - "Sounds like <real singer>" in a style prompt — legal risk and it breaks the artist's own identity.

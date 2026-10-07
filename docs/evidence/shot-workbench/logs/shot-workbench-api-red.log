@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________ test_workbench_reads_file_state_and_page ___________________
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-45/test_workbench_reads_file_stat0/projects/film')
+
+    def test_workbench_reads_file_state_and_page(project):
+        with TestClient(server.create_app()) as client:
+            response = client.get("/api/shot/film/shot1")
+>           assert response.status_code == 200
+E           assert 404 == 200
+E            +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:81: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_workbench_reads_file_state_and_page
+1 failed in 0.24s

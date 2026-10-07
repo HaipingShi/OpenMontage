@@ -36,6 +36,7 @@ extensions:
   custom_tools: false
 
 required_skills:
+  - meta/shot-workbench
   - pipelines/music-video/executive-producer
   - pipelines/music-video/idea-director
   - pipelines/music-video/song-analysis-director
@@ -212,6 +213,8 @@ stages:
       - script sections tile the full song duration with no gaps or overlaps
 
   - name: scene_plan
+    required_tools:
+      - shot_compiler
     skill: pipelines/music-video/scene-director
     required_artifacts_in:
       - script
@@ -223,10 +226,12 @@ stages:
     optional_tools:
       - frame_sampler
     tools_available:
+      - shot_compiler
       - frame_sampler
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Every shot boundary is a song_map cut point (beat_cut) or phrase boundary (phrase_flow)
       - Shot lengths respect provider clip limits with handles for trimming
       - Performance shots needing lip-sync are flagged with exact vocal in/out times
@@ -249,6 +254,7 @@ stages:
     produces:
       - asset_manifest
     required_tools:
+      - shot_compiler
       - frame_sampler
     optional_tools:
       - shot_verifier
@@ -262,6 +268,7 @@ stages:
       - subtitle_gen
       - audio_probe
     tools_available:
+      - shot_compiler
       - shot_verifier
       - frame_sampler
       - video_selector
@@ -277,6 +284,7 @@ stages:
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Performer bible images exist and every cast shot was generated from them
       - Generated clips are at least as long as their shot plus handles
       - Lip-synced shots were driven by the exact song slice for their timeline window

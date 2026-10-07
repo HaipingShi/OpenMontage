@@ -44,6 +44,13 @@ class SeedanceVideo(BaseTool):
     agent_skills = ["seedance-2-0", "seedance-2-5", "ai-video-gen"]
 
     capabilities = ["text_to_video", "image_to_video", "reference_to_video"]
+    limits = {
+        "max_reference_images": 9, "max_prompt_chars": None,
+        "negative_prompt_field": None, "durations": list(range(4, 16)),
+        "first_last_frame": True, "control_inputs": [],
+        "routes": ["t2v", "i2v", "first_last", "multi_ref"],
+        "variants": {"2.5": {"max_reference_images": 30, "durations": list(range(4, 31))}},
+    }
     supports = {
         "text_to_video": True,
         "image_to_video": True,

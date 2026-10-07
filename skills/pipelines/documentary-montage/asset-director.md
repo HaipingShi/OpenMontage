@@ -57,7 +57,7 @@ clip with full provenance.
 | Tool (fast path) | `direct_clip_search` | Lightweight multi-provider search + download |
 | Tool (standard path) | `corpus_builder` | Populates the retrieval index with CLIP embeddings |
 | Tool (standard path) | `clip_search` | Ranks clips against slot descriptions |
-| Tool (optional) | `music_gen`, user's `music_library/` | Score bed |
+| Tool (optional) | `music_gen`, user's the directory reported by `music_library` (default: `<user library>/music/`) | Score bed |
 
 ## Mental Model
 
@@ -407,7 +407,7 @@ montage-specific fields live in `metadata`:
     {
       "id": "asset_music_bed",
       "type": "music",
-      "path": "music_library/dawn_04.mp3",
+      "path": "assets/music/dawn_04.mp3",
       "source_tool": "music_library",
       "scene_id": "global",
       "subtype": "library",

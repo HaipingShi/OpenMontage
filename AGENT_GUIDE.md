@@ -202,7 +202,9 @@ Infrastructure files:
 
 ## Project Directory Convention
 
-Every production run creates a project workspace under `projects/`. This directory is gitignored — all generated assets are regenerable.
+Every production run creates its own project workspace under the configured `PROJECTS_DIR`, defaulting to `~/OpenMontageData/projects/`. `OPENMONTAGE_DATA_DIR`, `OPENMONTAGE_PROJECTS_DIR` and `OPENMONTAGE_LIBRARY_DIR` select absolute user-data locations; the application checkout owns no production assets. The paths below are relative to this projects root. User source media, identities and approved voice recordings are permanent data and must be backed up alongside the project.
+
+Project assets belong to that project. Reuse only assets explicitly imported from the user's library, pinning their version/hash and copying a project-local snapshot. Artist profiles resolve under `<project>/assets/artists/<alias>/`; the library catalog is separate from the application repository. Record generation provenance, costs and artist usage in the current project. Changing a project look must not modify the shared source or another project. See `docs/asset-decoupling.md` and `lib.project_assets` for publication, import and private forks. Old repository-local workspaces are supported through the explicit copy-and-verify migration, never an implicit same-name artist lookup.
 
 ```
 projects/<project-name>/
@@ -230,7 +232,7 @@ All tools and agents must write outputs to these paths — **always pass an expl
 
 ## Music Library
 
-Users can place royalty-free music tracks in `music_library/` (gitignored). The asset director will check this folder before falling back to API-based music generation.
+Users can keep reusable royalty-free music in their configured library and import selected tracks into the project. An existing `music_library/` remains an explicit legacy source (gitignored), not part of the application distribution. The asset director checks the current project's selected music and explicitly offered library tracks before API-based generation.
 
 ```
 music_library/
@@ -537,10 +539,10 @@ Music is a critical part of any video. **Surface the music situation to the user
 
 Check music availability in this order and present the options:
 
-1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect `music_library/`. If tracks exist, list durations and let the user pick one.
+1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect the directory reported by the `music_library` tool. If tracks exist, list durations and let the user pick one.
 2. **Royalty-free search:** Check `registry.get_by_capability("music_search")` for configured search/download tools. Report licensing constraints and whether a key is required.
 3. **Music generation APIs:** Check `registry.get_by_capability("music_generation")`. Report status, quota, cost, and quality tradeoffs honestly.
-4. **Bring your own:** Note that the user can provide a track (for example from YouTube Audio Library or Jamendo) through the `music_library/` drop path.
+4. **Bring your own:** Note that the user can provide a track (for example from YouTube Audio Library or Jamendo) through the configured user-library music directory.
 
 **Always present the user with explicit choices:**
 - Use a track from their library (which one?)

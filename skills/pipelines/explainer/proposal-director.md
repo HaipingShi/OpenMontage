@@ -369,7 +369,7 @@ Music is a critical part of the video's feel. **Surface the music situation to t
 
 **Check music availability in this order:**
 
-1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect `music_library/`. List tracks with durations.
+1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect the directory reported by `music_library` (default: `<user library>/music/`). List tracks with durations.
 2. **Royalty-free search:** Check `registry.get_by_capability("music_search")`. Report providers, licensing constraints, and key requirements.
 3. **Music generation APIs:** Check `registry.get_by_capability("music_generation")`. Report status, quota, cost, and quality tradeoffs honestly.
 
@@ -389,15 +389,15 @@ MUSIC PLAN
 Would you like to:
   (a) Use a track from your library (which one?)
   (b) Search a royalty-free provider
-  (c) Provide a different track (drop it in music_library/)
+  (c) Provide a different track (drop it in the configured user library music directory)
   (d) Generate one via API (if available)
   (e) Proceed without music
 ```
 
-**If no music source is available:** Tell the user explicitly. Do NOT let this surface as a surprise at the asset stage. Offer the `music_library/` path so they can add a track before production starts.
+**If no music source is available:** Tell the user explicitly. Do NOT let this surface as a surprise at the asset stage. Offer the the directory reported by `music_library` (default: `<user library>/music/`) path so they can add a track before production starts.
 
 **Rules:**
-- Always check `music_library/` first — user-provided music is free and intentional
+- Always check the directory reported by `music_library` (default: `<user library>/music/`) first — user-provided music is free and intentional
 - Always report music API status (available, unavailable, quota remaining if checkable)
 - Record the music decision in `proposal_packet.production_plan.music_source`
 - If the user picks a library track, record its path for the asset director

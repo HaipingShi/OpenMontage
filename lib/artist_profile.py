@@ -1,6 +1,8 @@
 """Persistent digital artists shared across projects.
 
-An artist lives at ``artists/<id>/``:
+Reusable artists live in the user's asset catalog, by default
+``~/OpenMontageData/library/artists/<id>/``. Project-private copies live at
+``<project>/assets/artists/<id>/``. There is no repository catalog fallback.
 
     artist.yaml     identity, persona, voice, music, rights (schema: artist_profile)
     bible/          locked identity reference images
@@ -18,6 +20,12 @@ CLI:
     python -m lib.artist_profile style <id> ["<song-specific additions>"]
     python -m lib.artist_profile cast <id>,<id> "<shot description>"
     python -m lib.artist_profile duet-style <id>,<id> ["<song-specific additions>"]
+
+Scope options precede the command: ``--root /absolute/catalog list`` selects
+an explicit catalog; ``--project <project-id> prompt <alias> "<shot>"`` selects
+that project's local assets. Omitting both uses the user catalog from lib.paths.
+Project imports are verified immutable snapshots; voice edits require an
+explicit private fork, while private project profiles remain editable.
 """
 
 from __future__ import annotations
@@ -32,16 +40,16 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Mapping
+from contextlib import contextmanager
 from datetime import date
+from functools import wraps
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 from schemas.artifacts import validate_artifact
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-ARTISTS_DIR = REPO_ROOT / "artists"
+from lib.paths import ARTISTS_DIR
 STYLE_LIMIT = 200
 LEDGER_REQUIRED = ("asset", "tool", "human_input")
 RELEASE_REQUIRED = ("title", "project_id")
@@ -376,6 +384,33 @@ def _save_artist(profile: dict[str, Any]) -> None:
         temp.unlink(missing_ok=True)
 
 
+@contextmanager
+def _artist_edit_scope(artist_id: str, root: Path | None):
+    """Serialize project edits and enforce imported immutability at the write API."""
+    base = Path(root or ARTISTS_DIR).expanduser().resolve()
+    if base.name == "artists" and base.parent.name == "assets":
+        from lib.project_assets import verify_binding
+        from lib.shot_spec import transaction
+        project = base.parent.parent
+        with transaction(project, "project-assets"):
+            binding = verify_binding(project, artist_id)
+            if binding is not None and binding.get("mode") == "imported":
+                raise ValueError("Imported artist snapshots are immutable; fork this asset to a private alias before editing")
+            yield base
+    else:
+        yield base
+
+
+def _guard_artist_edit(function):
+    @wraps(function)
+    def guarded(artist_id, *args, **kwargs):
+        with _artist_edit_scope(artist_id, kwargs.get("root")) as root:
+            kwargs["root"] = root
+            return function(artist_id, *args, **kwargs)
+    return guarded
+
+
+@_guard_artist_edit
 def bind_suno_voice(
     artist_id: str, *, kind: str, name: str = "", url: str = "",
     source_song_url: str = "", confirmed: bool = False, root: Path | None = None,
@@ -408,6 +443,7 @@ def bind_suno_voice(
     return binding
 
 
+@_guard_artist_edit
 def import_voice_reference(
     artist_id: str, source: Path, *, approved: bool = False,
     source_url: str = "", notes: str = "", root: Path | None = None,
@@ -471,6 +507,9 @@ def import_voice_reference(
 
 def _main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="python -m lib.artist_profile")
+    scope = parser.add_mutually_exclusive_group()
+    scope.add_argument("--root", type=Path, help="Explicit artist catalog root (before the command)")
+    scope.add_argument("--project", help="Project id; use only its assets/artists catalog (before the command)")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list")
     p_check = sub.add_parser("check")
@@ -497,28 +536,40 @@ def _main(argv: list[str]) -> int:
     p_style.add_argument("artist_id")
     p_style.add_argument("extra", nargs="?", default="")
     p_cast = sub.add_parser("cast")
-    p_cast.add_argument("artist_ids", help="comma-separated, e.g. amor,fati")
+    p_cast.add_argument("artist_ids", help="comma-separated artist ids or project aliases")
     p_cast.add_argument("shot")
     p_duet = sub.add_parser("duet-style")
-    p_duet.add_argument("artist_ids", help="comma-separated, e.g. amor,fati")
+    p_duet.add_argument("artist_ids", help="comma-separated artist ids or project aliases")
     p_duet.add_argument("extra", nargs="?", default="")
     args = parser.parse_args(argv)
+    root = args.root.expanduser().resolve() if args.root else None
+    selected_project = None
+    if args.project:
+        from lib.shot_spec import project_path, safe_path
+        selected_project = project_path(args.project)
+        root = safe_path(selected_project, "assets/artists")
+
+    def scoped_artist(artist_id: str) -> dict[str, Any]:
+        if selected_project is not None:
+            from lib.project_assets import load_project_artist
+            return load_project_artist(selected_project, artist_id)
+        return load_artist(artist_id, root)
 
     if args.cmd == "bind-suno":
         print(json.dumps(bind_suno_voice(args.artist_id, kind=args.kind, name=args.name, url=args.url,
-            source_song_url=args.source_song_url, confirmed=args.confirm), ensure_ascii=False, indent=2))
+            source_song_url=args.source_song_url, confirmed=args.confirm, root=root), ensure_ascii=False, indent=2))
         return 0
     if args.cmd == "import-voice":
         print(json.dumps(import_voice_reference(args.artist_id, args.source, approved=args.approve,
-            source_url=args.source_url, notes=args.notes), ensure_ascii=False, indent=2))
+            source_url=args.source_url, notes=args.notes, root=root), ensure_ascii=False, indent=2))
         return 0
     if args.cmd == "list":
-        for artist_id in list_artists():
-            profile = load_artist(artist_id)
+        for artist_id in list_artists(root):
+            profile = scoped_artist(artist_id)
             print(f"{artist_id}\t{profile['names']['stage']}\t{profile['status']}\tv{profile['version']}")
         return 0
     if args.cmd in ("cast", "duet-style"):
-        profiles = [load_artist(a.strip()) for a in args.artist_ids.split(",") if a.strip()]
+        profiles = [scoped_artist(a.strip()) for a in args.artist_ids.split(",") if a.strip()]
         if args.cmd == "cast":
             print(json.dumps(cast_prompt(profiles, args.shot), ensure_ascii=False, indent=2))
             return 0
@@ -526,7 +577,7 @@ def _main(argv: list[str]) -> int:
         print(json.dumps({"style": style, "chars": len(style)}, ensure_ascii=False))
         return 0
 
-    profile = load_artist(args.artist_id)
+    profile = scoped_artist(args.artist_id)
     if args.cmd == "check":
         issues = check_artist(profile, args.voice_route)
         print(json.dumps({"artist": args.artist_id, "voice_route": args.voice_route,

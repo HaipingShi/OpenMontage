@@ -53,6 +53,11 @@ class SeedreamImage(BaseTool):
         "dense_layouts": True,
         "multi_language_text": True,
     }
+    limits = {
+        "max_reference_images": 0, "max_prompt_chars": None,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v"],
+    }
     best_for = [
         "raster brand and campaign assets",
         "images with accurate text rendering",

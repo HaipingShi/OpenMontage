@@ -157,6 +157,20 @@
               }
             },
             "additionalProperties": false
+          },
+          "shot_spec_path": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "shot_spec_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "shot_complexity": {
+            "enum": [
+              "simple",
+              "complex"
+            ]
           }
         },
         "additionalProperties": false

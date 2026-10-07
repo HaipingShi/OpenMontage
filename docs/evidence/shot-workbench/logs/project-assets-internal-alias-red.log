@@ -1,0 +1,93 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_internal_reference_symlinks_cannot_hide_an_imported_asset_binding[image] _
+
+api = (<starlette.testclient.TestClient object at 0x10c039480>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-180/test_internal_reference_symlin0/projects/film'))
+channel = 'image'
+
+    @pytest.mark.parametrize("channel", ["image", "parent"])
+    def test_internal_reference_symlinks_cannot_hide_an_imported_asset_binding(api, channel):
+        import hashlib
+        from lib.project_assets import publish_asset, import_asset
+        client, tool, lease, project = api
+        source = project.parent / "room-source"
+        source.mkdir()
+        (source / "background.png").write_bytes(base64.b64decode(png_uri("red").split(",")[1]))
+        library = project.parent / "library"
+        publish_asset(source, "room", "v1", kind="environment", library=library)
+        binding = import_asset(project, "room", "v1", "room", kind="environment", library=library)
+        imported = project / binding["snapshot_path"] / "background.png"
+        alias = project / "assets" / "images" / "internal-alias.png"
+        alias.parent.mkdir(parents=True, exist_ok=True)
+        alias.symlink_to(imported)
+        imported.write_bytes(base64.b64decode(png_uri("blue").split(",")[1]))
+        spec = read_spec(client)
+        spec["route"] = "multi_ref"
+        ref = {"asset_path": alias.relative_to(project).as_posix(), "sha256": hashlib.sha256(imported.read_bytes()).hexdigest(), "role": "environment"}
+        if channel == "parent":
+            private = alias.parent / "private.png"
+            private.write_bytes(base64.b64decode(png_uri("red").split(",")[1]))
+            ref.update(asset_path=private.relative_to(project).as_posix(), sha256=hashlib.sha256(private.read_bytes()).hexdigest(),
+                       parent_asset=alias.relative_to(project).as_posix())
+        spec["references"] = [ref]
+        response = client.put("/api/shot/film/shot1", json={"spec": spec, "revision": spec["revision"], "lease_id": lease})
+>       assert response.status_code in (403, 409)
+E       assert 200 in (403, 409)
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:1033: AssertionError
+_ test_internal_reference_symlinks_cannot_hide_an_imported_asset_binding[parent] _
+
+api = (<starlette.testclient.TestClient object at 0x10c09bb20>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-180/test_internal_reference_symlin1/projects/film'))
+channel = 'parent'
+
+    @pytest.mark.parametrize("channel", ["image", "parent"])
+    def test_internal_reference_symlinks_cannot_hide_an_imported_asset_binding(api, channel):
+        import hashlib
+        from lib.project_assets import publish_asset, import_asset
+        client, tool, lease, project = api
+        source = project.parent / "room-source"
+        source.mkdir()
+        (source / "background.png").write_bytes(base64.b64decode(png_uri("red").split(",")[1]))
+        library = project.parent / "library"
+        publish_asset(source, "room", "v1", kind="environment", library=library)
+        binding = import_asset(project, "room", "v1", "room", kind="environment", library=library)
+        imported = project / binding["snapshot_path"] / "background.png"
+        alias = project / "assets" / "images" / "internal-alias.png"
+        alias.parent.mkdir(parents=True, exist_ok=True)
+        alias.symlink_to(imported)
+        imported.write_bytes(base64.b64decode(png_uri("blue").split(",")[1]))
+        spec = read_spec(client)
+        spec["route"] = "multi_ref"
+        ref = {"asset_path": alias.relative_to(project).as_posix(), "sha256": hashlib.sha256(imported.read_bytes()).hexdigest(), "role": "environment"}
+        if channel == "parent":
+            private = alias.parent / "private.png"
+            private.write_bytes(base64.b64decode(png_uri("red").split(",")[1]))
+            ref.update(asset_path=private.relative_to(project).as_posix(), sha256=hashlib.sha256(private.read_bytes()).hexdigest(),
+                       parent_asset=alias.relative_to(project).as_posix())
+        spec["references"] = [ref]
+        response = client.put("/api/shot/film/shot1", json={"spec": spec, "revision": spec["revision"], "lease_id": lease})
+>       assert response.status_code in (403, 409)
+E       assert 200 in (403, 409)
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:1033: AssertionError
+___ test_internal_project_symlink_does_not_create_a_second_project_identity ____
+
+api = (<starlette.testclient.TestClient object at 0x10c3075b0>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-180/test_internal_project_symlink_0/projects/film'))
+
+    def test_internal_project_symlink_does_not_create_a_second_project_identity(api):
+        client, tool, lease, project = api
+        (project.parent / "linked-film").symlink_to(project, target_is_directory=True)
+>       assert client.get("/api/shot/linked-film/shot1").status_code == 403
+E       AssertionError: assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+E        +    where <Response [200 OK]> = get('/api/shot/linked-film/shot1')
+E        +      where get = <starlette.testclient.TestClient object at 0x10c3075b0>.get
+
+tests/contracts/test_shot_workbench_api.py:1040: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_internal_reference_symlinks_cannot_hide_an_imported_asset_binding[image]
+FAILED tests/contracts/test_shot_workbench_api.py::test_internal_reference_symlinks_cannot_hide_an_imported_asset_binding[parent]
+FAILED tests/contracts/test_shot_workbench_api.py::test_internal_project_symlink_does_not_create_a_second_project_identity
+3 failed, 64 deselected in 1.11s

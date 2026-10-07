@@ -1,0 +1,22 @@
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+___________ test_music_catalog_defaults_to_user_library_not_software ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108b2e6e0>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-132/test_music_catalog_defaults_to0')
+
+    def test_music_catalog_defaults_to_user_library_not_software(monkeypatch, tmp_path):
+        from tools.audio import music_library
+        monkeypatch.delenv('MUSIC_LIBRARY_DIR', raising=False)
+        monkeypatch.setattr('lib.paths.LIBRARY_DIR', tmp_path / 'shared')
+>       assert music_library.MusicLibrary()._library_dir() == tmp_path / 'shared/music'
+E       AssertionError: assert PosixPath('/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/music_library') == (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-132/test_music_catalog_defaults_to0') / 'shared/music')
+E        +  where PosixPath('/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/music_library') = _library_dir()
+E        +    where _library_dir = <tools.audio.music_library.MusicLibrary object at 0x108b2cdf0>._library_dir
+E        +      where <tools.audio.music_library.MusicLibrary object at 0x108b2cdf0> = <class 'tools.audio.music_library.MusicLibrary'>()
+E        +        where <class 'tools.audio.music_library.MusicLibrary'> = <module 'tools.audio.music_library' from '/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/tools/audio/music_library.py'>.MusicLibrary
+
+tests/contracts/test_data_paths.py:56: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_data_paths.py::test_music_catalog_defaults_to_user_library_not_software
+1 failed, 6 passed in 0.03s

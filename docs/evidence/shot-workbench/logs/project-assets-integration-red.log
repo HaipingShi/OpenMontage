@@ -1,0 +1,84 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____________ test_explicit_library_cli_publish_import_fork_and_list ____________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-137/test_explicit_library_...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-137/test_explicit_library_cli_publ0/library'))
+capsys = <_pytest.capture.CaptureFixture object at 0x10c149bd0>
+
+    def test_explicit_library_cli_publish_import_fork_and_list(assets, capsys):
+>       from lib.project_assets import main
+E       ImportError: cannot import name 'main' from 'lib.project_assets' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/lib/project_assets.py)
+
+tests/contracts/test_project_assets.py:193: ImportError
+_________ test_ledger_is_written_for_each_artist_with_real_references __________
+
+api = (<starlette.testclient.TestClient object at 0x10c14b010>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-137/test_ledger_is_written_for_eac0/projects/film'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c14b820>
+
+    def test_ledger_is_written_for_each_artist_with_real_references(api, monkeypatch):
+        from tests.fixtures.artist_factory import write_artist
+        client, tool, lease, project = api
+        write_artist(project / "assets" / "artists", "local-performer")
+        spec = read_spec(client)
+        spec["subjects"] = [{"kind": "artist", "ref_id": "local-performer", "look": "main", "visible_parts": ["face"], "action": "standing"}]
+        spec["route"] = "multi_ref"
+        assert client.put("/api/shot/film/shot1", json={"spec": spec, "revision": spec["revision"], "lease_id": lease}).status_code == 200
+        spec = read_spec(client)
+        uploaded = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"], "lease_id": lease,
+            "role": "identity", "subject_ref": "local-performer", "data": png_uri()})
+        assert uploaded.status_code == 200, uploaded.text
+        body = render_body(client, lease)
+        approval = client.post("/api/shot/film/shot1/render", json=body).json()
+        body.update(confirmation_token=approval["confirmation_token"], request_id=approval["request_id"])
+        assert client.post("/api/shot/film/shot1/render", json=body).json()["status"] == "succeeded"
+>       ledger = [json.loads(line) for line in (project / "assets" / "artists" / "local-performer" / "ledger.jsonl").read_text().splitlines()]
+
+tests/contracts/test_shot_workbench_api.py:500:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-137/test_ledger_is_written_for_eac0/projects/film/assets/artists/local-performer/ledger.jsonl')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-137/test_ledger_is_written_for_eac0/projects/film/assets/artists/local-performer/ledger.jsonl'
+
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1119: FileNotFoundError
+_______ test_artist_browser_shows_canon_and_candidates_without_promoting _______
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-137/test_artist_browser_shows_cano0/projects/film')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c1fe560>
+
+    def test_artist_browser_shows_canon_and_candidates_without_promoting(project, monkeypatch):
+        from lib import shot_execution, shot_spec
+        from lib.shot_workbench import initialize
+        from tests.fixtures.artist_factory import write_artist
+        write_artist(project / "assets" / "artists", "alpha")
+        write_artist(project / "assets" / "artists", "beta", canonical=False)
+        spec = initialize(project, "shot1")
+        spec["subjects"] = [{"kind": "artist", "ref_id": "alpha"}, {"kind": "artist", "ref_id": "beta"}]
+        shot_spec.atomic_json(project / "shots" / "shot1.json", spec)
+        monkeypatch.setattr(shot_execution, "catalog", lambda: [])
+        with TestClient(server.create_app()) as client:
+            data = client.get("/api/shot/film/shot1").json()
+        by_id = {artist["id"]: artist for artist in data["artists"]}
+>       assert by_id["alpha"]["references"][0]["canonical"] is True
+E       KeyError: 'alpha'
+
+tests/contracts/test_shot_workbench_api.py:537: KeyError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_project_assets.py::test_explicit_library_cli_publish_import_fork_and_list
+FAILED tests/contracts/test_shot_workbench_api.py::test_ledger_is_written_for_each_artist_with_real_references
+FAILED tests/contracts/test_shot_workbench_api.py::test_artist_browser_shows_canon_and_candidates_without_promoting
+3 failed, 77 deselected in 1.07s

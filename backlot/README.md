@@ -3,7 +3,14 @@
 A local board that shows a production happening: pipeline stages
 lighting up, the script as a screenplay page, the scene plan as a filmstrip
 that fills in as assets generate, decisions, spend, and activity — all
-derived from what the pipeline already writes to `projects/<id>/`.
+derived from what the pipeline already writes to the configured `PROJECTS_DIR/<id>/`.
+
+Production data defaults to `~/OpenMontageData/projects`, outside the application checkout.
+Set `OPENMONTAGE_DATA_DIR`, or independently `OPENMONTAGE_PROJECTS_DIR` and
+`OPENMONTAGE_LIBRARY_DIR`, to absolute paths for a different workspace.
+The workbench reads the current project's private or explicitly imported artist snapshots;
+shared-library revisions never silently change an existing project. See
+[`asset-decoupling.md`](../docs/asset-decoupling.md) for the copy-and-verify migration.
 
 ```bash
 python -m backlot open <project-id>   # start server if needed + open browser
@@ -62,3 +69,55 @@ API: `GET /api/project/<id>/reviews` returns sources and the derived fix list;
 Hand-authored assets review pages served under `/media/<id>/artifacts/` can
 reuse `/ui/review-page.js` and `/ui/board.css` when they have `#sections` with
 `article > h3` scene ids. This adapter uses the same editor and persisted data.
+
+## Shot Workbench
+
+Open a complex generated shot with:
+
+```bash
+python -m lib.shot_workbench open <project-id> <shot-id> --reason 'Adjust the two-person blocking'
+```
+
+The command initializes `shots/<shot-id>.json` from `scene_plan` when needed,
+acquires the user lease and prints `/w/<project-id>/<shot-id>`. The four panels
+share references, structured shot fields, a local 3D stage and a read-only
+compiler preview. Save explicitly; conflicting revisions preserve your draft.
+**保存并交回 Agent** saves and releases the lease, appending a field-level handoff
+diff to `artifacts/decision_log.json`. An agent lease makes the UI read-only.
+
+The browser is optional. For an isolated agent edit:
+
+```bash
+python -m lib.shot_workbench acquire <project-id> <shot-id> --holder agent --reason 'Refine movement cause'
+python -m lib.shot_workbench status <project-id> <shot-id> --holder agent
+python -m lib.shot_workbench edit <project-id> <shot-id> --holder agent --revision <revision> --lease-id <lease> --file <shot.json>
+python -m lib.shot_workbench compile <project-id> <shot-id> --tool <approved-tool>
+python -m lib.shot_workbench dry-run <project-id> <shot-id> --tool <approved-tool>
+python -m lib.shot_workbench release <project-id> <shot-id> --holder agent --lease-id <lease>
+```
+
+All commands return JSON. `compile` and `dry-run` read the saved spec, verify local
+reference hashes and obtain the existing tool's quote without reserving money or
+calling generation. Leases expire after two hours without save/heartbeat;
+`steal --reason ...` explicitly recovers an expired lease and records the reason.
+Unresolved running/unknown render requests block forced handoff.
+
+The stage uses vendored Three.js 0.181.2, five coarse human poses and basic shapes.
+Exports save composition, linear camera-space depth, skeleton PNG/JSON and camera
+JSON with their source spec. Projection uses the selected lens and cropped 36×24 mm
+sensor. It does not model fingers. These images guide composition; only tools with
+an explicit control-input mapping receive depth/pose. Artist canonical references
+are read-only; candidate images are shown with their approval state.
+
+Rendering compiles the saved revision on the server, checks lint and reference
+content, then uses CostTracker and a persistent request record. New paid tools and
+single-action thresholds require an explicit one-time confirmation; CAP and unknown
+quotes still block execution. Confirmation expires after ten minutes. Double clicks
+and request replay return the existing result, and unknown provider outcomes are
+never automatically retried. Generated candidates remain unreviewed until the
+existing review workflow selects them. The server listens on `127.0.0.1`.
+
+Routes: `GET /w/<project>/<shot>`, `GET|PUT /api/shot/<project>/<shot>`, and POST
+`references`, `compile`, `render`, `stage-export`, `acquire`, `heartbeat`, `release`
+below that API path. Mutations require the current lease and, when saving/exporting,
+the current revision; image uploads accept validated PNG/JPEG/WebP only.

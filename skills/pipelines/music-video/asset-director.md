@@ -129,3 +129,9 @@ Validate the manifest; confirm every path exists on disk. Present: bible sheet, 
 - Lip-syncing with a slice that is a few hundred milliseconds off the shot window; the mouth will lead or lag the song for the whole shot.
 - Regenerating the same failing lip-sync shot five times. Two attempts, then change the shot.
 - Swapping provider mid-batch because one is slow. That changes the look and the cast — ask first.
+
+## Structured generated shots
+
+Read [`skills/meta/shot-workbench.md`](../../meta/shot-workbench.md) before planning or generating a complex shot. Use the shared `shots/<shot_id>.json` as its source of truth, preserving `shot_spec_path` and `shot_spec_revision` in the scene plan. Build or edit structured fields, then use the registry's local `shot_compiler` (or the headless CLI `compile` / `dry-run`) and resolve every lint error before calling the previously approved generation tool. Keep the selected provider/model and budget approval policy. Do not independently rewrite the compiled prompt.
+
+Offer the workbench when there are three or more references, multiple subjects, precise camera/blocking needs, frame continuity, or two rejected attempts. Explain why, open the shot for the user, and wait for their `release`; inspect its revision and handoff diff before resuming this stage. Agent saves need an agent lease. Source footage remains on its existing edit path; this contract applies only to generated shots.

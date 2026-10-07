@@ -1,0 +1,25 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+_______ test_artist_media_sources_must_be_packaged_relative_files[voice] _______
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-139/test_artist_media_sour...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-139/test_artist_media_sources_must1/library'))
+section = 'voice'
+
+    @pytest.mark.parametrize("section", ["bible", "voice"])
+    def test_artist_media_sources_must_be_packaged_relative_files(assets, section):
+        from lib.project_assets import publish_asset
+        source, project, library = assets
+        path = source / "artist.yaml"
+        profile = yaml.safe_load(path.read_text())
+        if section == "bible":
+            profile["identity"]["bible"][0]["path"] = "/outside/portrait.png"
+        else:
+            profile["voice"]["canonical_tracks"] = [{"path": "/outside/voice.wav"}]
+        path.write_text(yaml.safe_dump(profile))
+>       with pytest.raises(ShotError):
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_project_assets.py:213: Failed
+=========================== short test summary info ============================
+FAILED tests/contracts/test_project_assets.py::test_artist_media_sources_must_be_packaged_relative_files[voice]
+1 failed, 1 passed, 19 deselected in 0.24s

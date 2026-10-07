@@ -180,3 +180,9 @@ This stage gates on human approval (`human_approval_default: true`). After revie
 checkpoint with `status="awaiting_human"`, present the summary (the Backlot board renders
 the artifact), and **END YOUR TURN**. Do not start the next stage in the same response.
 Approval is per-gate — an earlier "go ahead" does not cover this gate.
+
+## Structured generated shots
+
+Read [`skills/meta/shot-workbench.md`](../../meta/shot-workbench.md) before planning or generating a complex shot. Use the shared `shots/<shot_id>.json` as its source of truth, preserving `shot_spec_path` and `shot_spec_revision` in the scene plan. Build or edit structured fields, then use the registry's local `shot_compiler` (or the headless CLI `compile` / `dry-run`) and resolve every lint error before calling the previously approved generation tool. Keep the selected provider/model and budget approval policy. Do not independently rewrite the compiled prompt.
+
+Offer the workbench when there are three or more references, multiple subjects, precise camera/blocking needs, frame continuity, or two rejected attempts. Explain why, open the shot for the user, and wait for their `release`; inspect its revision and handoff diff before resuming this stage. Agent saves need an agent lease. Source footage remains on its existing edit path; this contract applies only to generated shots.

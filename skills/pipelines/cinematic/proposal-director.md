@@ -231,7 +231,7 @@ Check availability in this order:
 1. **User music library** — query `registry.get_by_capability("music_library")` and list available tracks
 2. **Royalty-free search** — query `registry.get_by_capability("music_search")` and report providers/licensing
 3. **Music generation APIs** — query `registry.get_by_capability("music_generation")` and report status, cost, and quality honestly
-4. **Bring-your-own path** — user can drop a track in `music_library/`
+4. **Bring-your-own path** — user can drop a track in the directory reported by `music_library` (default: `<user library>/music/`)
 
 Present explicit options:
 ```
@@ -239,7 +239,7 @@ MUSIC PLAN
 ├── Your music library: [N tracks / empty]
 ├── Royalty-free search: [providers / unavailable]
 ├── AI generation: [provider] — [AVAILABLE/UNAVAILABLE] [cost]
-└── Bring your own: Drop a track in music_library/ before asset stage
+└── Bring your own: Drop a track in the configured user library music directory before asset stage
 
 Recommendation: [specific recommendation based on mood research]
 ```

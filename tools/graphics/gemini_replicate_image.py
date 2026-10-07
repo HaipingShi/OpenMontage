@@ -12,6 +12,11 @@ class GeminiReplicateImage(SchemaMedia):
     install_instructions = "Configure REPLICATE_API_TOKEN."
     catalog_file = "replicate_refresh.json"
     capabilities = ["text_to_image", "image_edit"]
+    limits = {
+        "max_reference_images": 14, "max_prompt_chars": None,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v", "i2v", "multi_ref"],
+    }
     supports = {"image_edit": True, "multiple_reference_images": True}
     best_for = ["Nano Banana Pro through Replicate"]
     models = {

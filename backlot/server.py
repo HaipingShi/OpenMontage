@@ -166,6 +166,9 @@ async def _lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     app = FastAPI(title="Backlot", docs_url=None, redoc_url=None, lifespan=_lifespan)
 
+    from backlot.workbench import install as install_workbench
+    install_workbench(app, _safe_project_dir, hub)
+
     # ---- API ----------------------------------------------------------
 
     @app.get("/api/health")
@@ -316,7 +319,7 @@ def create_app() -> FastAPI:
     async def ui_no_cache(request, call_next):
         response = await call_next(request)
         path = request.url.path
-        if path == "/" or path.startswith("/ui") or path.startswith("/p/"):
+        if path == "/" or path.startswith("/ui") or path.startswith("/p/") or path.startswith("/w/"):
             response.headers["Cache-Control"] = "no-cache"
         return response
 

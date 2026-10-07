@@ -28,10 +28,9 @@ tests/qa/output/
 # Project workspaces (generated assets, renders — all regenerable)
 projects/
 
-# Zhenjiao MV acceptance test: keep song, shots, renders and run logs local.
-/projects/test-zhenjiao-fati/
-# Song-specific Fati look sheets copied outside the generated workspace.
-/artists/fati/bible/fati_zhenjiao_*.png
+# Legacy user artist data is local only. The neutral template is software.
+/artists/*
+!/artists/_template/
 
 # Corpus directories (downloaded stock clips, thumbnails, embeddings —
 # regenerable from source APIs via corpus_builder). Explicit rule even
@@ -43,8 +42,8 @@ corpus/
 # User music library (personal royalty-free tracks — not part of repo)
 music_library/
 
-# Permanent personal artist voice exports — back up separately from source patches.
-artists/*/voice/*
+# External data roots can also be explicitly placed here for local development.
+/OpenMontageData/
 
 # Environment & credentials
 .env

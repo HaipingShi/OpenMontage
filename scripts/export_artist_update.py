@@ -1,4 +1,4 @@
-"""Export one artist patch into both distribution locations using an isolated Git index.
+"""Export artist-management software, excluding personal assets, using an isolated index.
 
 Usage: python scripts/export_artist_update.py --base-ref <pre-artist-commit>
        --output /absolute/path/update.zip [--source-zip /absolute/path/original.zip]
@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import stat
 import subprocess
 import tempfile
 import zipfile
@@ -18,20 +19,37 @@ import zipfile
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCOPES = (
-    ".gitignore", "artists", "lib/artist_profile.py", "schemas/artifacts/__init__.py",
+    ".gitignore", "artists/_template", "lib/artist_profile.py", "lib/paths.py",
+    "lib/project_assets.py", "lib/asset_migration.py", "lib/shot_spec.py", "schemas/artifacts/__init__.py",
+    "schemas/artifacts/shot_spec.schema.json",
     "schemas/artifacts/artist_profile.schema.json", "skills/INDEX.md",
     "skills/meta/digital-artist.md", "skills/pipelines/music-video",
     "tools/audio/suno_music.py", "docs/DIGITAL_ARTIST_VOICE.md",
     "scripts/export_artist_update.py", "tests/contracts/test_artist_profile.py",
     "tests/contracts/test_artist_voice_safety.py", "tests/contracts/test_artist_export.py",
+    "tests/fixtures/artist_factory.py", "tests/contracts/test_data_paths.py",
+    "tests/contracts/test_project_assets.py", "tests/contracts/test_asset_migration.py", "docs/asset-decoupling.md",
 )
 PATCH_PATHS = ("openmontage-music-video/digital-artist.patch", "public/openmontage-digital-artist.patch")
 
 
 def _exportable(path: Path) -> bool:
-    return "__pycache__" not in path.parts and not (
-        len(path.parts) > 2 and path.parts[0] == "artists" and path.parts[2] == "voice"
-    )
+    return "__pycache__" not in path.parts and (
+        not path.parts or path.parts[0] != "artists"
+        or (len(path.parts) > 1 and path.parts[1] == "_template")
+    ) and (not path.parts or path.parts[0] not in {'projects', 'library', 'OpenMontageData', 'music_library'})
+
+
+def _archive_exportable(name: str) -> bool:
+    path = Path(name)
+    if path.is_absolute() or '..' in path.parts or '\\' in name or '\x00' in name:
+        return False
+    for index, part in enumerate(path.parts):
+        if part in {'projects', 'library', 'OpenMontageData', 'music_library', '__pycache__'}:
+            return False
+        if part == 'artists' and (index + 1 >= len(path.parts) or path.parts[index + 1] != '_template'):
+            return False
+    return True
 
 
 def export_update(base_ref: str, output: Path, source_zip: Path | None = None, repo: Path = REPO_ROOT) -> dict:
@@ -61,7 +79,7 @@ def export_update(base_ref: str, output: Path, source_zip: Path | None = None, r
         # Refresh matching legacy MTV source files too, retaining earlier compatibility fixes.
         with zipfile.ZipFile(source_zip) as original:
             for name in original.namelist():
-                if name.startswith("openmontage-music-video/") and not name.endswith("/"):
+                if _archive_exportable(name) and name.startswith("openmontage-music-video/") and not name.endswith("/"):
                     relative = Path(name.removeprefix("openmontage-music-video/"))
                     if not relative.is_absolute() and ".." not in relative.parts and _exportable(relative):
                         local = repo / relative
@@ -71,7 +89,7 @@ def export_update(base_ref: str, output: Path, source_zip: Path | None = None, r
         replacements[name] = patch
     manifest = {"base_commit": base, "patch_sha256": hashlib.sha256(patch).hexdigest(),
                 "patch_paths": list(PATCH_PATHS), "files": sorted(files),
-                "local_voice_audio_included": False}
+                "local_voice_audio_included": False, "personal_artist_assets_included": False}
     replacements["artist-update-manifest.json"] = (json.dumps(manifest, indent=2) + "\n").encode()
     replacements["ARTIST_UPDATE_README.md"] = (
         f"# Artist update\n\nBase commit: `{base}`.\n\n"
@@ -79,7 +97,7 @@ def export_update(base_ref: str, output: Path, source_zip: Path | None = None, r
         "```bash\ngit apply --check /path/to/digital-artist.patch\ngit apply /path/to/digital-artist.patch\n```\n\n"
         "The patch updates the existing music-video integration; do not also apply the legacy music-video.patch. "
         "Read docs/DIGITAL_ARTIST_VOICE.md for the saved Suno bindings and local import. "
-        "Local voice recordings are permanent personal assets and are excluded; back them up separately.\n"
+        "Personal artist profiles, media and ledgers are excluded; back up the user data directory separately.\n"
     ).encode()
     output = output.resolve()
     if source_zip and output == source_zip.resolve():
@@ -93,9 +111,7 @@ def export_update(base_ref: str, output: Path, source_zip: Path | None = None, r
                 with zipfile.ZipFile(source_zip) as original:
                     seen = set()
                     for entry in original.infolist():
-                        if entry.filename.startswith("openmontage-music-video/") and not _exportable(
-                            Path(entry.filename.removeprefix("openmontage-music-video/"))
-                        ):
+                        if not _archive_exportable(entry.filename) or stat.S_ISLNK(entry.external_attr >> 16):
                             continue
                         if entry.filename not in replacements and entry.filename not in seen:
                             target.writestr(entry, original.read(entry))

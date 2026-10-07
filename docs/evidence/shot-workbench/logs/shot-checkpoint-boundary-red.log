@@ -1,0 +1,104 @@
+...........................FFFF                                          [100%]
+=================================== FAILURES ===================================
+____________ test_checkpoint_symlink_cannot_initialize_from_outside ____________
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-104/test_checkpoint_symlink_cannot0/film')
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-104/test_checkpoint_symlink_cannot0')
+
+    def test_checkpoint_symlink_cannot_initialize_from_outside(project,tmp_path):
+        from lib.shot_spec import _artifact
+        (project/'artifacts/scene_plan.json').unlink()
+        outside=tmp_path/'outside-checkpoint.json'
+        outside.write_text(json.dumps({'artifacts':{'scene_plan':{'scenes':[{'id':'outside'}]}}}))
+        (project/'checkpoint_scene_plan.json').symlink_to(outside)
+>       with pytest.raises(ShotError,match='escapes') as error:
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_shot_spec.py:281: Failed
+_____ test_invalid_checkpoint_shape_fails_without_overwriting[checkpoint0] _____
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-104/test_invalid_checkpoint_shape_0/film')
+checkpoint = []
+
+    @pytest.mark.parametrize('checkpoint',[[],{'artifacts':[]},{'artifacts':{'scene_plan':'artifacts/bad.json'}}])
+    def test_invalid_checkpoint_shape_fails_without_overwriting(project,checkpoint):
+        from lib.shot_spec import _artifact
+        (project/'artifacts/scene_plan.json').unlink()
+        path=project/'checkpoint_scene_plan.json';path.write_text(json.dumps(checkpoint))
+        (project/'artifacts/bad.json').write_text('[]')
+        with pytest.raises(ShotError,match='object'):
+>           _artifact(project,'scene_plan')
+
+tests/contracts/test_shot_spec.py:294:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-104/test_invalid_checkpoint_shape_0/film')
+name = 'scene_plan'
+
+    def _artifact(project: Path, name: str) -> dict:
+        for relative in [f'artifacts/{name}.json', f'{name}.json']:
+            data = read_json(safe_path(project, relative))
+            if data is not None:
+                if not isinstance(data, dict):
+                    raise ShotError('INVALID_ARTIFACT', f'{name} must be an object', 409)
+                return data
+        for cp in sorted(project.glob('checkpoint_*.json')):
+            data = read_json(cp, {})
+>           value = data.get('artifacts', {}).get(name)
+E           AttributeError: 'list' object has no attribute 'get'
+
+lib/shot_spec.py:208: AttributeError
+_____ test_invalid_checkpoint_shape_fails_without_overwriting[checkpoint1] _____
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-104/test_invalid_checkpoint_shape_1/film')
+checkpoint = {'artifacts': []}
+
+    @pytest.mark.parametrize('checkpoint',[[],{'artifacts':[]},{'artifacts':{'scene_plan':'artifacts/bad.json'}}])
+    def test_invalid_checkpoint_shape_fails_without_overwriting(project,checkpoint):
+        from lib.shot_spec import _artifact
+        (project/'artifacts/scene_plan.json').unlink()
+        path=project/'checkpoint_scene_plan.json';path.write_text(json.dumps(checkpoint))
+        (project/'artifacts/bad.json').write_text('[]')
+        with pytest.raises(ShotError,match='object'):
+>           _artifact(project,'scene_plan')
+
+tests/contracts/test_shot_spec.py:294:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-104/test_invalid_checkpoint_shape_1/film')
+name = 'scene_plan'
+
+    def _artifact(project: Path, name: str) -> dict:
+        for relative in [f'artifacts/{name}.json', f'{name}.json']:
+            data = read_json(safe_path(project, relative))
+            if data is not None:
+                if not isinstance(data, dict):
+                    raise ShotError('INVALID_ARTIFACT', f'{name} must be an object', 409)
+                return data
+        for cp in sorted(project.glob('checkpoint_*.json')):
+            data = read_json(cp, {})
+>           value = data.get('artifacts', {}).get(name)
+E           AttributeError: 'list' object has no attribute 'get'
+
+lib/shot_spec.py:208: AttributeError
+_____ test_invalid_checkpoint_shape_fails_without_overwriting[checkpoint2] _____
+
+project = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-104/test_invalid_checkpoint_shape_2/film')
+checkpoint = {'artifacts': {'scene_plan': 'artifacts/bad.json'}}
+
+    @pytest.mark.parametrize('checkpoint',[[],{'artifacts':[]},{'artifacts':{'scene_plan':'artifacts/bad.json'}}])
+    def test_invalid_checkpoint_shape_fails_without_overwriting(project,checkpoint):
+        from lib.shot_spec import _artifact
+        (project/'artifacts/scene_plan.json').unlink()
+        path=project/'checkpoint_scene_plan.json';path.write_text(json.dumps(checkpoint))
+        (project/'artifacts/bad.json').write_text('[]')
+>       with pytest.raises(ShotError,match='object'):
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_shot_spec.py:293: Failed
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_spec.py::test_checkpoint_symlink_cannot_initialize_from_outside
+FAILED tests/contracts/test_shot_spec.py::test_invalid_checkpoint_shape_fails_without_overwriting[checkpoint0]
+FAILED tests/contracts/test_shot_spec.py::test_invalid_checkpoint_shape_fails_without_overwriting[checkpoint1]
+FAILED tests/contracts/test_shot_spec.py::test_invalid_checkpoint_shape_fails_without_overwriting[checkpoint2]
+4 failed, 27 passed in 1.57s

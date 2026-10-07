@@ -1,0 +1,28 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_http_asset_import_and_private_fork_are_explicit_and_do_not_overwrite_aliases _
+
+api = (<starlette.testclient.TestClient object at 0x10cc01840>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-147/test_http_asset_import_and_pri0/projects/film'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b4dbbe0>
+
+    def test_http_asset_import_and_private_fork_are_explicit_and_do_not_overwrite_aliases(api, monkeypatch):
+        from lib import paths
+        from lib.project_assets import publish_asset
+        from tests.fixtures.artist_factory import write_artist
+        client, tool, lease, project = api
+        source = project.parent / "catalog"
+        write_artist(source, "solo")
+        library = project.parent / "library"
+        manifest = publish_asset(source / "solo", "performer", "v1", library=library)
+        monkeypatch.setattr(paths, "LIBRARY_DIR", library)
+        base = "/api/project/film/assets"
+        body = {"library_id": manifest["library_id"], "asset_id": "performer", "version": "v1", "alias": "lead", "kind": "artist"}
+        wrong = client.post(base + "/import", json={**body, "library_id": "wrong-library"})
+>       assert wrong.status_code == 409
+E       assert 404 == 409
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:965: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_http_asset_import_and_private_fork_are_explicit_and_do_not_overwrite_aliases
+1 failed, 1 passed, 61 deselected in 1.67s

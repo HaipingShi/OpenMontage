@@ -1,0 +1,216 @@
+FFFFFFFFFFFFFFFFFF                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_project_does_not_resolve_a_global_same_name_artist ____________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_project_does_not_...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_project_does_not_resolve_0/library'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10967d5a0>
+
+    def test_project_does_not_resolve_a_global_same_name_artist(assets, monkeypatch):
+        from lib import artist_profile
+>       from lib.project_assets import load_project_artist, project_artist_root
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:26: ModuleNotFoundError
+_________ test_publish_is_an_immutable_version_and_import_is_portable __________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_publish_is_an_imm...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_publish_is_an_immutable_v0/library'))
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_publish_is_an_immutable_v0')
+
+    def test_publish_is_an_immutable_version_and_import_is_portable(assets, tmp_path):
+>       from lib.project_assets import publish_asset, import_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:35: ModuleNotFoundError
+_________ test_library_publish_rejects_overwriting_an_existing_version _________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_library_publish_r...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_library_publish_rejects_o0/library'))
+
+    def test_library_publish_rejects_overwriting_an_existing_version(assets):
+>       from lib.project_assets import publish_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:55: ModuleNotFoundError
+_______ test_alias_is_project_scoped_and_cannot_silently_change_version ________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_alias_is_project_...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_alias_is_project_scoped_a0/library'))
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_alias_is_project_scoped_a0')
+
+    def test_alias_is_project_scoped_and_cannot_silently_change_version(assets, tmp_path):
+>       from lib.project_assets import publish_asset, import_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:68: ModuleNotFoundError
+__________ test_imported_snapshot_hash_changes_are_rejected[profile] ___________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_imported_snapshot...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_imported_snapshot_hash_ch0/library'))
+tamper = 'profile'
+
+    @pytest.mark.parametrize("tamper", ["profile", "reference", "extra"])
+    def test_imported_snapshot_hash_changes_are_rejected(assets, tamper):
+>       from lib.project_assets import publish_asset, import_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:84: ModuleNotFoundError
+_________ test_imported_snapshot_hash_changes_are_rejected[reference] __________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_imported_snapshot...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_imported_snapshot_hash_ch1/library'))
+tamper = 'reference'
+
+    @pytest.mark.parametrize("tamper", ["profile", "reference", "extra"])
+    def test_imported_snapshot_hash_changes_are_rejected(assets, tamper):
+>       from lib.project_assets import publish_asset, import_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:84: ModuleNotFoundError
+___________ test_imported_snapshot_hash_changes_are_rejected[extra] ____________
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_imported_snapshot...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_imported_snapshot_hash_ch2/library'))
+tamper = 'extra'
+
+    @pytest.mark.parametrize("tamper", ["profile", "reference", "extra"])
+    def test_imported_snapshot_hash_changes_are_rejected(assets, tamper):
+>       from lib.project_assets import publish_asset, import_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:84: ModuleNotFoundError
+_ test_private_artist_edits_and_explicit_fork_do_not_change_other_projects_or_library _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_private_artist_ed...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_private_artist_edits_and_0/library'))
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_private_artist_edits_and_0')
+
+    def test_private_artist_edits_and_explicit_fork_do_not_change_other_projects_or_library(assets, tmp_path):
+>       from lib.project_assets import publish_asset, import_asset, fork_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:101: ModuleNotFoundError
+_______ test_generation_ledger_is_local_and_not_part_of_a_shared_version _______
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_generation_ledger...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_generation_ledger_is_loca0/library'))
+
+    def test_generation_ledger_is_local_and_not_part_of_a_shared_version(assets):
+>       from lib.project_assets import publish_asset, import_asset, record_project_artist_ledger, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:124: ModuleNotFoundError
+_ test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[asset_id-../outside] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifie...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifiers_canno0/library'))
+field = 'asset_id', value = '../outside'
+
+    @pytest.mark.parametrize("field,value", [("asset_id", "../outside"), ("version", "../v1"), ("kind", "../artist"),
+                                             ("alias", "../lead"), ("alias", "Lead")])
+    def test_binding_identifiers_cannot_escape_or_confuse_artist_aliases(assets, field, value):
+>       from lib.project_assets import publish_asset, import_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:141: ModuleNotFoundError
+_ test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[version-../v1] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifie...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifiers_canno1/library'))
+field = 'version', value = '../v1'
+
+    @pytest.mark.parametrize("field,value", [("asset_id", "../outside"), ("version", "../v1"), ("kind", "../artist"),
+                                             ("alias", "../lead"), ("alias", "Lead")])
+    def test_binding_identifiers_cannot_escape_or_confuse_artist_aliases(assets, field, value):
+>       from lib.project_assets import publish_asset, import_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:141: ModuleNotFoundError
+_ test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[kind-../artist] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifie...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifiers_canno2/library'))
+field = 'kind', value = '../artist'
+
+    @pytest.mark.parametrize("field,value", [("asset_id", "../outside"), ("version", "../v1"), ("kind", "../artist"),
+                                             ("alias", "../lead"), ("alias", "Lead")])
+    def test_binding_identifiers_cannot_escape_or_confuse_artist_aliases(assets, field, value):
+>       from lib.project_assets import publish_asset, import_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:141: ModuleNotFoundError
+_ test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[alias-../lead] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifie...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifiers_canno3/library'))
+field = 'alias', value = '../lead'
+
+    @pytest.mark.parametrize("field,value", [("asset_id", "../outside"), ("version", "../v1"), ("kind", "../artist"),
+                                             ("alias", "../lead"), ("alias", "Lead")])
+    def test_binding_identifiers_cannot_escape_or_confuse_artist_aliases(assets, field, value):
+>       from lib.project_assets import publish_asset, import_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:141: ModuleNotFoundError
+_ test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[alias-Lead] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifie...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_binding_identifiers_canno4/library'))
+field = 'alias', value = 'Lead'
+
+    @pytest.mark.parametrize("field,value", [("asset_id", "../outside"), ("version", "../v1"), ("kind", "../artist"),
+                                             ("alias", "../lead"), ("alias", "Lead")])
+    def test_binding_identifiers_cannot_escape_or_confuse_artist_aliases(assets, field, value):
+>       from lib.project_assets import publish_asset, import_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:141: ModuleNotFoundError
+___ test_asset_symlinks_are_rejected_even_when_they_stay_inside_root[source] ___
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_asset_symlinks_ar...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_asset_symlinks_are_reject0/library'))
+target = 'source'
+
+    @pytest.mark.parametrize("target", ["source", "version", "snapshot"])
+    def test_asset_symlinks_are_rejected_even_when_they_stay_inside_root(assets, target):
+>       from lib.project_assets import publish_asset, import_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:153: ModuleNotFoundError
+__ test_asset_symlinks_are_rejected_even_when_they_stay_inside_root[version] ___
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_asset_symlinks_ar...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_asset_symlinks_are_reject1/library'))
+target = 'version'
+
+    @pytest.mark.parametrize("target", ["source", "version", "snapshot"])
+    def test_asset_symlinks_are_rejected_even_when_they_stay_inside_root(assets, target):
+>       from lib.project_assets import publish_asset, import_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:153: ModuleNotFoundError
+__ test_asset_symlinks_are_rejected_even_when_they_stay_inside_root[snapshot] __
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_asset_symlinks_ar...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_asset_symlinks_are_reject2/library'))
+target = 'snapshot'
+
+    @pytest.mark.parametrize("target", ["source", "version", "snapshot"])
+    def test_asset_symlinks_are_rejected_even_when_they_stay_inside_root(assets, target):
+>       from lib.project_assets import publish_asset, import_asset, load_project_artist
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:153: ModuleNotFoundError
+______ test_generic_non_artist_assets_use_the_same_explicit_file_protocol ______
+
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-125/test_generic_non_artist_assets0')
+
+    def test_generic_non_artist_assets_use_the_same_explicit_file_protocol(tmp_path):
+>       from lib.project_assets import publish_asset, import_asset
+E       ModuleNotFoundError: No module named 'lib.project_assets'
+
+tests/contracts/test_project_assets.py:179: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_project_assets.py::test_project_does_not_resolve_a_global_same_name_artist
+FAILED tests/contracts/test_project_assets.py::test_publish_is_an_immutable_version_and_import_is_portable
+FAILED tests/contracts/test_project_assets.py::test_library_publish_rejects_overwriting_an_existing_version
+FAILED tests/contracts/test_project_assets.py::test_alias_is_project_scoped_and_cannot_silently_change_version
+FAILED tests/contracts/test_project_assets.py::test_imported_snapshot_hash_changes_are_rejected[profile]
+FAILED tests/contracts/test_project_assets.py::test_imported_snapshot_hash_changes_are_rejected[reference]
+FAILED tests/contracts/test_project_assets.py::test_imported_snapshot_hash_changes_are_rejected[extra]
+FAILED tests/contracts/test_project_assets.py::test_private_artist_edits_and_explicit_fork_do_not_change_other_projects_or_library
+FAILED tests/contracts/test_project_assets.py::test_generation_ledger_is_local_and_not_part_of_a_shared_version
+FAILED tests/contracts/test_project_assets.py::test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[asset_id-../outside]
+FAILED tests/contracts/test_project_assets.py::test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[version-../v1]
+FAILED tests/contracts/test_project_assets.py::test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[kind-../artist]
+FAILED tests/contracts/test_project_assets.py::test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[alias-../lead]
+FAILED tests/contracts/test_project_assets.py::test_binding_identifiers_cannot_escape_or_confuse_artist_aliases[alias-Lead]
+FAILED tests/contracts/test_project_assets.py::test_asset_symlinks_are_rejected_even_when_they_stay_inside_root[source]
+FAILED tests/contracts/test_project_assets.py::test_asset_symlinks_are_rejected_even_when_they_stay_inside_root[version]
+FAILED tests/contracts/test_project_assets.py::test_asset_symlinks_are_rejected_even_when_they_stay_inside_root[snapshot]
+FAILED tests/contracts/test_project_assets.py::test_generic_non_artist_assets_use_the_same_explicit_file_protocol
+18 failed in 0.55s

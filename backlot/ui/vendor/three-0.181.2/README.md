@@ -1,0 +1,1 @@
+Three.js 0.181.2, MIT. Unmodified files extracted from the npm release after SHA-512 verification. See integrity.json for exact release, source paths and SHA-256 hashes. Both module and core builds are required. Controls import the local three importmap entry. No CDN or runtime install is used.

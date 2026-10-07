@@ -76,6 +76,13 @@ class GoogleImagen(BaseTool):
     agent_skills = ["provider-model-refresh"]
 
     capabilities = ["generate_image", "generate_illustration", "text_to_image"]
+    limits = {
+        "max_reference_images": 0, "max_prompt_chars": None,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v"],
+        "variants": {model: {"max_reference_images": 14, "routes": ["t2v", "i2v", "multi_ref"]}
+                     for model in ("gemini-2.5-flash-image", "gemini-3-pro-image", "gemini-3.1-flash-image")},
+    }
     supports = {
         "negative_prompt": False,
         "seed": False,

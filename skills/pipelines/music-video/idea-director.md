@@ -28,7 +28,7 @@ Run `audio_probe` on any existing file and report duration, sample rate, channel
 
 **Music-capability discovery is mandatory**, even if the user brought a file — they may want an alternative or a cutdown-friendly version. Check all three families and report what exists:
 
-- `registry.get_by_capability("music_library")` — the user's own tracks in `music_library/`
+- `registry.get_by_capability("music_library")` — the user's own tracks in the directory reported by `music_library` (default: `<user library>/music/`)
 - `registry.get_by_capability("music_search")` — royalty-free providers (instrumentals only; rarely right for an MV)
 - `registry.get_by_capability("music_generation")` — e.g. `suno_music` (full songs with vocals and custom lyrics) or `music_gen` (instrumentals)
 
@@ -45,8 +45,8 @@ Collect or default:
 - **Full song or excerpt.** Default: full song. Excerpts (e.g. "first verse + chorus") are chosen on downbeats at `song_analysis`, not here.
 - **Platform and aspect.** Default master 16:9 1920x1080 at 24 fps (cinematic) or 30 fps (performance/pop). If the primary platform is vertical (TikTok, 抖音, Reels, Shorts, 视频号), master at 9:16 1080x1920 instead of reframing later. `brief.target_platform` only accepts `youtube | instagram | tiktok | linkedin | generic`; use `generic` for Bilibili, 网易云, QQ 音乐, Weibo, 视频号 and record the real platform in `brief.metadata.platform_detail`.
 - **Artist presence.** Does a real artist appear (footage/photos supplied), a generated performer, an animated character, or nobody?
-- **Persistent artist.** Run `python -m lib.artist_profile list`. If the video is for an artist in `artists/`, set `metadata.artist_id` and `artist_presence: "persistent_artist"`, load it with `lib.artist_profile.load_artist`, and check the brief against `persona.never` and `persona.canon` — refuse or reshape anything that crosses them. Check the actual route: `check_artist(profile, voice_route="suno_web")` for manual selection of an existing Suno binding, `local_reference` for local audition comparison, or `visual_only` when an approved finished song is already supplied and no singing generation is needed. If issues remain, route to `skills/meta/digital-artist.md`. An existing Suno voice needs binding/import, not a new audition. The CLI report separates external binding, local sample availability, and generation capabilities; do not call a text style signature a voice reference. If the user wants a recurring artist that does not exist yet, create it there before this pipeline.
-- **Joint release (two or more persistent artists).** Set `metadata.artist_ids` to the list in billing order (e.g. `["amor", "fati"]`) and `metadata.artist_id` to the first. Every artist must list the others in `collaborators`; check the brief against every artist's `persona.never` and `persona.canon`, including the `relation` recorded there.
+- **Persistent artist.** Run `python -m lib.artist_profile --project <project> list`. For an explicitly selected reusable identity, first import its fixed library version into the project. If the video is for a project-local artist, set `metadata.artist_id` and `artist_presence: "persistent_artist"`, load it with `lib.project_assets.load_project_artist(project, alias)`, and check the brief against `persona.never` and `persona.canon` — refuse or reshape anything that crosses them. Check the actual route: `check_artist(profile, voice_route="suno_web")` for manual selection of an existing Suno binding, `local_reference` for local audition comparison, or `visual_only` when an approved finished song is already supplied and no singing generation is needed. If issues remain, route to `skills/meta/digital-artist.md`. An existing Suno voice needs binding/import, not a new audition. The CLI report separates external binding, local sample availability, and generation capabilities; do not call a text style signature a voice reference. If the user wants a recurring artist that does not exist yet, create a project-owned profile via that skill before this pipeline.
+- **Joint release (two or more persistent artists).** Set `metadata.artist_ids` to the list in billing order (e.g. `["singer-a", "singer-b"]`) and `metadata.artist_id` to the first. Every artist must list the others in `collaborators`; check the brief against every artist's `persona.never` and `persona.canon`, including the `relation` recorded there.
 - **Supplied media.** Footage, photos, logos, album art. If any exist, a `source_media_review` is required before the proposal (see AGENT_GUIDE.md).
 
 ### Step 4: Treatment hypothesis
@@ -72,7 +72,7 @@ Map to the schema (`additionalProperties: false` — put everything music-specif
   "metadata": {
     "song_source": {
       "source_type": "user_supplied",
-      "path": "music_library/<file>.wav",
+      "path": "assets/music/<file>.wav",
       "has_vocal_stem": false,
       "rights_statement": "<user's words>",
       "generation_brief": null

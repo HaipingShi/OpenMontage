@@ -1,0 +1,33 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_dropped_generic_media_binding_is_not_claimed_in_generated_asset_or_cost_provenance _
+
+api = (<starlette.testclient.TestClient object at 0x10c6fd4b0>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-187/test_dropped_generic_media_bin0/projects/film'))
+
+    def test_dropped_generic_media_binding_is_not_claimed_in_generated_asset_or_cost_provenance(api):
+        import hashlib
+        from lib.project_assets import publish_asset, import_asset
+        client, tool, lease, project = api
+        source = project.parent / "unused-room"
+        source.mkdir()
+        (source / "background.png").write_bytes(base64.b64decode(png_uri("red").split(",")[1]))
+        library = project.parent / "library"
+        publish_asset(source, "room", "v1", kind="environment", library=library)
+        binding = import_asset(project, "room", "v1", "room", kind="environment", library=library)
+        relative = binding["snapshot_path"] + "/background.png"
+        spec = read_spec(client)
+        spec["route"] = "t2v"
+        spec["references"] = [{"asset_path": relative, "sha256": hashlib.sha256((project / relative).read_bytes()).hexdigest(), "role": "environment"}]
+        assert client.put("/api/shot/film/shot1", json={"spec": spec, "revision": spec["revision"], "lease_id": lease}).status_code == 200
+        spec, compiled = preview(client, lease)
+        assert compiled["payload"]["references"] == []
+>       assert compiled["asset_bindings"] == []
+E       AssertionError: assert [{'alias': 'r...686964', ...}] == []
+E
+E         Left contains one more item: {'alias': 'room', 'kind': 'environment', 'mode': 'imported', 'library_id': '5c72f11ef69341bab5428e7a3f686964', ...}
+E         Use -v to get more diff
+
+tests/contracts/test_shot_workbench_api.py:1061: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_dropped_generic_media_binding_is_not_claimed_in_generated_asset_or_cost_provenance
+1 failed, 67 deselected in 0.74s

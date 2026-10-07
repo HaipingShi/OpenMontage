@@ -114,7 +114,7 @@ class CostTracker:
         self._save()
         return entry_id
 
-    def reserve(self, entry_id: str) -> None:
+    def reserve(self, entry_id: str, *, action_approved: bool = False) -> None:
         """Reserve budget for an estimated entry.
 
         Raises BudgetExceededError in cap mode, or ApprovalRequiredError
@@ -124,7 +124,7 @@ class CostTracker:
         estimated = entry["estimated_usd"]
 
         # Check single-action approval threshold
-        if estimated > self.single_action_approval_usd:
+        if estimated > self.single_action_approval_usd and not action_approved:
             if self.mode != BudgetMode.OBSERVE:
                 raise ApprovalRequiredError(
                     f"Action costs ${estimated:.2f}, exceeds "
@@ -496,8 +496,15 @@ class CostTracker:
             "entries": self.entries,
         }
         self.cost_log_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.cost_log_path, "w") as f:
-            json.dump(data, f, indent=2)
+        # Callers serialize read/modify/write with the project transaction;
+        # an atomic replacement prevents an observer seeing truncated JSON.
+        tmp = self.cost_log_path.with_name(f'.{self.cost_log_path.name}.{uuid.uuid4().hex}.tmp')
+        try:
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, allow_nan=False)
+            tmp.replace(self.cost_log_path)
+        finally:
+            tmp.unlink(missing_ok=True)
 
     def _load(self) -> None:
         with open(self.cost_log_path) as f:  # type: ignore[arg-type]

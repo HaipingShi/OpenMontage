@@ -1,0 +1,15 @@
+Name                              Stmts   Miss Branch BrPart  Cover
+-------------------------------------------------------------------
+backlot/workbench.py                332     15     78     16    92%
+lib/artist_profile.py               394     44    152     30    86%
+lib/asset_migration.py              464     35    210     27    90%
+lib/paths.py                         15      0      2      0   100%
+lib/project_assets.py               369     37    148     31    86%
+lib/shot_compiler.py                338      4    190      9    98%
+lib/shot_execution.py               600     78    260     46    83%
+lib/shot_spec.py                    261     28    100     16    85%
+lib/shot_workbench.py               165     14     60      9    88%
+scripts/export_artist_update.py      91     10     44      8    87%
+tools/analysis/shot_compiler.py      17      0      0      0   100%
+-------------------------------------------------------------------
+TOTAL                              3046    265   1244    192    88%

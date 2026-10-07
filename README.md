@@ -48,6 +48,10 @@
   <a href="https://github.com/calesthio/OpenMontage/discussions"><img src="https://img.shields.io/badge/Community-GitHub%20Discussions-0b1220?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Discussions"></a>
 </p>
 
+## User workspaces and reusable assets
+
+Production data is independent of the application checkout. The default data home is `~/OpenMontageData`, containing `projects/` and `library/`; select absolute locations with `OPENMONTAGE_DATA_DIR`, `OPENMONTAGE_PROJECTS_DIR` and `OPENMONTAGE_LIBRARY_DIR`. Each project owns its profiles, references, shots, candidates, costs and usage ledger. Reuse explicitly imports a fixed library version and a local snapshot; project edits never change another project or the shared source. Personal assets are excluded from software patches. See [asset ownership and legacy migration](docs/asset-decoupling.md).
+
 ## Sponsors
 
 > Want to support OpenMontage? [Sponsor the project](https://github.com/sponsors/calesthio).

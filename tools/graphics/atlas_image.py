@@ -46,6 +46,15 @@ class AtlasImage(BaseTool):
     agent_skills = ["atlas-cloud", "flux-best-practices"]
 
     capabilities = ["generate_image", "text_to_image", "image_edit", "layer_decomposition"]
+    limits = {
+        "max_reference_images": 0, "max_prompt_chars": None,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v"],
+        "variants": {model: {
+            "max_reference_images": spec.get("max_images", 1 if spec.get("media_style") == "image" else 0),
+            "routes": ["t2v", "i2v", "multi_ref"] if spec.get("media_style") in ("image", "images") else ["t2v"],
+        } for model, spec in IMAGE_MODELS.items()},
+    }
     supports = {
         "custom_size": True, "aspect_ratio": True, "image_edit": True,
         "multiple_reference_images": True, "layer_decomposition": True,
