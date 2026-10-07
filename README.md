@@ -50,7 +50,7 @@
 
 ## User workspaces and reusable assets
 
-Production data is independent of the application checkout. The default data home is `~/OpenMontageData`, containing `projects/` and `library/`; select absolute locations with `OPENMONTAGE_DATA_DIR`, `OPENMONTAGE_PROJECTS_DIR` and `OPENMONTAGE_LIBRARY_DIR`. Each project owns its profiles, references, shots, candidates, costs and usage ledger. Reuse explicitly imports a fixed library version and a local snapshot; project edits never change another project or the shared source. Personal assets are excluded from software patches. See [asset ownership and legacy migration](docs/asset-decoupling.md).
+Production data is independent of the application checkout. The default data home is `~/OpenMontageData`, containing `projects/` and `library/`; select absolute locations with `OPENMONTAGE_DATA_DIR`, `OPENMONTAGE_PROJECTS_DIR` and `OPENMONTAGE_LIBRARY_DIR`. Each project owns its profiles, references, shots, candidates, costs and usage ledger. Reuse explicitly imports a fixed library version and a local snapshot; project edits never change another project or the shared source. Personal assets are excluded from the application distribution. Development changes are delivered through the active checkout and Git commits. See [asset ownership and legacy migration](docs/asset-decoupling.md).
 
 ## Sponsors
 

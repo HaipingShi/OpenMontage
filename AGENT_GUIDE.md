@@ -4,6 +4,10 @@ Start here. This is the complete operating guide and agent contract for OpenMont
 
 For architecture, key files, and conventions see [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md).
 
+## Software Development Delivery
+
+User preference confirmed on 2026-10-07: deliver development changes through the active application checkout and Git commits. Do not generate or export patch files unless the user explicitly requests one for that task. Existing implementation specs that ask for a patch are superseded by this preference.
+
 ## First Interaction — Onboarding
 
 When the user's first message is vague, exploratory, or asks what you can do ("make me a video", "what can you do?", "help me create something", "I want to make content"), read the onboarding skill **before** doing anything else:

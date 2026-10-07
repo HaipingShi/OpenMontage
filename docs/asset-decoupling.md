@@ -20,6 +20,10 @@
 
 `OPENMONTAGE_DATA_DIR` 改变默认数据根；`OPENMONTAGE_PROJECTS_DIR` 和 `OPENMONTAGE_LIBRARY_DIR` 可分别显式覆盖项目与库目录。所有目录都应使用绝对路径。已有项目覆盖配置继续有效，迁移 CLI 的 `--data-dir` 则明确指定此次迁移的目标根。
 
+辅助入口也使用同一项目根：atelier 脚手架与逐场景截图按项目名查找用户工作区，Kling 验收报告和 AutoMV 离线验收默认写在用户工作区，视频分析与角色预览的默认输出也位于该根。更换应用检出目录或调用时的工作目录，不会改变这些默认位置。
+
+atelier 脚手架的显式 `--root /absolute/root` 保留原有 `/absolute/root/projects/<slug>` 约定；AutoMV 的显式 `--output`、工具的 `output_dir` / `output_path` 继续由调用者选择。截图脚本的显式 `--entry`、`--props`、`--public-dir` 相对路径按调用目录解析；`edit_decisions.bespoke` 内的相对路径按当前项目解析。生成的 atelier README 使用项目绝对路径和 `Path` 拼接，适用于仓库外项目。
+
 项目生成只读取本项目的艺人快照。某个同名艺人没有项目绑定时，不会自动回退读取全局库。修改库中的工作资料或发布新版本，也不会悄悄改变已有项目。
 
 ## 发布、导入与本项目修改
@@ -92,3 +96,5 @@ python -m pytest tests/contracts/test_asset_migration.py --cov=lib.asset_migrati
 用户于 2026-10-07 明确批准直接合入当前本体并提交。代码现位于 `/Users/geesh/projects/OpenMontage`，默认使用已迁移的 `~/OpenMontageData`，无需另行手动应用软件补丁。复用来自独立用户库的固定版本，通过项目本地绑定读取。
 
 原任务要求生成的 `shot-workbench.patch` 与已落地的 AutoMV 导入补丁，仅保留在本地 `.git/agent-imports/` 作为迁移记录，不纳入应用软件。完整核对与集成结果见 [本体集成记录](shot-workbench-integration.md)。
+
+用户进一步明确后续开发无需输出补丁。该约定已写入 `AGENT_GUIDE.md`：后续变更直接在当前本体开发、验证和提交，仅在用户明确要求时生成补丁。

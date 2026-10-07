@@ -2,7 +2,7 @@
 """Offline acceptance fixture, NOT a production pipeline or model-quality test.
 
 Mocks inference only; real FFmpeg produces and probes every media file.
-Run: python scripts/automv_dry_run.py --output projects/automv-upgrade-dry-run
+Run: python scripts/automv_dry_run.py [--output /path/to/workspace]
 """
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from lib.frames import file_sha256
 from lib.mv_routes import plan_render_routes, verified_continuation_frame
+from lib.paths import PROJECTS_DIR
 from lib.song_audio import vocal_slice
 from lib.timeline import build_segments, validate_timeline
 from schemas.artifacts import validate_artifact
@@ -187,8 +188,24 @@ def run(output):
     return report
 
 
-if __name__=='__main__':
+def main(argv: list[str] | None = None) -> int:
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output',default='projects/automv-upgrade-dry-run')
-    report=run(parser.parse_args().output)
+    parser.add_argument('--output', help='Workspace override (default: configured projects root / automv-upgrade-dry-run)')
+    output = parser.parse_args(argv).output
+    if output is None:
+        output = PROJECTS_DIR / 'automv-upgrade-dry-run'
+        path = output
+        while path != PROJECTS_DIR:
+            if path.is_symlink():
+                parser.error(f'default workspace contains a symlink: {path}')
+            path = path.parent
+        for path in output.rglob('*'):
+            if path.is_symlink():
+                parser.error(f'default workspace contains a symlink: {path}')
+    report=run(output)
     print(json.dumps({key:report[key] for key in ('duration_seconds','timeline','shots','candidates','external_calls','master_unchanged')},indent=2))
+    return 0
+
+
+if __name__=='__main__':
+    raise SystemExit(main())

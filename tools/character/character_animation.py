@@ -15,6 +15,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from lib.paths import PROJECTS_DIR
 from schemas.artifacts import validate_artifact
 from tools.base_tool import (
     BaseTool,
@@ -518,7 +519,16 @@ class CharacterRigRenderer(BaseTool):
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         start = time.time()
-        output_path = Path(inputs.get("output_path", "projects/character-preview/preview.html"))
+        output_path = Path(inputs.get("output_path", PROJECTS_DIR / "character-preview" / "preview.html"))
+        if "output_path" not in inputs:
+            path = output_path.parent
+            while path != PROJECTS_DIR:
+                if path.is_symlink():
+                    return ToolResult(success=False, error=f"Default character workspace contains a symlink: {path}")
+                path = path.parent
+            for path in output_path.parent.rglob("*"):
+                if path.is_symlink():
+                    return ToolResult(success=False, error=f"Default character workspace contains a symlink: {path}")
         output_path.parent.mkdir(parents=True, exist_ok=True)
         timeline_json = json.dumps(inputs["action_timeline"])
         rig_characters = (inputs.get("rig_plan") or {}).get("characters", [])

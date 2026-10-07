@@ -124,3 +124,18 @@ python -m coverage report
 ### 当前本体集成验收
 
 用户于 2026-10-07 批准直接合入本体并提交后，当前 `/Users/geesh/projects/OpenMontage` 的完整合同重新通过：**1655 passed、7 skipped in 76.09s**；真实 Chrome **6 passed in 23.65s**。默认外部数据目录与三个真实项目绑定已用本体代码校验。当前验证日志及来源分析见 [本体集成记录](shot-workbench-integration.md)。
+
+### 默认路径收尾验收
+
+用户进一步要求后续开发不输出补丁，该约定已写入项目指南。六处辅助脚本与工具的默认路径遗漏已在本体修复，显式路径覆盖保留；仓库外日志及新 atelier README 的渲染命令已验证。独立功能与安全审查 **APPROVE**，发现的 1 项 MEDIUM 已修复，未解决问题为 0；详情见 [收尾审查](workspace-defaults-review.md)。
+
+最终全量合同：**1733 passed、7 skipped in 120.08s**。89 项针对性回归及跨调用目录的 5 个真实 CLI 子进程验证均通过。所有新增资产 fixture 和输出位于临时目录，供应商、渲染与分析子工具使用 mock。
+
+本次六个运行时文件的新增或修改可执行行覆盖率为 **94.35%（167/177）**，各文件均超过 80%；这是改动行覆盖率，不是旧脚本全部功能的覆盖率。初次全量运行的 coverage 模块名过滤对动态加载脚本有提示，已改用目录过滤运行针对性回归，覆盖结果以 `logs/workspace-defaults-changed-coverage.json` 为准。合同结果不受该过滤提示影响。
+
+```sh
+python -m pytest tests/contracts -q
+python -m coverage run --branch --source=./scripts,./tools/analysis,./tools/character -m pytest tests/contracts/test_atelier_workspace_scripts.py tests/contracts/test_automv_dry_run_workspace.py tests/contracts/test_kling_official_e2e_script.py tests/contracts/test_tool_workspace_defaults.py tests/contracts/test_data_paths.py -q
+```
+
+完整 RED/GREEN、最终合同及覆盖率日志保存在 `docs/evidence/shot-workbench/logs/workspace-defaults-*.log`；跨目录进程验证记录为 `workspace-defaults-cli-smoke.json`。此次验收直接使用当前本体，没有生成新的补丁。

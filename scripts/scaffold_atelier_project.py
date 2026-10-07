@@ -15,7 +15,7 @@ Usage:
     python scripts/scaffold_atelier_project.py <slug> [--composition-id CamelName]
 
 Creates:
-    projects/<slug>/
+    <configured PROJECTS_DIR>/<slug>/
       index.tsx                # registerRoot(Root)
       Root.tsx                 # one Composition + calculateMetadata
       Composition.tsx          # EMPTY scene with TODO; no imports from src/
@@ -28,9 +28,15 @@ Creates:
 """
 from __future__ import annotations
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from lib.paths import PROJECTS_DIR
 
 
 def to_camel(slug: str) -> str:
@@ -39,18 +45,43 @@ def to_camel(slug: str) -> str:
 
 
 def write(path: Path, content: str) -> None:
+    if path.is_symlink():
+        raise ValueError(f"Refusing output symlink: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
-        print(f"  skip (exists)  {path.relative_to(Path.cwd())}")
+        print(f"  skip (exists)  {path}")
         return
     path.write_text(content, encoding="utf-8")
-    print(f"  wrote          {path.relative_to(Path.cwd())}")
+    print(f"  wrote          {path}")
 
 
-def scaffold(slug: str, comp_id: str, root: Path) -> Path:
-    proj = root / "projects" / slug
+def _check_output(project: Path, relative: str) -> None:
+    path = project
+    for component in Path(relative).parts:
+        path /= component
+        if path.is_symlink():
+            raise ValueError(f"Refusing project output symlink: {path}")
+    if not path.resolve().is_relative_to(project):
+        raise ValueError(f"Output escapes project: {path}")
+
+
+def scaffold(slug: str, comp_id: str, root: Path | None = None) -> Path:
+    """Use the user projects root; explicit legacy roots retain root/projects."""
+    if not isinstance(slug, str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,127}", slug):
+        raise ValueError("slug must be a bounded kebab-case project name")
+    if not isinstance(comp_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", comp_id):
+        raise ValueError("composition id must be a bounded identifier")
+    projects = ((Path(root).expanduser() / "projects") if root is not None else PROJECTS_DIR).resolve()
+    proj = projects / slug
+    if proj.is_symlink() or not proj.resolve().is_relative_to(projects):
+        raise ValueError(f"Refusing project symlink or path outside projects root: {proj}")
+    directories = ("artifacts", "assets/audio", "assets/music", "assets/footage", "public", "renders")
+    files = ("index.tsx", "Root.tsx", "Composition.tsx", "art-direction.md", "artifacts/props.template.json", "README.md")
+    # Check every existing destination before creating any part of the scaffold.
+    for relative in (*directories, *files):
+        _check_output(proj, relative)
     (proj / "artifacts").mkdir(parents=True, exist_ok=True)
-    for sub in ("assets/audio", "assets/music", "assets/footage", "public", "renders"):
+    for sub in directories[1:]:
         (proj / sub).mkdir(parents=True, exist_ok=True)
 
     # --- index.tsx -------------------------------------------------------
@@ -168,12 +199,11 @@ Naming them keeps you from drifting into them.
 """)
 
     # --- README -------------------------------------------------------------
-    rel_proj = f"projects/{slug}"
     write(proj / "README.md", f"""\
 # {slug} — atelier (bespoke) composition
 
 Hand-authored Remotion composition. Source of truth lives here under
-`{rel_proj}/`; at render time the atelier path auto-stages a junction at
+`{proj}/`; at render time the atelier path auto-stages source files under
 `remotion-composer/projects/{slug}/` so the bundler can resolve `node_modules`.
 
 ## Doctrine
@@ -185,19 +215,20 @@ Hand-authored Remotion composition. Source of truth lives here under
 ## Render
 
 ```python
+from pathlib import Path
 from tools.video.video_compose import VideoCompose
-P = r"{rel_proj.replace('/', chr(92)*2)}"  # absolute path on your machine
+P = Path({json.dumps(str(proj), ensure_ascii=False)})
 VideoCompose().execute({{
   "operation": "render",
-  "output_path": P + r"\\renders\\final.mp4",
+  "output_path": str(P / "renders" / "final.mp4"),
   "edit_decisions": {{
     "render_runtime": "remotion",
     "composition_mode": "atelier",
     "bespoke": {{
-      "entry": P + r"\\index.tsx",
+      "entry": str(P / "index.tsx"),
       "composition_id": "{comp_id}",
-      "props_path": P + r"\\artifacts\\props.json",
-      "public_dir": P + r"\\public",
+      "props_path": str(P / "artifacts" / "props.json"),
+      "public_dir": str(P / "public"),
       "art_direction": "<short note OR path to art-direction.md>",
       "scale": 1.0, "crf": 18, "concurrency": 8
     }}
@@ -213,7 +244,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("slug", help="kebab-case project name, e.g. 'compound-snowball'")
     ap.add_argument("--composition-id", help="React composition id (default: CamelCase of slug)")
-    ap.add_argument("--root", default=".", help="Repo root (default: cwd)")
+    ap.add_argument("--root", type=Path, help="Explicit legacy root; use <root>/projects (default: configured user PROJECTS_DIR)")
     args = ap.parse_args(argv)
 
     slug = args.slug.strip().lower()
@@ -221,15 +252,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: slug must be kebab-case, got {slug!r}", file=sys.stderr)
         return 2
     comp_id = args.composition_id or to_camel(slug)
-    root = Path(args.root).resolve()
-
-    print(f"Scaffolding atelier project '{slug}' (composition_id={comp_id}) under {root}\n")
-    proj = scaffold(slug, comp_id, root)
+    try:
+        proj = scaffold(slug, comp_id, args.root)
+    except (ValueError, OSError) as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 2
     print(f"\nDone. Now:")
-    print(f"  1. Open {proj.relative_to(root)}/art-direction.md and fill it in.")
+    print(f"  1. Open {proj / 'art-direction.md'} and fill it in.")
     print(f"  2. Read skills/meta/bespoke-composition.md.")
     print(f"  3. Hand-author Composition.tsx (replace the black placeholder).")
-    print(f"  4. Render — see {proj.relative_to(root)}/README.md.")
+    print(f"  4. Render — see {proj / 'README.md'}.")
     return 0
 
 

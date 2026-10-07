@@ -1,0 +1,63 @@
+{
+  "scope": "added or modified executable lines in six runtime modules",
+  "files": [
+    {
+      "file": "scripts/atelier_snapshots.py",
+      "changed_statements": 63,
+      "covered_statements": 57,
+      "percent": 90.48,
+      "missing_lines": [
+        36,
+        54,
+        61,
+        147,
+        148,
+        149
+      ]
+    },
+    {
+      "file": "scripts/automv_dry_run.py",
+      "changed_statements": 18,
+      "covered_statements": 17,
+      "percent": 94.44,
+      "missing_lines": [
+        211
+      ]
+    },
+    {
+      "file": "scripts/kling_official_animated_explainer_e2e.py",
+      "changed_statements": 36,
+      "covered_statements": 36,
+      "percent": 100.0,
+      "missing_lines": []
+    },
+    {
+      "file": "scripts/scaffold_atelier_project.py",
+      "changed_statements": 39,
+      "covered_statements": 36,
+      "percent": 92.31,
+      "missing_lines": [
+        38,
+        49,
+        65
+      ]
+    },
+    {
+      "file": "tools/analysis/video_analyzer.py",
+      "changed_statements": 10,
+      "covered_statements": 10,
+      "percent": 100.0,
+      "missing_lines": []
+    },
+    {
+      "file": "tools/character/character_animation.py",
+      "changed_statements": 11,
+      "covered_statements": 11,
+      "percent": 100.0,
+      "missing_lines": []
+    }
+  ],
+  "changed_statements": 177,
+  "covered_statements": 167,
+  "percent": 94.35
+}

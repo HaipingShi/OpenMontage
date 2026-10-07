@@ -1,0 +1,45 @@
+{
+  "normalization": "Remove pytest presentation whitespace at line ends only; raw logs retained in /tmp/openmontage-*.log.",
+  "files": [
+    {
+      "file": "workspace-defaults-atelier-green.log",
+      "raw_sha256": "d9c19819adee73e4be7fce201cd842592927aadfd4b8dc54085913158e3e3b78",
+      "committed_sha256": "d9c19819adee73e4be7fce201cd842592927aadfd4b8dc54085913158e3e3b78"
+    },
+    {
+      "file": "workspace-defaults-atelier-red.log",
+      "raw_sha256": "bc8441b9c666e9b6e8feae793e738d89e81c7501e780d0164425cff0c7a3d06f",
+      "committed_sha256": "bc8441b9c666e9b6e8feae793e738d89e81c7501e780d0164425cff0c7a3d06f"
+    },
+    {
+      "file": "workspace-defaults-contracts-final.log",
+      "raw_sha256": "86ee4995669f7a1ed8c14ec79e6d49b656b61e6ca7a2c59243f4b1fae8270115",
+      "committed_sha256": "86ee4995669f7a1ed8c14ec79e6d49b656b61e6ca7a2c59243f4b1fae8270115"
+    },
+    {
+      "file": "workspace-defaults-coverage.log",
+      "raw_sha256": "365bfa251bec726c986d90c5cb36a628c5e27c4215db45d3437dc40cb0b6021a",
+      "committed_sha256": "365bfa251bec726c986d90c5cb36a628c5e27c4215db45d3437dc40cb0b6021a"
+    },
+    {
+      "file": "workspace-defaults-review-green.log",
+      "raw_sha256": "78dd76f300d329126dcc56016630efecc9a705c265beded874af22993e2ea463",
+      "committed_sha256": "78dd76f300d329126dcc56016630efecc9a705c265beded874af22993e2ea463"
+    },
+    {
+      "file": "workspace-defaults-review-red.log",
+      "raw_sha256": "e32854b0902d3af6efa8a3ef04b3e2784ac40533d25e632cf374739dcada937f",
+      "committed_sha256": "b5a3645bfe14dfa1e378862769a3acd8aacca080a71f25c2eb0461fb6a38f197"
+    },
+    {
+      "file": "workspace-defaults-tools-green.log",
+      "raw_sha256": "1de51de75a92c47c8a59041ae4decdd03fe8f09f4a8ac80776d60c53437110a6",
+      "committed_sha256": "1de51de75a92c47c8a59041ae4decdd03fe8f09f4a8ac80776d60c53437110a6"
+    },
+    {
+      "file": "workspace-defaults-tools-red.log",
+      "raw_sha256": "b164e338679f7decb79f496703fb0e8afd8a67690c480d3e14cdc6698e16d24c",
+      "committed_sha256": "abf03eb4ae295dc749c7afe6d3e9946ab2bb4563aec1aa3b62859cf63b7cc070"
+    }
+  ]
+}
