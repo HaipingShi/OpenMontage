@@ -533,3 +533,46 @@ def test_actual_frame_and_control_metadata_survive_in_provenance(compiler):
     assert {r["asset_path"] for r in result["payload"]["references"]} == {r["asset_path"] for r in refs}
     assert result["payload"]["reference_images"] == [refs[1]["asset_path"], refs[0]["asset_path"]]
     assert result["payload"]["reference_map"] == {"fati": [refs[1]["asset_path"]], "amor": [refs[0]["asset_path"]]}
+
+
+def test_complete_sentences_and_decimal_times_keep_clean_punctuation(compiler):
+    value = spec(intent='An ordinary room.', subjects=[artist(action='At 0.50 seconds she lifts her eyes.')],
+                 identity_context=identity(), movement={'type':'static','intensity':0,'cause':'Window daylight illuminates her face.'})
+    result = compiler(value, 'mock', context())
+    assert '..' not in result['prompt'] and 'Movement cause:' not in result['prompt']
+    assert '0.50 seconds' in result['prompt'] and 'Window daylight illuminates' in result['prompt']
+
+
+def test_specific_candle_light_does_not_get_generic_mixed_light(compiler):
+    result = compiler(spec(environment={'location':'rental room','lighting':'a single candle below her left cheek',
+                                        'lighting_key':'natural','color_temperature':'mixed'}), 'mock', context())
+    assert 'single candle' in result['prompt']
+    assert 'natural ambient lighting' not in result['prompt']
+    assert 'mixed color temperatures' not in result['prompt']
+
+
+def test_placeholder_and_missing_visible_identity_trait_block_submission(compiler):
+    value = spec(subjects=[artist()], identity_context=identity(), intent='director-defined framing')
+    assert 'UNRESOLVED_PROMPT_PLACEHOLDER' in codes(compiler(value,'mock',context()))
+    value['intent']='She sits beside a window'
+    value['identity_context']['fati']['prompt_required_traits']=['soft bangs']
+    assert 'IDENTITY_TRAIT_MISSING' in codes(compiler(value,'mock',context()))
+    value['subjects'][0]['visible_parts']=['hands']
+    assert 'IDENTITY_TRAIT_MISSING' not in codes(compiler(value,'mock',context()))
+
+
+def test_duration_sizing_preserves_later_reuse_and_discrete_provider_limits(compiler):
+    from lib.shot_compiler import size_generation_duration
+    assert size_generation_duration([3.03,6.3], {'minimum':4,'maximum':15}) == 7
+    assert size_generation_duration([3.03], [5,8,10]) == 5
+    with pytest.raises(ValueError):size_generation_duration([15], {'maximum':15})
+    value=spec(generation_context={'duration_policy':'source_out_with_handles','source_outs':[3.03,6.3]})
+    result=compiler(value,'mock',context(limits={'durations':{'minimum':4,'maximum':15}}))
+    assert result['payload']['duration_seconds']==7
+    assert value['duration_seconds']==5
+
+
+def test_fast_lyrics_warn_instead_of_silently_retiming_audio(compiler):
+    value=spec(generation_context={'lyric_windows':[{'clip_in_seconds':2.6,'clip_out_seconds':3.4667,'text':'最后那句叮咛'}]})
+    result=compiler(value,'mock',context())
+    assert 'LYRIC_RATE_REVIEW' in codes(result) and result['payload']['duration_seconds']==5

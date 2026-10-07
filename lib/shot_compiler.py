@@ -52,6 +52,34 @@ _VISIBLE_TRAITS = {
 }
 _PERSON_KINDS = {"artist", "character"}
 _ROUTE_NAMES = {"t2v", "i2v", "first_last", "multi_ref", "lipsync"}
+_PLACEHOLDER = re.compile(
+    r"director-defined|specified for this shot|approved (?:scene picture|clothing|chapter outfit)|"
+    r"stands or sits|ready to deliver the selected phrase", re.I,
+)
+
+
+def _sentences(*parts: str) -> str:
+    return ". ".join(part.strip().rstrip(".。 ") for part in parts if part.strip())
+
+
+def size_generation_duration(source_outs: list[float], constraints: Any,
+                             trailing_handle: float = 0.5, minimum: float = 4) -> float:
+    """Size from every retained/reused out-point; never retime the song."""
+    if not source_outs or any(not _number(v, 0, 3600) for v in source_outs):
+        raise ValueError("source out-points must be finite nonnegative numbers")
+    if not _number(trailing_handle, 0, 3600) or not _number(minimum, 0, 3600):
+        raise ValueError("duration bounds must be finite nonnegative numbers")
+    required = max(minimum, math.ceil(max(source_outs) + trailing_handle - 1e-9))
+    if isinstance(constraints, list):
+        choices = sorted(v for v in constraints if _number(v, required, 3600))
+        if not choices:
+            raise ValueError("no supported duration covers all source out-points and handles")
+        return choices[0]
+    if isinstance(constraints, dict):
+        required = max(required, constraints.get("minimum", 0))
+        if required > constraints.get("maximum", math.inf):
+            raise ValueError("source out-points exceed provider duration limit")
+    return required
 
 
 def resolve_limits(limits: dict[str, Any], options: dict[str, Any]) -> dict[str, Any]:
@@ -274,24 +302,28 @@ def compile(spec: dict[str, Any], tool_name: str, context: dict[str, Any] | None
                     details.extend(trait for trait in canon.get("locked_traits", []) if isinstance(trait, str) and _VISIBLE_TRAITS[part].search(trait))
         wardrobe = _text(canon.get("wardrobe"))
         if wardrobe:
-            details.append(f"Wardrobe: {wardrobe}")
-        clean_canon, canon_exclusions = _normalize_canon(". ".join(filter(None, details)))
+            details.append(f"Wearing {wardrobe}")
+        clean_canon, canon_exclusions = _normalize_canon(_sentences(*details))
         exclusions.extend(canon_exclusions)
         negative = _text(canon.get("negative_prompt"))
         if negative:
             exclusions.extend(part.strip() for part in negative.split(",") if part.strip())
         name = _text(canon.get("name")) or ref_id
-        description = ". ".join(filter(None, [name, clean_canon, _text(subject.get("placement")), _text(subject.get("action"))]))
+        for trait in canon.get("prompt_required_traits", []) if "face" in parts else []:
+            if isinstance(trait, str) and trait.casefold() not in clean_canon.casefold():
+                report("error", "IDENTITY_TRAIT_MISSING", f"可见身份描述缺少锁定特征：{trait}")
+        description = _sentences(name, clean_canon, _text(subject.get("placement")), _text(subject.get("action")))
         subject_descriptions.append(description)
     if len(persons) > 1:
         subject_descriptions.append("Each person retains distinct facial features and their own designated wardrobe")
     environment_description = ", ".join(filter(None, [_text(environment.get("location")), _text(environment.get("time")),
         ", ".join(_text(color) for color in _strings(environment.get("palette")))]))
-    if environment.get("lighting_key") and environment.get("lighting"):
+    specific_light = _text(environment.get("lighting"))
+    if specific_light:
         environment_description += ", " + _text(environment["lighting"])
-    scene_description = ". ".join(filter(None, [_text(spec.get("intent")), *subject_descriptions, environment_description]))
+    scene_description = _sentences(_text(spec.get("intent")), *subject_descriptions, environment_description)
     if cause:
-        scene_description += f". Movement cause: {cause}"
+        scene_description = _sentences(scene_description, cause)
     camera_text = []
     if framing.get("camera_height") is not None:
         camera_text.append(f"camera height {framing['camera_height']} m")
@@ -299,7 +331,7 @@ def compile(spec: dict[str, Any], tool_name: str, context: dict[str, Any] | None
         angle = framing["camera_angle"]
         camera_text.append(f"camera angle {angle}" + (" degrees" if isinstance(angle, (int, float)) else ""))
     if camera_text:
-        scene_description += ". " + ", ".join(camera_text)
+        scene_description = _sentences(scene_description, ", ".join(camera_text))
     negative_field = limits.get("negative_prompt_field")
     exclusions = list(dict.fromkeys(value for value in exclusions if value))
     negative_prompt = ", ".join(exclusions) if negative_field else ""
@@ -315,7 +347,9 @@ def compile(spec: dict[str, Any], tool_name: str, context: dict[str, Any] | None
     scene = {"description": scene_description, "shot_language": {
         "shot_size": shot_size, "lens_mm": framing.get("lens_mm"),
         "depth_of_field": framing.get("depth_of_field"), "camera_movement": movement_type,
-        "lighting_key": environment.get("lighting_key") or environment.get("lighting"), "color_temperature": environment.get("color_temperature"),
+        "lighting_key": (None if specific_light and environment.get("lighting_key") in (None, "natural")
+                         else environment.get("lighting_key")),
+        "color_temperature": None if specific_light else environment.get("color_temperature"),
     }, "texture_keywords": spec.get("texture_keywords") or []}
     prompt = build_shot_prompt(scene, spec.get("style_context") or {})
     notes = spec.get("notes", "")
@@ -325,11 +359,30 @@ def compile(spec: dict[str, Any], tool_name: str, context: dict[str, Any] | None
             report("error", "NOTES_TOO_LONG", "附加说明超过 4000 字符")
     if _NEGATION.search(prompt):
         report("error", "POSITIVE_NEGATION", "最终正向提示词包含 no / without / not / 中文否定表达；请改成正向结构描述或 exclusions")
+    if _PLACEHOLDER.search(prompt):
+        report("error", "UNRESOLVED_PROMPT_PLACEHOLDER", "提示词含未解析占位描述；请填写具体服装、位置和动作")
+    if ".." in prompt:
+        report("error", "PROMPT_PUNCTUATION", "提示词含重复句号；请检查源说明标点")
     max_prompt = limits.get("max_prompt_chars")
     if isinstance(max_prompt, int) and len(prompt) > max_prompt:
         report("error", "PROMPT_TOO_LONG", f"提示词共 {len(prompt)} 字符，超过工具上限 {max_prompt}；请缩短结构字段")
     generation_context = spec.get("generation_context") or {}
     duration = generation_context.get("generation_duration_seconds", spec.get("duration_seconds")) if isinstance(generation_context, dict) else spec.get("duration_seconds")
+    if isinstance(generation_context, dict):
+        if generation_context.get("duration_policy") == "source_out_with_handles":
+            try:
+                duration = size_generation_duration(generation_context.get("source_outs", []),
+                                                    limits.get("durations"),
+                                                    generation_context.get("trailing_handle_seconds", 0.5),
+                                                    generation_context.get("minimum_generation_seconds", 4))
+            except ValueError as exc:
+                report("error", "UNSUPPORTED_DURATION", str(exc))
+        for window in generation_context.get("lyric_windows", []):
+            start, end = window.get("clip_in_seconds"), window.get("clip_out_seconds")
+            if _number(start, 0, 3600) and _number(end, 0, 3600) and end > start:
+                count = len(re.findall(r"[\u4e00-\u9fff]", window.get("text", "")))
+                if count / (end - start) > 4.5:
+                    report("warn", "LYRIC_RATE_REVIEW", f"唱词语速 {count / (end-start):.2f} 字/秒，需复核音频边界：{window.get('text', '')}")
     constraints = [limits.get("durations")]
     constraints.append((limits.get("durations_by_route") or {}).get(route))
     constraints.append((limits.get("durations_by_resolution") or {}).get(options.get("resolution") or spec.get("target_resolution")))
