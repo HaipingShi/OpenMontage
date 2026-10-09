@@ -1,7 +1,7 @@
 import {el, mediaURL} from '/ui/lib.js';
 
 export const reviewLabels = {unreviewed: '未标注', approved: '通过', rejected: '不合格', trimmable: '可裁切使用'};
-const reasonLabels = {face: '面貌', action: '动作', costume: '服装', lip_sync: '口型', framing: '构图', other: '其他'};
+const reasonLabels = {face: '面貌', action: '动作', costume: '服装', lip_sync: '口型', framing: '构图', camera: '运镜', lighting: '光线', environment: '环境', objects: '手 / 道具', continuity: '时序', other: '其他'};
 const timeText = value => value == null ? '整段' : `${Number(value).toFixed(2)}s`;
 export function sourceReview(reviews, path) {
   return (reviews.sources || []).find(record => record.media_path === path);
@@ -61,7 +61,7 @@ export function openShotReview({projectId, card, media, reviews, modal, onSaved}
     if (Number.isFinite(viewer.duration) && ((a || 0) > viewer.duration || (b || 0) > viewer.duration)) {
       message.textContent = '问题时间不能超过素材时长。'; return false;
     }
-    const issue = {scene_id: editingIssue?.scene_id || card.id, start_seconds: a, end_seconds: b, reasons: selected, note: note.value.trim()};
+    const issue = {...(editingIssue || {}), scene_id: editingIssue?.scene_id || card.id, start_seconds: a, end_seconds: b, reasons: selected, note: note.value.trim()};
     const index = issues.indexOf(editingIssue);
     if (index >= 0) issues[index] = issue; else issues.push(issue);
     editingIssue = null;
@@ -114,7 +114,7 @@ export function renderFixList(reviews, onOpen) {
     sources.length ? sources.map(record => el('div', {class: 'review-issue'},
       el('div', {}, el('b', {}, `${reviewLabels[record.status]} · ${record.linked_scene_ids.join('、') || '原镜头已变更'}`),
         el('div', {class: 'review-source'}, record.media_path),
-        ...record.issues.map(issue => el('p', {}, `${issue.scene_id} · ${timeText(issue.start_seconds)}${issue.end_seconds != null ? '–' + timeText(issue.end_seconds) : ''} · ${issue.reasons.map(key => reasonLabels[key]).join('、')} ${issue.note}`))),
+        ...record.issues.map(issue => el('p', {}, `${issue.scene_id} · ${timeText(issue.start_seconds)}${issue.end_seconds != null ? '–' + timeText(issue.end_seconds) : ''} · ${issue.reasons.map(key => reasonLabels[key]).join('、')} ${issue.note}${issue.desired_change ? ' → '+issue.desired_change : ''}`))),
       record.linked_scene_ids.length ? el('button', {type: 'button', onclick: () => onOpen(record)}, '查看 / 修改') : null))
       : el('p', {}, '暂无修正项。点击镜头下方「标注」记录审片反馈。'));
 }

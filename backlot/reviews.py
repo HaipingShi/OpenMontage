@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import threading
 import uuid
 from datetime import datetime, timezone
@@ -20,8 +21,10 @@ class Issue(BaseModel):
     scene_id: str = Field(min_length=1, max_length=200)
     start_seconds: float | None = Field(default=None, ge=0, allow_inf_nan=False)
     end_seconds: float | None = Field(default=None, ge=0, allow_inf_nan=False)
-    reasons: list[Literal['face', 'action', 'costume', 'lip_sync', 'framing', 'other']] = Field(default_factory=list, max_length=6)
+    reasons: list[Literal['face', 'action', 'costume', 'lip_sync', 'framing', 'camera', 'lighting', 'environment', 'objects', 'continuity', 'other']] = Field(default_factory=list, max_length=11)
     note: str = Field(default='', max_length=4000)
+    severity: Literal['minor', 'major', 'blocking'] = 'major'
+    desired_change: str = Field(default='', max_length=4000)
 
     @model_validator(mode='after')
     def valid_range(self):
@@ -121,3 +124,45 @@ def save_review(project: Path, review: ShotReview) -> dict:
         finally:
             tmp.unlink(missing_ok=True)
         return {**record, 'linked_scene_ids': links[key]}
+
+
+def submit_reviews(project: Path) -> dict:
+    """Freeze human notes and source hashes for later analysis; no approval/generation."""
+    with _lock:
+        reviews = load_reviews(project)
+        if not reviews['sources']:
+            raise HTTPException(422, '请先保存至少一段素材的标注')
+        sources = []
+        for record in reviews['sources']:
+            target = (project / record['media_path']).resolve()
+            if not target.is_relative_to(project.resolve()) or not target.is_file():
+                raise HTTPException(409, '标注素材已变更或不存在，请重新确认')
+            digest = hashlib.sha256()
+            with target.open('rb') as stream:
+                for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+                    digest.update(chunk)
+            sources.append({**record, 'source_sha256': digest.hexdigest()})
+        ident = uuid.uuid4().hex
+        result = {'version': '1.0', 'submission_id': ident,
+                  'submitted_at': datetime.now(timezone.utc).isoformat(),
+                  'project_id': project.name, 'review_file': 'reviews/shot_reviews.json',
+                  'snapshot_path': f'reviews/submissions/{ident}.json', 'sources': sources,
+                  'purpose': 'human_annotations_for_agent_analysis',
+                  'generation_authorized': False}
+        directory = _path(project).parent
+        snapshots = directory / 'submissions'
+        if not snapshots.resolve().is_relative_to(project.resolve()):
+            raise HTTPException(403, 'submission path escapes project')
+        snapshots.mkdir(parents=True, exist_ok=True)
+        payload = json.dumps(result, ensure_ascii=False, indent=2) + '\n'
+        (snapshots / f'{ident}.json').write_text(payload, encoding='utf-8')
+        handoff = directory / 'review_handoff.json'
+        if not handoff.resolve().is_relative_to(project.resolve()):
+            raise HTTPException(403, 'handoff path escapes project')
+        tmp = directory / f'.{ident}.tmp'
+        try:
+            tmp.write_text(payload, encoding='utf-8')
+            tmp.replace(handoff)
+        finally:
+            tmp.unlink(missing_ok=True)
+        return result

@@ -205,6 +205,36 @@ class TestFindingsFixes:
         assert res.status_code == 404  # never the raw video bytes (F-03)
 
 class TestShotReviews:
+    def test_dedicated_page_and_human_submission(self, client, projects_root):
+        import hashlib
+        project = self.setup_shots(projects_root)
+        page = client.get('/r/film')
+        assert page.status_code == 200
+        assert '完成标注，交给 Agent' in page.text
+        assert page.headers['cache-control'] == 'no-cache'
+        assert client.post('/api/project/film/reviews/submit').status_code == 422
+        before = (project / 'artifacts/asset_manifest.json').read_bytes()
+        issue = {'scene_id': 'sc2', 'start_seconds': 1.2, 'end_seconds': 2.4,
+                 'reasons': ['action', 'objects'], 'note': '道具漂浮',
+                 'severity': 'blocking', 'desired_change': '道具留在桌面'}
+        assert client.put('/api/project/film/reviews', json=self.payload(issues=[issue])).status_code == 200
+        handoff = client.post('/api/project/film/reviews/submit').json()
+        assert handoff['generation_authorized'] is False
+        assert handoff['sources'][0]['source_sha256'] == hashlib.sha256(b'video').hexdigest()
+        assert handoff['sources'][0]['issues'][0] == issue
+        snapshot = project / handoff['snapshot_path']
+        assert json.loads(snapshot.read_text()) == handoff
+        assert json.loads((project / 'reviews/review_handoff.json').read_text()) == handoff
+        assert (project / 'artifacts/asset_manifest.json').read_bytes() == before
+        assert client.put('/api/project/film/reviews', json=self.payload(revision=1, issues=[])).status_code == 200
+        assert json.loads(snapshot.read_text())['sources'][0]['issues'] == [issue]
+
+    def test_submission_origin_and_severity_validation(self, client, projects_root):
+        self.setup_shots(projects_root)
+        assert client.post('/api/project/film/reviews/submit', headers={'Origin':'https://other.example'}).status_code == 403
+        issue = {'scene_id':'sc2', 'reasons':['camera'], 'severity':'invalid'}
+        assert client.put('/api/project/film/reviews', json=self.payload(issues=[issue])).status_code == 422
+
     def setup_shots(self, root):
         project = _make_project(root)
         (project / 'assets/video/source.mp4').write_bytes(b'video')

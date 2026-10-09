@@ -50,6 +50,19 @@ Design doc: `internal/design/LIVING_STORYBOARD.md`.
 
 ## Shot review annotations
 
+Open `/r/<project-id>` for the dedicated human review workspace. It lists
+saved video sources without autoplay or generated thumbnails, with a player,
+source-relative point/range annotations, severity, issue categories and desired
+changes. Accepted annotations autosave to `reviews/shot_reviews.json`; drafts
+survive refresh per browser tab, and conflicting revisions require reopening.
+The workspace can export notes and compare approved reference images/prompts.
+
+**完成标注，交给 Agent** saves outstanding changes and calls
+`POST /api/project/<id>/reviews/submit`. This freezes notes plus source SHA256
+in `reviews/submissions/<id>.json` and updates `reviews/review_handoff.json`.
+It requests later analysis of human feedback, and never approves production,
+selects a candidate or resumes generation.
+
 Click **标注** below a storyboard shot (or click an alternate take) to review
 its source. Choose 通过 / 不合格 / 可裁切使用, pause the source to capture a
 point or range, and record face, action, costume, lip-sync, framing, or other

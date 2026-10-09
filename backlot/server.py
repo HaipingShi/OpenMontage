@@ -18,7 +18,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from backlot.reviews import ShotReview, load_reviews, save_review
+from backlot.reviews import ShotReview, load_reviews, save_review, submit_reviews
 from backlot.state import PROJECTS_DIR, REPO_ROOT, list_projects, load_board_state, summarize_project
 
 UI_DIR = Path(__file__).resolve().parent / "ui"
@@ -199,6 +199,15 @@ def create_app() -> FastAPI:
         hub.publish(project_id)
         return result
 
+    @app.post("/api/project/{project_id}/reviews/submit")
+    async def submit_project_reviews(project_id: str, request: Request) -> dict:
+        origin = request.headers.get("origin")
+        if origin and origin.rstrip("/") != str(request.base_url).rstrip("/"):
+            raise HTTPException(403, "cross-origin review write denied")
+        result = await asyncio.to_thread(submit_reviews, _safe_project_dir(project_id))
+        hub.publish(project_id)
+        return result
+
     @app.get("/api/project/{project_id}/events")
     async def project_events(project_id: str, request: Request) -> StreamingResponse:
         _safe_project_dir(project_id)  # 404 early for unknown projects
@@ -296,6 +305,11 @@ def create_app() -> FastAPI:
 
     # ---- UI ------------------------------------------------------------
 
+    @app.get("/r/{project_id}")
+    async def review_page(project_id: str) -> HTMLResponse:
+        _safe_project_dir(project_id)
+        return _ui_html("review.html", ("review.css", "review.js"))
+
     @app.get("/p/{project_id}")
     async def board_page(project_id: str) -> HTMLResponse:
         return _ui_html("board.html", ("board.css", "board.js"))
@@ -319,7 +333,7 @@ def create_app() -> FastAPI:
     async def ui_no_cache(request, call_next):
         response = await call_next(request)
         path = request.url.path
-        if path == "/" or path.startswith("/ui") or path.startswith("/p/") or path.startswith("/w/"):
+        if path == "/" or path.startswith("/ui") or path.startswith("/p/") or path.startswith("/w/") or path.startswith("/r/"):
             response.headers["Cache-Control"] = "no-cache"
         return response
 
