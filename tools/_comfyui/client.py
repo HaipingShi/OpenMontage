@@ -60,9 +60,30 @@ class ComfyUIClient:
             server_url or self._capability_url() or os.environ.get("COMFYUI_SERVER_URL")
         )
         self.server_url = (resolved or "http://localhost:8188").rstrip("/")
+        configured_url = self._capability_url() or os.environ.get("COMFYUI_SERVER_URL")
+        capability_key = (
+            os.environ.get(f"COMFYUI_{capability.upper()}_API_KEY")
+            if capability else None
+        )
+        shared_url = os.environ.get("COMFYUI_SERVER_URL", "").rstrip("/")
+        token = capability_key or (
+            os.environ.get("COMFYUI_API_KEY")
+            if self.server_url == shared_url else None
+        )
+        # Never forward the configured credential to an explicit different server.
+        self._auth_headers = (
+            {"Authorization": f"Bearer {token}"}
+            if token and configured_url and self.server_url == configured_url.rstrip("/") else {}
+        )
+        self._auth_server_url = self.server_url
         # Scopes websocket execution events to this client (see wait_ws) and
         # is echoed back on /prompt so the server targets messages to us.
         self.client_id = str(uuid.uuid4())
+
+    def _auth_options(self) -> dict:
+        if self._auth_headers and self.server_url == self._auth_server_url:
+            return {"headers": self._auth_headers}
+        return {}
 
     def _capability_url(self) -> str | None:
         if self._capability_env_var:
@@ -80,6 +101,11 @@ class ComfyUIClient:
 
     def unavailable_reason(self) -> str:
         """Human-readable explanation of why the server can't be reached."""
+        status = getattr(self, "_last_http_status", None)
+        if status in (401, 403):
+            return f"ComfyUI at {self.server_url} rejected authentication (HTTP {status}). The connection is configured; ask the service maintainer to check its service-level key."
+        if status == 404:
+            return f"ComfyUI at {self.server_url} returned HTTP 404. The connection is configured; check cloud service readiness and routing before changing its address."
         env_var_hint = self._capability_env_var or "COMFYUI_SERVER_URL"
         if self._capability_env_var:
             env_var_hint += " (or the shared COMFYUI_SERVER_URL)"
@@ -98,9 +124,11 @@ class ComfyUIClient:
     def is_available(self) -> bool:
         """Return True if the ComfyUI server is reachable."""
         try:
-            resp = requests.get(f"{self.server_url}/system_stats", timeout=5)
+            resp = requests.get(f"{self.server_url}/system_stats", timeout=5, **self._auth_options())
+            self._last_http_status = resp.status_code
             return resp.status_code == 200
         except Exception:
+            self._last_http_status = None
             return False
 
     # ------------------------------------------------------------------
@@ -131,7 +159,7 @@ class ComfyUIClient:
         for node_class, (field, group) in node_to_key.items():
             try:
                 resp = requests.get(
-                    f"{self.server_url}/object_info/{node_class}", timeout=10
+                    f"{self.server_url}/object_info/{node_class}", timeout=10, **self._auth_options()
                 )
                 resp.raise_for_status()
                 data = resp.json()
@@ -164,7 +192,7 @@ class ComfyUIClient:
         """Return whether the connected server exposes a node class."""
         try:
             response = requests.get(
-                f"{self.server_url}/object_info/{node_class}", timeout=10
+                f"{self.server_url}/object_info/{node_class}", timeout=10, **self._auth_options()
             )
             response.raise_for_status()
             return node_class in response.json()
@@ -180,7 +208,7 @@ class ComfyUIClient:
         resp = requests.post(
             f"{self.server_url}/prompt",
             json={"prompt": workflow, "client_id": self.client_id},
-            timeout=30,
+            timeout=30, **self._auth_options(),
         )
         try:
             data = resp.json()
@@ -223,7 +251,7 @@ class ComfyUIClient:
 
     def _history_entry(self, prompt_id: str) -> dict | None:
         """Return a completed history entry, or ``None`` while it is absent."""
-        resp = requests.get(f"{self.server_url}/history/{prompt_id}", timeout=10)
+        resp = requests.get(f"{self.server_url}/history/{prompt_id}", timeout=10, **self._auth_options())
         resp.raise_for_status()
         entry = resp.json().get(prompt_id)
         if entry is None:
@@ -280,7 +308,8 @@ class ComfyUIClient:
             "https://", "wss://", 1
         )
         conn = websocket.create_connection(
-            f"{ws_url}/ws?clientId={self.client_id}", timeout=10
+            f"{ws_url}/ws?clientId={self.client_id}", timeout=10,
+            **({"header": self._auth_options()["headers"]} if self._auth_options() else {})
         )
         try:
             conn.settimeout(interval)
@@ -383,7 +412,7 @@ class ComfyUIClient:
                 "subfolder": subfolder,
                 "type": folder_type,
             },
-            timeout=120,
+            timeout=120, **self._auth_options(),
         )
         resp.raise_for_status()
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -399,7 +428,7 @@ class ComfyUIClient:
             resp = requests.post(
                 f"{self.server_url}/upload/image",
                 files={"image": (name, f, "image/png")},
-                timeout=30,
+                timeout=30, **self._auth_options(),
             )
         resp.raise_for_status()
         return resp.json()["name"]

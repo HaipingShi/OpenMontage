@@ -8,6 +8,10 @@ For architecture, key files, and conventions see [`PROJECT_CONTEXT.md`](PROJECT_
 
 User preference confirmed on 2026-10-07: deliver development changes through the active application checkout and Git commits. Do not generate or export patch files unless the user explicitly requests one for that task. Existing implementation specs that ask for a patch are superseded by this preference.
 
+## Existing H3 / ComfyUI connections
+
+Before asking for an H3 address or key, read `docs/h3-connection.md` and the current project's `integrations/h3/connection.json`. Use its read-only `check-connection.mjs` when present. Registry video tools load the ignored application `.env` automatically; the project Node client uses its registered environment file. A configured endpoint returning 404/401 is a readiness/authentication issue, not a missing address. Do not expose secrets or start generation as a connection test.
+
 ## First Interaction — Onboarding
 
 When the user's first message is vague, exploratory, or asks what you can do ("make me a video", "what can you do?", "help me create something", "I want to make content"), read the onboarding skill **before** doing anything else:
