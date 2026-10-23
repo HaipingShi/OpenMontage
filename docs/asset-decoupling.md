@@ -15,7 +15,8 @@
 │   ├── assets/artists/<alias>/         # 本项目拥有的艺人快照
 │   ├── artifacts/                     # 项目创作与流程数据
 │   └── assets/、renders/、shots/        # 项目素材、成片与镜头工作台数据
-└── migration-reports/                 # 复制迁移报告
+├── migration-reports/                 # 复制迁移报告
+└── archives/                          # 仓库清理时保留的旧副本、原文件与校验清单
 ```
 
 `OPENMONTAGE_DATA_DIR` 改变默认数据根；`OPENMONTAGE_PROJECTS_DIR` 和 `OPENMONTAGE_LIBRARY_DIR` 可分别显式覆盖项目与库目录。所有目录都应使用绝对路径。已有项目覆盖配置继续有效，迁移 CLI 的 `--data-dir` 则明确指定此次迁移的目标根。
@@ -89,12 +90,12 @@ python -m pytest tests/contracts/test_asset_migration.py --cov=lib.asset_migrati
 当前迁移契约：46 tests passed。最新全量覆盖率与迁移执行结果见 [验收记录](shot-workbench-verification.md)。覆盖目标冲突、源变化、复制校验、符号链接、穿越与范围限制、旧路径规范化、候选/正式状态保留、项目绑定、二项目账本隔离、幂等重试、CLI 默认 dry-run、历史来源警告和源目录原件保留。独立审查仅使用合成 fixture；主任务已按用户授权完成实际目录的复制迁移及独立哈希校验，旧文件保持原样。
 
 
-## 本体集成与 Git 索引
+## 本体分发与旧副本清理
 
-复制及独立校验成功后，已在开发工作树与当前本体对 `artists/amor`、`artists/fati`、`artists/wanyu` 执行 `git rm --cached`。29 个文件的原字节仍在磁盘，真实生产项目保持原样；`.gitignore` 允许分发的艺人目录只有 `_template`，旧提交历史没有改写。
+应用仓库的 `artists/` 只保留中性 `_template`。真实艺人资料、声音、生成素材、一次性合成源码及参数归用户数据目录；默认从 `~/OpenMontageData/library/artists/` 管理资料，从 `~/OpenMontageData/projects/<project>/assets/artists/<alias>/` 读取本项目的固定快照。Git 忽略规则不代表这些文件可以重新生成或直接删除。
 
-用户于 2026-10-07 明确批准直接合入当前本体并提交。代码现位于 `/Users/geesh/projects/OpenMontage`，默认使用已迁移的 `~/OpenMontageData`，无需另行手动应用软件补丁。复用来自独立用户库的固定版本，通过项目本地绑定读取。
+清理迁移后的仓库旧副本时，先核对独立资产库、项目文件和版本哈希，再修正当前输入中仍指向旧仓库的明确文件路径。修改前保留原文件；历史记录、来源说明和账本保持原字节。旧生产目录及一次性合成文件可移入数据根下的 `archives/openmontage-cleanup-<timestamp>/legacy-checkout/`，逐文件记录路径、大小和 SHA256，并在移动后重新校验。归档不是活动项目入口，也不覆盖当前库或项目资料。
 
-原任务要求生成的 `shot-workbench.patch` 与已落地的 AutoMV 导入补丁，仅保留在本地 `.git/agent-imports/` 作为迁移记录，不纳入应用软件。完整核对与集成结果见 [本体集成记录](shot-workbench-integration.md)。
+旧脚本可能包含历史安装路径或写共享资料的逻辑；保留在归档中不表示可以直接重跑。重新使用前需检查路径及当前项目的写入规则。清理时保留应用运行环境和本地凭据配置，凭据继续由 Git 忽略；工具、技能、模板、回归测试和产品展示素材继续随本体维护。
 
-用户进一步明确后续开发无需输出补丁。该约定已写入 `AGENT_GUIDE.md`：后续变更直接在当前本体开发、验证和提交，仅在用户明确要求时生成补丁。
+清理当前工作区不会改写 Git 历史。本地迁移清单与清理报告保存在用户数据目录；应用开发继续按 `AGENT_GUIDE.md` 在当前检出目录修改、验证和提交，仅在用户明确要求时输出补丁。此前集成结果见 [本体集成记录](shot-workbench-integration.md)。

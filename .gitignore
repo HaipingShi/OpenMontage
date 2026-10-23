@@ -25,7 +25,8 @@ output/
 pipeline/
 tests/qa/output/
 
-# Project workspaces (generated assets, renders — all regenerable)
+# User project workspaces include permanent source media and approved assets.
+# Keep them outside the application checkout; ignoring is not permission to delete.
 projects/
 
 # Legacy user artist data is local only. The neutral template is software.
@@ -88,8 +89,8 @@ node_modules/
 
 # Remotion build output and copied project assets (regenerable at render time)
 remotion-composer/out/
-# Project-local bespoke ("atelier") compositions — hand-authored per video,
-# throwaway and regenerable. Keeps the shared src/ free of one-off scenes.
+# Render-time staging copies of project-local bespoke ("atelier") compositions.
+# Preserve hand-authored originals and props in the external project workspace.
 remotion-composer/projects/
 remotion-composer/public/*
 # But keep demo props (shipped with the project for zero-key demos)

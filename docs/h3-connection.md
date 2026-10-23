@@ -17,7 +17,7 @@ HTTP 401/403 means rejected authentication. HTTP 404 can mean stopped/preparing 
 
 The `.env` contains secrets, must remain ignored, and should have mode 0600. Never copy values into workflow JSON, task logs, Backlot or Git. Local registration paths and model selections may be documented without keys. If a workspace moves to a different machine, update its local `env_file` registration to an administrator-provisioned secret file.
 
-The current workspace follows `lib.paths.PROJECTS_DIR` and lives under `~/OpenMontageData/projects/`. The repository-local legacy copy is also configured for compatibility; do not mistake it for the active project or move task/media records between them.
+The current workspace follows `lib.paths.PROJECTS_DIR` and lives under `~/OpenMontageData/projects/`. Run project clients and read task/media records from this independent user-data directory. Repository-local legacy copies have been moved to the user-data archive and are historical records, not active project entry points.
 
 ## Exact vocal timing: reference audio is not a target lock
 
