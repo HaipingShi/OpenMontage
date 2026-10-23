@@ -12,6 +12,8 @@ User preference confirmed on 2026-10-07: deliver development changes through the
 
 Before asking for an H3 address or key, read `docs/h3-connection.md` and the current project's `integrations/h3/connection.json`. Use its read-only `check-connection.mjs` when present. Registry video tools load the ignored application `.env` automatically; the project Node client uses its registered environment file. A configured endpoint returning 404/401 is a readiness/authentication issue, not a missing address. Do not expose secrets or start generation as a connection test.
 
+Before preparing or submitting H3 workflows, also read the project's `integrations/h3/AGENTS.md` and `workflow-policy.json` when present. Reference-audio conditioning alone does not lock the target vocal. For exact sung lip sync, follow the target-audio lock contract in `docs/h3-connection.md`; never restore quarantined workflows or bypass project submission guards.
+
 ## First Interaction — Onboarding
 
 When the user's first message is vague, exploratory, or asks what you can do ("make me a video", "what can you do?", "help me create something", "I want to make content"), read the onboarding skill **before** doing anything else:
