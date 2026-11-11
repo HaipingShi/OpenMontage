@@ -19,7 +19,7 @@ concurrency:
 jobs:
   validate:
     name: Validate Python
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -35,7 +35,14 @@ jobs:
             requirements-dev.txt
 
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        timeout-minutes: 5
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+            sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install --no-install-recommends -y ffmpeg
+          fi
+          ffmpeg -version
+          ffprobe -version
 
       - name: Install dependencies
         run: make install-dev
