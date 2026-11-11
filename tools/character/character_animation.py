@@ -519,8 +519,8 @@ class CharacterRigRenderer(BaseTool):
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         start = time.time()
-        output_path = Path(inputs.get("output_path", PROJECTS_DIR / "character-preview" / "preview.html"))
-        if "output_path" not in inputs:
+        output_path = Path(inputs.get("output_path") or PROJECTS_DIR / "character-preview" / "preview.html")
+        if not inputs.get("output_path"):
             path = output_path.parent
             while path != PROJECTS_DIR:
                 if path.is_symlink():

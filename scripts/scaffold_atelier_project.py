@@ -39,6 +39,13 @@ if str(REPO_ROOT) not in sys.path:
 from lib.paths import PROJECTS_DIR
 
 
+def _rel(path: Path) -> Path:
+    try:
+        return path.relative_to(Path.cwd())
+    except ValueError:
+        return path
+
+
 def to_camel(slug: str) -> str:
     parts = re.split(r"[\s_\-]+", slug.strip())
     return "".join(p.capitalize() for p in parts if p) or "Bespoke"
@@ -49,10 +56,10 @@ def write(path: Path, content: str) -> None:
         raise ValueError(f"Refusing output symlink: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
-        print(f"  skip (exists)  {path}")
+        print(f"  skip (exists)  {_rel(path)}")
         return
     path.write_text(content, encoding="utf-8")
-    print(f"  wrote          {path}")
+    print(f"  wrote          {_rel(path)}")
 
 
 def _check_output(project: Path, relative: str) -> None:

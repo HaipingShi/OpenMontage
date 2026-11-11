@@ -31,6 +31,14 @@ class TestGuardBlocksOutbound:
         with pytest.raises(Exception):
             requests.get("https://api.atlascloud.ai/api/v1/model/prediction/x", timeout=5)
 
+    def test_environment_loopback_proxy_cannot_bypass_guard(self, monkeypatch):
+        requests = pytest.importorskip("requests")
+        for key in ("HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy"):
+            monkeypatch.setenv(key, "http://127.0.0.1:9")
+        with pytest.raises(Exception, match="Blocked a network connection"):
+            # Documentation-only IP avoids DNS and never reaches a provider.
+            requests.get("https://203.0.113.1/", timeout=5)
+
     def test_loopback_still_permitted(self):
         """Local servers and fixtures must keep working."""
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

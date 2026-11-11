@@ -15,11 +15,19 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from backlot.reviews import ShotReview, load_reviews, save_review, submit_reviews
-from backlot.state import PROJECTS_DIR, REPO_ROOT, list_projects, load_board_state, summarize_project
+from backlot.state import (
+    PROJECTS_DIR,
+    REPO_ROOT,
+    list_projects,
+    load_board_state,
+    series_from_disk,
+    summarize_project,
+)
 
 UI_DIR = Path(__file__).resolve().parent / "ui"
 THUMB_CACHE_DIR = REPO_ROOT / ".backlot" / "thumbs"
@@ -97,6 +105,7 @@ def _cached_summaries() -> list[dict]:
             except Exception:
                 cached = {
                     "project_id": entry.name, "title": entry.name,
+                    "series": series_from_disk(entry),
                     "pipeline_type": "unknown", "has_pipeline_state": False,
                     "poster": None, "live": False, "last_activity": 0,
                     "active_stage": None, "awaiting_human": False,
@@ -337,6 +346,10 @@ def create_app() -> FastAPI:
             response.headers["Cache-Control"] = "no-cache"
         return response
 
+    # Loopback binding alone does not prevent browser DNS-rebinding requests.
+    app.add_middleware(
+        TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"], www_redirect=False,
+    )
     return app
 
 

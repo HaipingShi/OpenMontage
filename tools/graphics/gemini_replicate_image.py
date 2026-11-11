@@ -23,5 +23,9 @@ class GeminiReplicateImage(SchemaMedia):
         "gemini-3-pro-image": {
             "generate": "google/nano-banana-pro",
             "edit": "google/nano-banana-pro",
-        }
+        },
+        "gemini-nano-banana-2.1": {
+            "generate": "google/nano-banana-2.1",
+            "edit": "google/nano-banana-2.1",
+        },
     }

@@ -13,7 +13,18 @@ def provider(properties, catalog=None):
 
 def test_open_model_path_routes_to_local_provider():
     tool = provider({'model': {'type': 'string'}})
-    assert filter_explicit_route({'model': '/voices/custom.onnx'}, [tool]) == [tool]
+    assert filter_explicit_route(
+        {'model': '/voices/custom.onnx', 'preferred_tool': tool.name}, [tool]
+    ) == [tool]
+
+
+def test_local_model_path_routes_automatically_when_provider_confirms_it(tmp_path):
+    from tools.audio.piper_tts import PiperTTS
+
+    model = tmp_path / 'custom.onnx'
+    model.write_bytes(b'mock model')
+    tool = PiperTTS()
+    assert filter_explicit_route({'model': str(model)}, [tool]) == [tool]
 
 
 def test_unknown_model_cannot_bypass_closed_enum():

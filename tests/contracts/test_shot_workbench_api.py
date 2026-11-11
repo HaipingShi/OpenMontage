@@ -77,7 +77,7 @@ def project(tmp_path, monkeypatch):
 
 
 def test_workbench_reads_file_state_and_page(project):
-    with TestClient(server.create_app()) as client:
+    with TestClient(server.create_app(), base_url="http://127.0.0.1:4750") as client:
         response = client.get("/api/shot/film/shot1")
         assert response.status_code == 200
         data = response.json()
@@ -94,7 +94,7 @@ def api(project, monkeypatch):
                                get_by_capability=lambda capability: [tool] if capability == tool.capability else [])
     monkeypatch.setattr(shot_execution, "get_registry", lambda: registry)
     monkeypatch.setattr(shot_execution, "get_budget", lambda project: BudgetConfig())
-    with TestClient(server.create_app()) as client:
+    with TestClient(server.create_app(), base_url="http://127.0.0.1:4750") as client:
         read = client.get("/api/shot/film/shot1")
         assert read.status_code == 200, read.text
         lease = client.post("/api/shot/film/shot1/acquire", json={"reason": "test edit"})
@@ -142,7 +142,7 @@ def test_agent_lock_does_not_leak_lease_or_allow_user_write(project, monkeypatch
     monkeypatch.setattr(shot_execution, "catalog", lambda: [])
     initialize(project, "shot1")
     lock = acquire(project, "shot1", "agent", reason="agent edit")
-    with TestClient(server.create_app()) as client:
+    with TestClient(server.create_app(), base_url="http://127.0.0.1:4750") as client:
         response = client.get("/api/shot/film/shot1").json()
         assert response["read_only"]
         assert "lease_id" not in response["lock"]
@@ -165,7 +165,8 @@ def test_host_rebinding_rejected(api):
     client, tool, lease, project = api
     response = client.post("/api/shot/film/shot1/heartbeat", json={"lease_id": lease},
                            headers={"Host": "evil.example"})
-    assert response.status_code == 403
+    assert response.status_code == 400
+    assert response.text == "Invalid host header"
 
 
 def test_upload_content_dedup_revision_and_path_safety(api):
@@ -531,7 +532,7 @@ def test_artist_browser_shows_canon_and_candidates_without_promoting(project, mo
     spec["subjects"] = [{"kind": "artist", "ref_id": "alpha"}, {"kind": "artist", "ref_id": "beta"}]
     shot_spec.atomic_json(project / "shots" / "shot1.json", spec)
     monkeypatch.setattr(shot_execution, "catalog", lambda: [])
-    with TestClient(server.create_app()) as client:
+    with TestClient(server.create_app(), base_url="http://127.0.0.1:4750") as client:
         data = client.get("/api/shot/film/shot1").json()
     by_id = {artist["id"]: artist for artist in data["artists"]}
     assert by_id["alpha"]["references"][0]["canonical"] is True

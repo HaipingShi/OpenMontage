@@ -123,7 +123,14 @@ def pytest_configure(config):
     base = Path(_test_data_home.name)
     overrides = {'OPENMONTAGE_DATA_DIR': base,
                  'OPENMONTAGE_PROJECTS_DIR': base / 'projects',
-                 'OPENMONTAGE_LIBRARY_DIR': base / 'library'}
+                 'OPENMONTAGE_LIBRARY_DIR': base / 'library',
+                 'OPENMONTAGE_CACHE_DIR': base / 'clips_cache',
+                 'OPENMONTAGE_ASSET_CACHE_DIR': base / 'asset_cache'}
+    if not _network_allowed():
+        # A localhost HTTP proxy would otherwise tunnel external requests
+        # through the socket guard's loopback allowance. Keep local fixtures
+        # reachable while forcing external destinations through the guard.
+        overrides.update({'NO_PROXY': '*', 'no_proxy': '*'})
     _previous_data_environment = {key: os.environ.get(key) for key in overrides}
     for key, value in overrides.items():
         os.environ[key] = str(value)

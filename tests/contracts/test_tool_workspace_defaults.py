@@ -50,15 +50,16 @@ def test_video_analysis_execute_preserves_output_override_and_uses_user_default(
     assert not (Path.cwd() / "projects").exists()
 
 
-@pytest.mark.parametrize("explicit", [False, True])
-def test_character_execute_preserves_output_override_and_uses_user_default(projects, monkeypatch, explicit):
+@pytest.mark.parametrize("output", ["omitted", None, "", "custom-preview/index.html"])
+def test_character_execute_preserves_output_override_and_uses_user_default(projects, monkeypatch, output):
     render = Mock(side_effect=AssertionError("no browser or FFmpeg render in this regression"))
     monkeypatch.setattr(character_animation, "_render_preview_mp4", render)
     inputs = {"action_timeline": {"scenes": [{"id": "scene", "end_seconds": 1, "actions": []}]}}
     expected = projects / "character-preview" / "preview.html"
-    if explicit:
-        inputs["output_path"] = "custom-preview/index.html"
-        expected = Path("custom-preview/index.html")
+    if output != "omitted":
+        inputs["output_path"] = output
+        if output:
+            expected = Path(output)
 
     result = character_animation.CharacterRigRenderer().execute(inputs)
 
@@ -138,7 +139,8 @@ def test_analysis_default_rejects_internal_symlinks_before_child_tools(projects,
 
 
 @pytest.mark.parametrize("boundary", ["project", "preview", "workspace", "frames"])
-def test_character_default_rejects_existing_symlinks_before_writing(projects, monkeypatch, tmp_path, boundary):
+@pytest.mark.parametrize("output", ["omitted", None, ""])
+def test_character_default_rejects_existing_symlinks_before_writing(projects, monkeypatch, tmp_path, boundary, output):
     outside = tmp_path / "other-project"
     outside.mkdir()
     for root in (projects, Path.cwd() / "projects"):
@@ -160,7 +162,10 @@ def test_character_default_rejects_existing_symlinks_before_writing(projects, mo
     render = Mock(side_effect=write_render)
     monkeypatch.setattr(character_animation, "_render_preview_mp4", render)
 
-    result = character_animation.CharacterRigRenderer().execute({"action_timeline": {"scenes": []}, "render_video": True})
+    inputs = {"action_timeline": {"scenes": []}, "render_video": True}
+    if output != "omitted":
+        inputs["output_path"] = output
+    result = character_animation.CharacterRigRenderer().execute(inputs)
 
     assert not result.success
     assert "symlink" in result.error.lower()
