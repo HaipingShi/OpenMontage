@@ -77,7 +77,14 @@ Fades are allowed only on an approved excerpt whose end is not a natural stop â€
 
 Copy `render_runtime`, `renderer_family` (typically `cinematic-trailer` for video-led, `animation-first` for typography-led), and `composition_mode` from `proposal_packet.production_plan` unchanged. Record `metadata.proposal_render_runtime` as well.
 
-### Step 7: Validate
+### Step 7: Validate (mandatory frame-grid check)
+
+Before writing edit_decisions call `lib.timeline.validate_timeline(scene_plan,
+song_map, fps)`; also construct a scene-shaped timeline from the running cut
+frame indices and call it on that cut timeline. Both must return valid with
+`total_frames == round(song_duration * fps)`. Resolve each generated source to
+its selected_candidate path; never use rejected/unreviewed attempts silently.
+
 
 - Schema-valid `edit_decisions`.
 - Sum of cut durations (in frames) == `round(song_duration * fps)`.

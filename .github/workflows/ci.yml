@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -18,7 +19,7 @@ concurrency:
 jobs:
   validate:
     name: Validate Python
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -34,7 +35,19 @@ jobs:
             requirements-dev.txt
 
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        timeout-minutes: 5
+        run: |
+          # Pin both the build and checksum; avoid depending on apt mirror availability.
+          ffmpeg_dir="$RUNNER_TEMP/ffmpeg"
+          mkdir -p "$ffmpeg_dir"
+          curl --fail --location --retry 2 --max-time 180 \
+            https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-11-11-12-39/ffmpeg-n9.0.2-49-gc179411bbb-linux64-gpl-9.0.tar.xz \
+            --output "$ffmpeg_dir/ffmpeg.tar.xz"
+          echo "ca1107e3a14a9de4c4712f9405bb720a47dac41426cf2a1da09acb4811805758  $ffmpeg_dir/ffmpeg.tar.xz" | sha256sum --check
+          tar -xJf "$ffmpeg_dir/ffmpeg.tar.xz" --strip-components=1 -C "$ffmpeg_dir"
+          echo "$ffmpeg_dir/bin" >> "$GITHUB_PATH"
+          "$ffmpeg_dir/bin/ffmpeg" -version
+          "$ffmpeg_dir/bin/ffprobe" -version
 
       - name: Install dependencies
         run: make install-dev

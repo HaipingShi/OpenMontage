@@ -1,0 +1,219 @@
+...............FF........                                                [100%]
+=================================== FAILURES ===================================
+_ test_invalid_project_slug_is_rejected_before_discovery_or_live[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] _
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_sl...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/artifacts')
+mode = 511, parents = True, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           self._accessor.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_slug_is_r8/user-data/projects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/artifacts'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1175: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_sl...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 511, parents = True, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           self._accessor.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_slug_is_r8/user-data/projects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1175: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_sl...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 511, parents = False, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           self._accessor.mkdir(self, mode)
+E           OSError: [Errno 63] File name too long: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_slug_is_r8/user-data/projects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1175: OSError
+
+During handling of the above exception, another exception occurred:
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4479217680'>, '_env_status': <Mock id='4479212832'>, '_tool_statuses': <Mock id='4479214224'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_slug_is_r8')
+slug = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces", "a" * 300])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+        with pytest.raises(SystemExit) as exc:
+>           script.main(["--project", slug, "--live-tts"])
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:171:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:817: in main
+    _write_json(report_path, report)
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:61: in _write_json
+    path.parent.mkdir(parents=True, exist_ok=True)
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1179: in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1180: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1184: in mkdir
+    if not exist_ok or not self.is_dir():
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1305: in is_dir
+    return S_ISDIR(self.stat().st_mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_sl...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+follow_symlinks = True
+
+    def stat(self, *, follow_symlinks=True):
+        """
+        Return the result of the stat() system call on this path, like
+        os.stat() does.
+        """
+>       return self._accessor.stat(self, follow_symlinks=follow_symlinks)
+E       OSError: [Errno 63] File name too long: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-220/test_invalid_project_slug_is_r8/user-data/projects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1097: OSError
+_________ test_workspace_oserror_is_rejected_before_discovery_or_live __________
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4480228880'>, '_env_status': <Mock id='4480229600'>, '_tool_statuses': <Mock id='4480229408'>, ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b0ae4a0>
+
+    def test_workspace_oserror_is_rejected_before_discovery_or_live(isolated_main, monkeypatch):
+        script, _, _, mocks = isolated_main
+        monkeypatch.setattr(script, "_project_workspace", Mock(side_effect=OSError("fixture workspace is inaccessible")))
+
+        with pytest.raises(SystemExit) as exc:
+>           script.main(["--project", "inaccessible", "--live-tts"])
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:184:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:726: in main
+    args = _parse_args(argv)
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:707: in _parse_args
+    args.project_dir = _project_workspace(args.project)
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/unittest/mock.py:1114: in __call__
+    return self._mock_call(*args, **kwargs)
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/unittest/mock.py:1118: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <Mock id='4480230896'>, args = ('inaccessible',), kwargs = {}
+
+    def _execute_mock_call(self, /, *args, **kwargs):
+        # separate from _increment_mock_call so that awaited functions are
+        # executed separately from their call, also AsyncMock overrides this method
+
+        effect = self.side_effect
+        if effect is not None:
+            if _is_exception(effect):
+>               raise effect
+E               OSError: fixture workspace is inaccessible
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/unittest/mock.py:1173: OSError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_workspace_oserror_is_rejected_before_discovery_or_live
+2 failed, 23 passed in 0.17s
+.................FF........                                              [100%]
+=================================== FAILURES ===================================
+_ test_receipt_path_type_is_rejected_before_discovery_or_live[receipt_parent] __
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492524032'>, '_env_status': <Mock id='4492513712'>, '_tool_statuses': <Mock id='4492513184'>, ...})
+boundary = 'receipt_parent'
+
+    @pytest.mark.parametrize("boundary", ["receipt_parent", "receipt_target"])
+    def test_receipt_path_type_is_rejected_before_discovery_or_live(isolated_main, boundary):
+        script, projects, _, mocks = isolated_main
+        project = projects / "invalid-receipt"
+        project.mkdir(parents=True)
+        if boundary == "receipt_parent":
+            (project / "artifacts").write_text("fixture file where a directory is required")
+        else:
+            (project / "artifacts" / "kling_official_animated_explainer_e2e_report.json").mkdir(parents=True)
+
+        with pytest.raises(SystemExit) as exc:
+>           script.main(["--project", "invalid-receipt", "--live-tts"])
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:205:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:817: in main
+    _write_json(report_path, report)
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:61: in _write_json
+    path.parent.mkdir(parents=True, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-222/test_receipt_path_type_is_reje0/user-data/projects/invalid-receipt/artifacts')
+mode = 511, parents = True, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           self._accessor.mkdir(self, mode)
+E           FileExistsError: [Errno 17] File exists: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-222/test_receipt_path_type_is_reje0/user-data/projects/invalid-receipt/artifacts'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1175: FileExistsError
+_ test_receipt_path_type_is_rejected_before_discovery_or_live[receipt_target] __
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493209856'>, '_env_status': <Mock id='4493210384'>, '_tool_statuses': <Mock id='4493210624'>, ...})
+boundary = 'receipt_target'
+
+    @pytest.mark.parametrize("boundary", ["receipt_parent", "receipt_target"])
+    def test_receipt_path_type_is_rejected_before_discovery_or_live(isolated_main, boundary):
+        script, projects, _, mocks = isolated_main
+        project = projects / "invalid-receipt"
+        project.mkdir(parents=True)
+        if boundary == "receipt_parent":
+            (project / "artifacts").write_text("fixture file where a directory is required")
+        else:
+            (project / "artifacts" / "kling_official_animated_explainer_e2e_report.json").mkdir(parents=True)
+
+        with pytest.raises(SystemExit) as exc:
+>           script.main(["--project", "invalid-receipt", "--live-tts"])
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:205:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:817: in main
+    _write_json(report_path, report)
+/Users/geesh/projects/OpenMontage/scripts/kling_official_animated_explainer_e2e.py:62: in _write_json
+    path.write_text(json.dumps(_json_safe(data), indent=2, ensure_ascii=False), encoding="utf-8")
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1154: in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-222/test_receipt_path_type_is_reje1/user-data/projects/invalid-receipt/artifacts/kling_official_animated_explainer_e2e_report.json')
+mode = 'w', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       IsADirectoryError: [Errno 21] Is a directory: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-222/test_receipt_path_type_is_reje1/user-data/projects/invalid-receipt/artifacts/kling_official_animated_explainer_e2e_report.json'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1119: IsADirectoryError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_receipt_path_type_is_rejected_before_discovery_or_live[receipt_parent]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_receipt_path_type_is_rejected_before_discovery_or_live[receipt_target]
+2 failed, 25 passed in 0.14s

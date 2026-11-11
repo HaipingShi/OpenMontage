@@ -27,6 +27,7 @@ extensions:
   custom_tools: false
 
 required_skills:
+  - meta/shot-workbench
   - pipelines/character-animation/executive-producer
   - pipelines/character-animation/research-director
   - pipelines/character-animation/proposal-director
@@ -173,6 +174,8 @@ stages:
       - Every required action has at least one pose or action strategy
 
   - name: scene_plan
+    required_tools:
+      - shot_compiler
     skill: pipelines/character-animation/scene-director
     required_artifacts_in:
       - script
@@ -183,10 +186,12 @@ stages:
       - proposal_packet
     produces:
       - scene_plan
-    tools_available: []
+    tools_available:
+      - shot_compiler
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Scenes use character_scene or animation types with timed actions
       - Each scene has characters, actions, camera/framing, background, and effects
       - Scene complexity fits the approved sample and budget
@@ -195,6 +200,8 @@ stages:
       - Every scene maps to rigged characters and required assets
 
   - name: assets
+    required_tools:
+      - shot_compiler
     skill: pipelines/character-animation/asset-director
     required_artifacts_in:
       - character_design
@@ -207,6 +214,7 @@ stages:
     produces:
       - asset_manifest
     tools_available:
+      - shot_compiler
       - image_selector
       - tts_selector
       - music_gen
@@ -214,6 +222,7 @@ stages:
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Character parts, backgrounds, props, audio, and effects are linked to scenes
       - Layer 3 skills are read for every generation or animation-runtime tool
       - Asset provenance and prompts are recorded

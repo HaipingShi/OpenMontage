@@ -30,6 +30,8 @@ from __future__ import annotations
 
 import os
 import socket
+import tempfile
+from pathlib import Path
 
 import pytest
 
@@ -40,6 +42,8 @@ _LOOPBACK_HOSTS = {"localhost", "127.0.0.1", "::1", "0.0.0.0", ""}
 _real_connect = socket.socket.connect
 _real_connect_ex = socket.socket.connect_ex
 _real_create_connection = socket.create_connection
+_test_data_home = None
+_previous_data_environment = {}
 
 
 class NetworkCallInTestError(RuntimeError):
@@ -112,11 +116,39 @@ def _block_network():
 
 
 def pytest_configure(config):
+    # Isolate storage before collection imports lib.paths/artist_profile.
+    # Tests must never discover or mutate a developer's real project/library.
+    global _test_data_home, _previous_data_environment
+    _test_data_home = tempfile.TemporaryDirectory(prefix='openmontage-tests-')
+    base = Path(_test_data_home.name)
+    overrides = {'OPENMONTAGE_DATA_DIR': base,
+                 'OPENMONTAGE_PROJECTS_DIR': base / 'projects',
+                 'OPENMONTAGE_LIBRARY_DIR': base / 'library',
+                 'OPENMONTAGE_CACHE_DIR': base / 'clips_cache',
+                 'OPENMONTAGE_ASSET_CACHE_DIR': base / 'asset_cache'}
+    if not _network_allowed():
+        # A localhost HTTP proxy would otherwise tunnel external requests
+        # through the socket guard's loopback allowance. Keep local fixtures
+        # reachable while forcing external destinations through the guard.
+        overrides.update({'NO_PROXY': '*', 'no_proxy': '*'})
+    _previous_data_environment = {key: os.environ.get(key) for key in overrides}
+    for key, value in overrides.items():
+        os.environ[key] = str(value)
     config.addinivalue_line(
         "markers",
         "live_api: test performs a real, billable API call. Skipped unless "
         f"{_ALLOW_ENV_FLAG}=1 is set.",
     )
+
+
+def pytest_unconfigure(config):
+    for key, previous in _previous_data_environment.items():
+        if previous is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = previous
+    if _test_data_home is not None:
+        _test_data_home.cleanup()
 
 
 def pytest_collection_modifyitems(config, items):

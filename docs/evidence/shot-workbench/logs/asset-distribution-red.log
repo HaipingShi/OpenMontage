@@ -1,0 +1,77 @@
+....FFFFFF                                                               [100%]
+=================================== FAILURES ===================================
+_ test_legacy_archive_entries_are_checked_regardless_of_package_prefix[public/artists/solo/face.png] _
+
+name = 'public/artists/solo/face.png'
+
+    @pytest.mark.parametrize('name', ['public/artists/solo/face.png', 'package/projects/film/scene.json',
+                                     '../artists/_template/artist.yaml', '/absolute/source.py',
+                                     'package\\artists\\solo\\face.png'])
+    def test_legacy_archive_entries_are_checked_regardless_of_package_prefix(name):
+>       from scripts.export_artist_update import _archive_exportable
+E       ImportError: cannot import name '_archive_exportable' from 'scripts.export_artist_update' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/scripts/export_artist_update.py)
+
+tests/contracts/test_asset_distribution.py:19: ImportError
+_ test_legacy_archive_entries_are_checked_regardless_of_package_prefix[package/projects/film/scene.json] _
+
+name = 'package/projects/film/scene.json'
+
+    @pytest.mark.parametrize('name', ['public/artists/solo/face.png', 'package/projects/film/scene.json',
+                                     '../artists/_template/artist.yaml', '/absolute/source.py',
+                                     'package\\artists\\solo\\face.png'])
+    def test_legacy_archive_entries_are_checked_regardless_of_package_prefix(name):
+>       from scripts.export_artist_update import _archive_exportable
+E       ImportError: cannot import name '_archive_exportable' from 'scripts.export_artist_update' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/scripts/export_artist_update.py)
+
+tests/contracts/test_asset_distribution.py:19: ImportError
+_ test_legacy_archive_entries_are_checked_regardless_of_package_prefix[../artists/_template/artist.yaml] _
+
+name = '../artists/_template/artist.yaml'
+
+    @pytest.mark.parametrize('name', ['public/artists/solo/face.png', 'package/projects/film/scene.json',
+                                     '../artists/_template/artist.yaml', '/absolute/source.py',
+                                     'package\\artists\\solo\\face.png'])
+    def test_legacy_archive_entries_are_checked_regardless_of_package_prefix(name):
+>       from scripts.export_artist_update import _archive_exportable
+E       ImportError: cannot import name '_archive_exportable' from 'scripts.export_artist_update' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/scripts/export_artist_update.py)
+
+tests/contracts/test_asset_distribution.py:19: ImportError
+_ test_legacy_archive_entries_are_checked_regardless_of_package_prefix[/absolute/source.py] _
+
+name = '/absolute/source.py'
+
+    @pytest.mark.parametrize('name', ['public/artists/solo/face.png', 'package/projects/film/scene.json',
+                                     '../artists/_template/artist.yaml', '/absolute/source.py',
+                                     'package\\artists\\solo\\face.png'])
+    def test_legacy_archive_entries_are_checked_regardless_of_package_prefix(name):
+>       from scripts.export_artist_update import _archive_exportable
+E       ImportError: cannot import name '_archive_exportable' from 'scripts.export_artist_update' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/scripts/export_artist_update.py)
+
+tests/contracts/test_asset_distribution.py:19: ImportError
+_ test_legacy_archive_entries_are_checked_regardless_of_package_prefix[package\\artists\\solo\\face.png] _
+
+name = 'package\\artists\\solo\\face.png'
+
+    @pytest.mark.parametrize('name', ['public/artists/solo/face.png', 'package/projects/film/scene.json',
+                                     '../artists/_template/artist.yaml', '/absolute/source.py',
+                                     'package\\artists\\solo\\face.png'])
+    def test_legacy_archive_entries_are_checked_regardless_of_package_prefix(name):
+>       from scripts.export_artist_update import _archive_exportable
+E       ImportError: cannot import name '_archive_exportable' from 'scripts.export_artist_update' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/scripts/export_artist_update.py)
+
+tests/contracts/test_asset_distribution.py:19: ImportError
+_________ test_template_and_product_ui_resources_remain_distributable __________
+
+    def test_template_and_product_ui_resources_remain_distributable():
+>       from scripts.export_artist_update import _archive_exportable
+E       ImportError: cannot import name '_archive_exportable' from 'scripts.export_artist_update' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/scripts/export_artist_update.py)
+
+tests/contracts/test_asset_distribution.py:24: ImportError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_asset_distribution.py::test_legacy_archive_entries_are_checked_regardless_of_package_prefix[public/artists/solo/face.png]
+FAILED tests/contracts/test_asset_distribution.py::test_legacy_archive_entries_are_checked_regardless_of_package_prefix[package/projects/film/scene.json]
+FAILED tests/contracts/test_asset_distribution.py::test_legacy_archive_entries_are_checked_regardless_of_package_prefix[../artists/_template/artist.yaml]
+FAILED tests/contracts/test_asset_distribution.py::test_legacy_archive_entries_are_checked_regardless_of_package_prefix[/absolute/source.py]
+FAILED tests/contracts/test_asset_distribution.py::test_legacy_archive_entries_are_checked_regardless_of_package_prefix[package\\artists\\solo\\face.png]
+FAILED tests/contracts/test_asset_distribution.py::test_template_and_product_ui_resources_remain_distributable
+6 failed, 4 passed in 0.08s

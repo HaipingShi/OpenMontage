@@ -43,6 +43,11 @@ class KlingVideo(BaseTool):
     agent_skills = ["ai-video-gen"]
 
     capabilities = ["text_to_video", "image_to_video"]
+    limits = {
+        "max_reference_images": 1, "max_prompt_chars": None,
+        "negative_prompt_field": None, "durations": [5, 10],
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v", "i2v"],
+    }
     supports = {
         "text_to_video": True,
         "image_to_video": True,

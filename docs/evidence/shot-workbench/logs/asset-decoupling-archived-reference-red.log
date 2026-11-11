@@ -1,0 +1,43 @@
+.......................................F                                 [100%]
+=================================== FAILURES ===================================
+____ test_archived_structured_inputs_keep_their_bytes_without_new_bindings _____
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-181/test_archived_structur...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-181/test_archived_structured_input0/user-data'))
+
+    def test_archived_structured_inputs_keep_their_bytes_without_new_bindings(legacy):
+        source, data = legacy
+        path = source / "projects/first-film/history/old-snapshot.json"
+        path.parent.mkdir()
+        original = b'{"generation_context":{"artist_ids":["old-missing"]}, "reference_images":["assets/images/deleted.png"], "identity":{"bible":[{"path":"bible/old.png"}]}}\n'
+        path.write_bytes(original)
+>       report = migration.migrate(source, data, apply=True)
+
+tests/contracts/test_asset_migration.py:379:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/asset_migration.py:489: in migrate
+    raise failure from error
+lib/asset_migration.py:478: in migrate
+    plan = inventory(source_repo, data_dir)
+lib/asset_migration.py:348: in inventory
+    return _prepare(source_repo, data_dir)[0]
+lib/asset_migration.py:316: in _prepare
+    selected.update(_cast(document, names))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'generation_context': {'artist_ids': ['old-missing']}, 'reference_images': ['assets/images/deleted.png'], 'identity': {'bible': [{'path': 'bible/old.png'}]}}
+artists = {'solo'}
+
+    def _cast(value: Any, artists: set[str]) -> set[str]:
+        selected: set[str] = set()
+        if isinstance(value, dict):
+            context = value.get("generation_context")
+            if isinstance(context, dict) and "artist_ids" in context:
+                ids = context["artist_ids"]
+                if not isinstance(ids, list) or any(not isinstance(artist, str) or artist not in artists for artist in ids):
+>                   raise MigrationError("UNKNOWN_ARTIST", "An explicit generation_context artist is absent from the source catalog")
+E                   lib.asset_migration.MigrationError: UNKNOWN_ARTIST: An explicit generation_context artist is absent from the source catalog
+
+lib/asset_migration.py:169: MigrationError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_asset_migration.py::test_archived_structured_inputs_keep_their_bytes_without_new_bindings
+1 failed, 39 passed in 2.52s

@@ -25,8 +25,13 @@ output/
 pipeline/
 tests/qa/output/
 
-# Project workspaces (generated assets, renders — all regenerable)
+# User project workspaces include permanent source media and approved assets.
+# Keep them outside the application checkout; ignoring is not permission to delete.
 projects/
+
+# Legacy user artist data is local only. The neutral template is software.
+/artists/*
+!/artists/_template/
 
 # Corpus directories (downloaded stock clips, thumbnails, embeddings —
 # regenerable from source APIs via corpus_builder). Explicit rule even
@@ -37,6 +42,9 @@ corpus/
 
 # User music library (personal royalty-free tracks — not part of repo)
 music_library/
+
+# External data roots can also be explicitly placed here for local development.
+/OpenMontageData/
 
 # Environment & credentials
 .env
@@ -81,8 +89,8 @@ node_modules/
 
 # Remotion build output and copied project assets (regenerable at render time)
 remotion-composer/out/
-# Project-local bespoke ("atelier") compositions — hand-authored per video,
-# throwaway and regenerable. Keeps the shared src/ free of one-off scenes.
+# Render-time staging copies of project-local bespoke ("atelier") compositions.
+# Preserve hand-authored originals and props in the external project workspace.
 remotion-composer/projects/
 remotion-composer/public/*
 # But keep demo props (shipped with the project for zero-key demos)
@@ -104,3 +112,15 @@ venv/
 
 # Local Wan / diffusers GPU environment
 .venv-wan/
+
+# npm cache (NPM_CONFIG_CACHE — see .env), keeps npx/HyperFrames writes in-tree
+.npm-cache/
+
+# pytest scratch trees. These land in the repo root when the OS temp/profile
+# dirs are unwritable (see the NPM_CONFIG_CACHE note above), so `make test`
+# can leave pytest-of-<user>/ behind as untracked noise.
+pytest-of-*/
+
+
+# GFPGAN/facexlib download face-detection weights to ./gfpgan/weights at runtime
+gfpgan/

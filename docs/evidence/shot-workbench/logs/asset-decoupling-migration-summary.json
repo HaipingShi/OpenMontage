@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "copied_files": 1519,
+  "verified_files": 1519,
+  "inventory_sha256": "7ed19224ff7f8e8aad40126c4b36097bd455b2c90b72cb34cc0810a8c65c8ece",
+  "report_path": "/Users/geesh/OpenMontageData/migration-reports/migration-5ff3abc900734b0388a59e0643ba5ce3.json",
+  "projects": 2,
+  "artists": 3,
+  "bindings": 3,
+  "rewrites": 235,
+  "warnings": 1133
+}

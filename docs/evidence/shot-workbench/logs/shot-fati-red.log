@@ -1,0 +1,37 @@
+..FF                                                                     [100%]
+=================================== FAILURES ===================================
+__________ test_fati_singing_uses_only_current_canon_and_stable_roles __________
+
+film = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-55/test_fati_singing_uses_only_cu0/fati-snapshot')
+
+    def test_fati_singing_uses_only_current_canon_and_stable_roles(film):
+        initialize(film,'sh-s06-04')
+        draft=load(film,'sh-s06-04')
+        assert draft['subjects'][0]['ref_id']=='fati'
+        identities=[r for r in draft['references'] if r['role']=='identity']
+        assert len(identities)==1
+        assert 'v3-no-nose-ring' in identities[0]['parent_asset']
+>       assert all('_v2' not in r.get('parent_asset','') for r in draft['references'])
+E       assert False
+E        +  where False = all(<generator object test_fati_singing_uses_only_current_canon_and_stable_roles.<locals>.<genexpr> at 0x10b7d1770>)
+
+tests/contracts/test_shot_workbench_acceptance.py:78: AssertionError
+________________ test_amor_candidates_are_not_promoted_to_canon ________________
+
+film = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-55/test_amor_candidates_are_not_p0/fati-snapshot')
+
+    def test_amor_candidates_are_not_promoted_to_canon(film):
+        scene={'id':'duet','type':'generated','description':'Amor and Fati on a rooftop',
+            'start_seconds':0,'end_seconds':5,'render_route':'cast_multi_ref',
+            'generation_context':{'artist_ids':['amor','fati']}}
+        draft=from_scene(scene,film)
+        assert any('amor' in text and 'canonical' in text for text in draft['initialization_warnings'])
+>       assert not any(ref.get('subject_ref')=='amor' for ref in draft['references'])
+E       assert not True
+E        +  where True = any(<generator object test_amor_candidates_are_not_promoted_to_canon.<locals>.<genexpr> at 0x10bbf7840>)
+
+tests/contracts/test_shot_workbench_acceptance.py:98: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_acceptance.py::test_fati_singing_uses_only_current_canon_and_stable_roles
+FAILED tests/contracts/test_shot_workbench_acceptance.py::test_amor_candidates_are_not_promoted_to_canon
+2 failed, 2 passed in 0.54s

@@ -1,0 +1,309 @@
+FFFFFFFFFFFFFFFFFFFFFF.FF....FFFFFFFFF                                   [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert False
+     +  where False = is_file()
+     +    where is_file = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_scaffold_default_cli_uses0/user data/works') / 'film/index.tsx').is_file
+     +      where PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_scaffold_default_cli_uses0/user data/works') = namespace(repo=PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_sca...p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_scaffold_default_cli_uses0/invocation'), stages=[], renders=[]).projects
+----------------------------- Captured stdout call -----------------------------
+Scaffolding atelier project 'film' (composition_id=Film) under /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_scaffold_default_cli_uses0/invocation
+
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+
+Done. Now:
+  1. Open projects/film/art-direction.md and fill it in.
+  2. Read skills/meta/bespoke-composition.md.
+  3. Hand-author Composition.tsx (replace the black placeholder).
+  4. Render — see projects/film/README.md.
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:56: AssertionError: assert False
+E   TypeError: scaffold() missing 1 required positional argument: 'root'
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:62: TypeError: scaffold() missing 1 required positional argument: 'root'
+E   ValueError: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_explicit_scaffold_root_pr0/software checkout/projects/film/index.tsx' is not in the subpath of '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_explicit_scaffold_root_pr0/invocation' OR one path is relative and the other is absolute.
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:818: ValueError: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_explicit_scaffold_root_pr0/software checkout/projects/film/index.tsx' is not in the subpath of '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_explicit_scaffold_root_pr0/invocation' OR one path is relative and the other is absolute.
+E   AssertionError: assert PosixPath('projects\\\\film\\renders\\final.mp4') == (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_generated_readme_executes0/software checkout/projects/film') / 'renders/final.mp4')
+     +  where PosixPath('projects\\\\film\\renders\\final.mp4') = Path('projects\\\\film\\renders\\final.mp4')
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:85: AssertionError: assert PosixPath('projects\\\\film\\renders\\final.mp4') == (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_generated_readme_executes0/software checkout/projects/film') / 'renders/final.mp4')
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/../escape/index.tsx
+  wrote          projects/../escape/Root.tsx
+  wrote          projects/../escape/Composition.tsx
+  wrote          projects/../escape/art-direction.md
+  wrote          projects/../escape/artifacts/props.template.json
+  wrote          projects/../escape/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:97: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/child/index.tsx
+  wrote          projects/film/child/Root.tsx
+  wrote          projects/film/child/Composition.tsx
+  wrote          projects/film/child/art-direction.md
+  wrote          projects/film/child/artifacts/props.template.json
+  wrote          projects/film/child/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:97: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film\child/index.tsx
+  wrote          projects/film\child/Root.tsx
+  wrote          projects/film\child/Composition.tsx
+  wrote          projects/film\child/art-direction.md
+  wrote          projects/film\child/artifacts/props.template.json
+  wrote          projects/film\child/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:97: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/index.tsx
+  wrote          projects/Root.tsx
+  wrote          projects/Composition.tsx
+  wrote          projects/art-direction.md
+  wrote          projects/artifacts/props.template.json
+  wrote          projects/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:97: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/index.tsx
+  wrote          projects/Root.tsx
+  wrote          projects/Composition.tsx
+  wrote          projects/art-direction.md
+  wrote          projects/artifacts/props.template.json
+  wrote          projects/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:97: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/UPPER/index.tsx
+  wrote          projects/UPPER/Root.tsx
+  wrote          projects/UPPER/Composition.tsx
+  wrote          projects/UPPER/art-direction.md
+  wrote          projects/UPPER/artifacts/props.template.json
+  wrote          projects/UPPER/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:97: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:105: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:105: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:105: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  skip (exists)  projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:125: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  skip (exists)  projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:125: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:125: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:125: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:125: Failed: DID NOT RAISE ValueError
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e710>(['film'])
+     +    where <function main at 0x106f0e710> = scaffolding.main
+----------------------------- Captured stdout call -----------------------------
+Scaffolding atelier project 'film' (composition_id=Film) under /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_scaffold_cli_rejects_proj0/invocation
+
+  wrote          projects/film/index.tsx
+  wrote          projects/film/Root.tsx
+  wrote          projects/film/Composition.tsx
+  wrote          projects/film/art-direction.md
+  wrote          projects/film/artifacts/props.template.json
+  wrote          projects/film/README.md
+
+Done. Now:
+  1. Open projects/film/art-direction.md and fill it in.
+  2. Read skills/meta/bespoke-composition.md.
+  3. Hand-author Composition.tsx (replace the black placeholder).
+  4. Render — see projects/film/README.md.
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:135: AssertionError: assert 0 == 2
+E   AssertionError: assert 2 == 0
+     +  where 2 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stderr call -----------------------------
+error: no project at /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshots_default_uses_ex0/software checkout/projects/film
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:141: AssertionError: assert 2 == 0
+E   AssertionError: assert 2 == 0
+     +  where 2 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stderr call -----------------------------
+error: no project at /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshot_artifact_relativ0/software checkout/projects/film
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:158: AssertionError: assert 2 == 0
+E   AssertionError: assert 2 == 0
+     +  where 2 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stderr call -----------------------------
+error: no project at /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshot_artifact_relativ1/software checkout/projects/film
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:158: AssertionError: assert 2 == 0
+E   AssertionError: assert 2 == 0
+     +  where 2 = <function main at 0x106f0e320>(['film', '--entry', 'entry.tsx', '--props', 'props.json', '--public-dir', ...])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stderr call -----------------------------
+error: no project at /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshot_cli_path_overrid0/software checkout/projects/film
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:179: AssertionError: assert 2 == 0
+E   AssertionError: assert 2 == 0
+     +  where 2 = <function main at 0x106f0e320>(['film', '--entry', '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshot...x00000gn/T/pytest-of-geesh/pytest-211/test_snapshot_cli_path_overrid1/explicit inputs/props.json', '--public-dir', ...])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stderr call -----------------------------
+error: no project at /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshot_cli_path_overrid1/software checkout/projects/film
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:179: AssertionError: assert 2 == 0
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+  s01: frame 48 -> projects/film/snapshots/s01.png
+snapshots: 1 ok, 0 failed -> projects/film/snapshots
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:198: AssertionError: assert 0 == 2
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+  s01: frame 48 -> projects/film/snapshots/s01.png
+snapshots: 1 ok, 0 failed -> projects/film/snapshots
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:215: AssertionError: assert 0 == 2
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+  s01: frame 48 -> projects/film/snapshots/s01.png
+snapshots: 1 ok, 0 failed -> projects/film/snapshots
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:215: AssertionError: assert 0 == 2
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+  ../escape: frame 48 -> projects/film/snapshots/../escape.png
+snapshots: 1 ok, 0 failed -> projects/film/snapshots
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:224: AssertionError: assert 0 == 2
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+  folder/scene: frame 48 -> projects/film/snapshots/folder/scene.png
+snapshots: 1 ok, 0 failed -> projects/film/snapshots
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:224: AssertionError: assert 0 == 2
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+  scene\escape: frame 48 -> projects/film/snapshots/scene\escape.png
+snapshots: 1 ok, 0 failed -> projects/film/snapshots
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:224: AssertionError: assert 0 == 2
+E   AssertionError: assert 0 == 2
+     +  where 0 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+  .: frame 48 -> projects/film/snapshots/..png
+snapshots: 1 ok, 0 failed -> projects/film/snapshots
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:224: AssertionError: assert 0 == 2
+E   AssertionError: assert 1 == 2
+     +  where 1 = <function main at 0x106f0e320>(['film'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stdout call -----------------------------
+snapshots: 1 ok, 1 failed -> projects/film/snapshots
+----------------------------- Captured stderr call -----------------------------
+  /absolute: FAILED — '/absolute.png' is not in the subpath of '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshots_reject_unsafe_s4/software checkout' OR one path is relative and the other is absolute.
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:224: AssertionError: assert 1 == 2
+E   AssertionError: assert 2 == 0
+     +  where 2 = <function main at 0x106f0e320>(['film', '--only', 'another-scene'])
+     +    where <function main at 0x106f0e320> = snapshots.main
+----------------------------- Captured stderr call -----------------------------
+error: no project at /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-211/test_snapshot_only_selection_r0/software checkout/projects/film
+/Users/geesh/projects/OpenMontage/tests/contracts/test_atelier_workspace_scripts.py:230: AssertionError: assert 2 == 0
+=========================== short test summary info ============================
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_default_cli_uses_user_projects_not_cwd
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_default_direct_api_uses_user_projects
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_explicit_scaffold_root_preserves_root_projects_and_existing_files
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_generated_readme_executes_with_absolute_platform_native_project_paths
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_unsafe_slugs_before_creating_files[../escape]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_unsafe_slugs_before_creating_files[film/child]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_unsafe_slugs_before_creating_files[film\\child]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_unsafe_slugs_before_creating_files[.]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_unsafe_slugs_before_creating_files[]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_unsafe_slugs_before_creating_files[UPPER]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_injected_composition_identifiers[Scene" injected]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_injected_composition_identifiers[Scene\nname]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_direct_api_rejects_injected_composition_identifiers[../scene]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_rejects_existing_output_symlinks_before_any_write[index.tsx]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_rejects_existing_output_symlinks_before_any_write[README.md]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_rejects_existing_output_symlinks_before_any_write[artifacts]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_rejects_existing_output_symlinks_before_any_write[public]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_rejects_existing_output_symlinks_before_any_write[assets/music]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_scaffold_cli_rejects_project_symlink_outside_default_root
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_default_uses_external_user_project_and_logs_without_relative_to_repo
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshot_artifact_relative_paths_are_project_scoped[False]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshot_artifact_relative_paths_are_project_scoped[True]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshot_cli_path_overrides_resolve_from_caller_cwd_and_allow_external_inputs[False]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshot_cli_path_overrides_resolve_from_caller_cwd_and_allow_external_inputs[True]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshot_project_symlink_cannot_escape_user_root
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_reject_existing_output_symlinks_before_staging[snapshots]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_reject_existing_output_symlinks_before_staging[snapshots/s01.png]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_reject_unsafe_scene_filename_segments_before_staging[../escape]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_reject_unsafe_scene_filename_segments_before_staging[folder/scene]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_reject_unsafe_scene_filename_segments_before_staging[scene\\escape]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_reject_unsafe_scene_filename_segments_before_staging[.]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshots_reject_unsafe_scene_filename_segments_before_staging[/absolute]
+FAILED tests/contracts/test_atelier_workspace_scripts.py::test_snapshot_only_selection_retains_existing_filter
+33 failed, 5 passed in 0.10s

@@ -1,0 +1,13 @@
+{
+  "original_files_unchanged": 1519,
+  "destination_files_verified": 1519,
+  "project_bindings_verified": 3,
+  "warning_counts": {
+    "MANUAL_REVIEW_HISTORICAL_PATH": 774,
+    "MANUAL_REVIEW_UNSTRUCTURED_PATH": 12,
+    "MANUAL_REVIEW_ARCHIVED_INPUT": 173,
+    "MANUAL_REVIEW_PROVIDER_GRAPH": 173,
+    "MANUAL_REVIEW_PROVIDER_METADATA": 1
+  },
+  "report_path": "/Users/geesh/OpenMontageData/migration-reports/migration-5ff3abc900734b0388a59e0643ba5ce3.json"
+}

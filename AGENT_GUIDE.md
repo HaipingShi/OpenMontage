@@ -4,6 +4,16 @@ Start here. This is the complete operating guide and agent contract for OpenMont
 
 For architecture, key files, and conventions see [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md).
 
+## Software Development Delivery
+
+User preference confirmed on 2026-10-07: deliver development changes through the active application checkout and Git commits. Do not generate or export patch files unless the user explicitly requests one for that task. Existing implementation specs that ask for a patch are superseded by this preference.
+
+## Existing H3 / ComfyUI connections
+
+Before asking for an H3 address or key, read `docs/h3-connection.md` and the current project's `integrations/h3/connection.json`. Use its read-only `check-connection.mjs` when present. Registry video tools load the ignored application `.env` automatically; the project Node client uses its registered environment file. A configured endpoint returning 404/401 is a readiness/authentication issue, not a missing address. Do not expose secrets or start generation as a connection test.
+
+Before preparing or submitting H3 workflows, also read the project's `integrations/h3/AGENTS.md` and `workflow-policy.json` when present. Reference-audio conditioning alone does not lock the target vocal. For exact sung lip sync, follow the target-audio lock contract in `docs/h3-connection.md`; never restore quarantined workflows or bypass project submission guards.
+
 ## First Interaction — Onboarding
 
 When the user's first message is vague, exploratory, or asks what you can do ("make me a video", "what can you do?", "help me create something", "I want to make content"), read the onboarding skill **before** doing anything else:
@@ -202,7 +212,9 @@ Infrastructure files:
 
 ## Project Directory Convention
 
-Every production run creates a project workspace under `projects/`. This directory is gitignored — all generated assets are regenerable.
+Every production run creates its own project workspace under the configured `PROJECTS_DIR`, defaulting to `~/OpenMontageData/projects/`. `OPENMONTAGE_DATA_DIR`, `OPENMONTAGE_PROJECTS_DIR` and `OPENMONTAGE_LIBRARY_DIR` select absolute user-data locations; the application checkout owns no production assets. The paths below are relative to this projects root. User source media, identities and approved voice recordings are permanent data and must be backed up alongside the project.
+
+Project assets belong to that project. Reuse only assets explicitly imported from the user's library, pinning their version/hash and copying a project-local snapshot. Artist profiles resolve under `<project>/assets/artists/<alias>/`; the library catalog is separate from the application repository. Record generation provenance, costs and artist usage in the current project. Changing a project look must not modify the shared source or another project. See `docs/asset-decoupling.md` and `lib.project_assets` for publication, import and private forks. Old repository-local workspaces are supported through the explicit copy-and-verify migration, never an implicit same-name artist lookup.
 
 ```
 projects/<project-name>/
@@ -230,7 +242,7 @@ All tools and agents must write outputs to these paths — **always pass an expl
 
 ## Music Library
 
-Users can place royalty-free music tracks in `music_library/` (gitignored). The asset director will check this folder before falling back to API-based music generation.
+Users can keep reusable royalty-free music in their configured library and import selected tracks into the project. An existing `music_library/` remains an explicit legacy source (gitignored), not part of the application distribution. The asset director checks the current project's selected music and explicitly offered library tracks before API-based generation.
 
 ```
 music_library/
@@ -252,11 +264,14 @@ If the folder has tracks, the proposal and asset stages should present them as o
 | `podcast-repurpose` | Podcast highlights and derivatives | beta |
 | `cinematic` | Trailer, teaser, and mood-led edits | production |
 | `music-video` | Song-first music videos (MTV): performance, narrative, concept, lyric video, beat-cut footage — locked to a `song_map` | beta |
+
+| `documentary-montage` | Retrieval-first montage of real footage from free stock and open archives | beta |
 | `animation` | Motion-graphics and animation-first videos | production |
 | `character-animation` | Local rigged cartoon characters and reusable character acting | beta |
 | `hybrid` | Source footage plus support visuals | production |
 | `avatar-spokesperson` | Presenter-led avatar or lip-sync videos | production |
 | `localization-dub` | Subtitle, dub, and translated variants | beta |
+| `documentary-montage` | Real-footage thematic montage via corpus retrieval | beta |
 | `framework-smoke` | Test: minimal 2-stage smoke test | test |
 
 > **Beta pipelines** have not been fully audited. They work, but expect rough edges. Mention this when the user selects one.
@@ -298,10 +313,16 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
 Then:
 
 1. Read the selected manifest in `pipeline_defs/`.
-2. Check every `required_tools` entry against the registry.
-3. Check `fallback_tools` for unavailable tools.
-4. Report one of: `passed`, `degraded`, or `blocked`.
-5. Do not start production until the user understands the real capability envelope.
+2. For each stage, pass `get_stage_tools(manifest, stage)` to
+   `registry.capability_coverage(...)`; this includes optional selectors whose
+   concrete providers would otherwise be invisible to a required-tools-only check.
+3. Report every family from `registry.uncovered_capabilities(...)`. Treat it as
+   `degraded` when the treatment can proceed without that family, or `blocked`
+   when the approved delivery promise depends on it (especially motion, voice,
+   avatar, or music).
+4. Check every `required_tools` entry and its `fallback_tools` against the registry.
+5. Report one of: `passed`, `degraded`, or `blocked`.
+6. Do not start production until the user understands the real capability envelope.
 
 ### Provider Menu (Mandatory at Preflight)
 
@@ -496,7 +517,7 @@ All tool classes use **PascalCase without a "Tool" suffix**. When importing tool
 | `tools.audio.music_gen` | `MusicGen` | ~~MusicGenTool~~ |
 | `tools.video.video_compose` | `VideoCompose` | ~~VideoComposeTool~~ |
 | `tools.audio.audio_mixer` | `AudioMixer` | ~~AudioMixerTool~~ |
-| `tools.tts.elevenlabs_tts` | `ElevenLabsTTS` | ~~ElevenLabsTTSTool~~ |
+| `tools.audio.elevenlabs_tts` | `ElevenLabsTTS` | ~~ElevenLabsTTSTool~~ |
 | `tools.analysis.transcriber` | `Transcriber` | ~~TranscriberTool~~ |
 | `tools.subtitle.subtitle_gen` | `SubtitleGen` | ~~SubtitleGenTool~~ |
 
@@ -537,10 +558,10 @@ Music is a critical part of any video. **Surface the music situation to the user
 
 Check music availability in this order and present the options:
 
-1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect `music_library/`. If tracks exist, list durations and let the user pick one.
+1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect the directory reported by the `music_library` tool. If tracks exist, list durations and let the user pick one.
 2. **Royalty-free search:** Check `registry.get_by_capability("music_search")` for configured search/download tools. Report licensing constraints and whether a key is required.
 3. **Music generation APIs:** Check `registry.get_by_capability("music_generation")`. Report status, quota, cost, and quality tradeoffs honestly.
-4. **Bring your own:** Note that the user can provide a track (for example from YouTube Audio Library or Jamendo) through the `music_library/` drop path.
+4. **Bring your own:** Note that the user can provide a track (for example from YouTube Audio Library or Jamendo) through the configured user-library music directory.
 
 **Always present the user with explicit choices:**
 - Use a track from their library (which one?)
@@ -620,6 +641,7 @@ Checkpoint rules:
 - Write an `in_progress` checkpoint on entering each stage; during `assets`/`compose`, refresh `metadata.partial_progress` after each completed scene/asset unit — this powers live progress on the board.
 - `completed` and `awaiting_human` checkpoints must include the canonical artifact.
 - A gated stage (`human_approval_default: true`) can only be written `completed` with `human_approved=True` — the writer raises a GATE VIOLATION otherwise.
+- A `proposal` checkpoint can only be written `completed` when its `proposal_packet.approval.status` is `approved` or `approved_with_changes`; `human_approved=True` alone is not enough. Keep a pending proposal `awaiting_human` and leave `render_runtime` unset until the user approves and chooses a runtime.
 - Superseded checkpoints are archived automatically to `projects/<project_id>/history/` — stage re-runs never destroy run history.
 - Invalid checkpoints or invalid canonical artifacts are contract violations and should fail fast.
 
@@ -643,9 +665,14 @@ Tool rules:
 | `premium-minimalist` | Investor updates, expert explainers, product narratives |
 | `flat-motion-graphics` | Social media, TikTok, startups |
 | `minimalist-diagram` | Technical deep-dives, architecture |
-| `ink-sketch` (Ink Theater) | Hand-drawn ink-on-white doodle animation; a character that draws itself, walks, dances; contraption explainers |
+| `anime-ghibli` | Narrative animations, nature-themed stories, emotional storytelling, fantasy visuals |
+| `ink-sketch` (Ink Theater) | Hand-drawn ink-on-white doodle animation; a character that draws itself, walks, dances; contraption explainers. **Style id, not a YAML playbook** — there is no `styles/ink-sketch.yaml`; route through `skills/creative/ink-theater.md` |
+
+The YAML playbooks are the files in `styles/`; `list_playbooks()` in `styles/playbook_loader.py` is the authoritative list.
 
 For custom, atelier, brand, launch, or hero work, read `skills/meta/taste-direction.md` before choosing a playbook. Carry its `taste_profile` into the proposal so later stages can preserve the design read, visual variance, motion intensity, information density, reference strategy, and anti-patterns.
+
+For physical-product ads, launch films, or promos with generated shots of a specific SKU, also read `skills/creative/commercial-product-video.md` for product references, shot controls, continuity, and final-cut review within the selected pipeline.
 
 ### Hand-drawn "doodle" animation → Ink Theater / Ink Puppet
 

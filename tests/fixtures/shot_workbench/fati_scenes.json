@@ -1,0 +1,168 @@
+{
+  "version": "1.0",
+  "source": "test-zhenjiao-fati/scene_plan (read-only snapshot)",
+  "scenes": [
+    {
+      "id": "sh-s01-01",
+      "type": "generated",
+      "description": "抽屉缝隙里的针身反出一线冷光",
+      "start_seconds": 0,
+      "end_seconds": 3.878,
+      "script_section_id": "sec-s01",
+      "framing": "insert",
+      "movement": "static",
+      "transition_in": "cut",
+      "transition_out": "cut",
+      "overlay_notes": "开头小字歌名／末尾Fati署名；无歌词逐字高亮",
+      "shot_language": {
+        "shot_size": "insert",
+        "camera_movement": "static",
+        "lens_mm": 85,
+        "lighting_key": "overcast_soft",
+        "color_temperature": "cool",
+        "depth_of_field": "shallow"
+      },
+      "shot_intent": "abstract：灰尘里的旧针与窗光建立冷的世界，针线盒是一段未被拾起的记忆。",
+      "narrative_role": "establish_context",
+      "hero_moment": false,
+      "character_actions": [],
+      "texture_keywords": [
+        "natural skin",
+        "linen fibers",
+        "subtle grain",
+        "no plastic skin"
+      ],
+      "required_assets": [
+        {
+          "type": "image",
+          "source": "generate",
+          "description": "sh-s01-01 fixed scene keyframe, drawer, insert; use adult v3 only where Fati appears; no child photograph"
+        },
+        {
+          "type": "video",
+          "source": "generate",
+          "description": "H3 FL2VA; 192frames/24fps=8s; shot=3.878s; source_in=0.5s, source_out=4.378s; at least0.5s handles both ends; fixed first-frame reference; single modest action; no visible singing"
+        }
+      ]
+    },
+    {
+      "id": "sh-s05-02",
+      "type": "generated",
+      "description": "一根线穿过针眼后的静止状态，母亲手指收拢",
+      "start_seconds": 141.108,
+      "end_seconds": 146.657,
+      "script_section_id": "sec-s05",
+      "framing": "insert",
+      "movement": "static",
+      "transition_in": "cut",
+      "transition_out": "cut",
+      "overlay_notes": "无字幕图解；两个短刺绝不逐字高亮",
+      "shot_language": {
+        "shot_size": "insert",
+        "camera_movement": "static",
+        "lens_mm": 85,
+        "lighting_key": "tungsten_warm",
+        "color_temperature": "warm",
+        "depth_of_field": "shallow"
+      },
+      "shot_intent": "abstract：穿线与拉紧线头放慢，胸口针脚的形状与远方屋顶的晾布形成呼应。",
+      "narrative_role": "emotional_beat",
+      "hero_moment": false,
+      "character_actions": [
+        {
+          "character_id": "mother",
+          "action_sequence": [
+            "一根线穿过针眼后的静止状态，母亲手指收拢"
+          ],
+          "emotion": "克制、亲密、安静",
+          "notes": "Fati嘴部仅三组hook可见演唱；旅途向画面右侧；母亲不唱歌。"
+        }
+      ],
+      "texture_keywords": [
+        "natural skin",
+        "linen fibers",
+        "subtle grain",
+        "no plastic skin"
+      ],
+      "required_assets": [
+        {
+          "type": "image",
+          "source": "generate",
+          "description": "bible:mother_zhenjiao; independent fictional mother identity and wardrobe reference group must be generated and reviewed first; never Fati aged-up or user family photo"
+        },
+        {
+          "type": "image",
+          "source": "generate",
+          "description": "sh-s05-02 fixed scene keyframe, room, insert; use adult v3 only where Fati appears; no child photograph"
+        },
+        {
+          "type": "video",
+          "source": "generate",
+          "description": "H3 FL2VA; 192frames/24fps=8s; shot=5.549s; source_in=0.5s, source_out=6.049s; at least0.5s handles both ends; fixed first-frame reference; single modest action; no visible singing"
+        }
+      ]
+    },
+    {
+      "id": "sh-s06-04",
+      "type": "generated",
+      "description": "Fati正面唱“我是离别前／最后那句叮咛”，镜头让句子完整落下",
+      "start_seconds": 195.24,
+      "end_seconds": 202.04,
+      "script_section_id": "sec-s06",
+      "framing": "medium_close",
+      "movement": "static",
+      "transition_in": "cut",
+      "transition_out": "cut",
+      "overlay_notes": "无字幕图解；两个短刺绝不逐字高亮",
+      "shot_language": {
+        "shot_size": "medium_close",
+        "camera_movement": "static",
+        "lens_mm": 85,
+        "lighting_key": "blue_hour",
+        "color_temperature": "mixed",
+        "depth_of_field": "shallow"
+      },
+      "shot_intent": "counterpoint+literal：两个短刺只给针尖与布料；三组hook落在Fati正面表演，母亲、家书、归期在衣缝汇合。",
+      "narrative_role": "deliver_payload",
+      "hero_moment": false,
+      "character_actions": [
+        {
+          "character_id": "fati",
+          "action_sequence": [
+            "Fati正面唱“我是离别前／最后那句叮咛”，镜头让句子完整落下"
+          ],
+          "emotion": "克制、亲密、安静",
+          "notes": "Fati嘴部仅三组hook可见演唱；旅途向画面右侧；母亲不唱歌。"
+        }
+      ],
+      "texture_keywords": [
+        "natural skin",
+        "linen fibers",
+        "subtle grain",
+        "no plastic skin"
+      ],
+      "required_assets": [
+        {
+          "type": "image",
+          "source": "provided",
+          "description": "bible:fati_zhenjiao; identity v3 only: fati_road_front_v3-no-nose-ring.png; hair bob; no nose jewelry; compass anatomical right wrist; turnaround for wardrobe only, never face or side placement"
+        },
+        {
+          "type": "image",
+          "source": "generate",
+          "description": "sh-s06-04 fixed scene keyframe, roof, medium_close; use adult v3 only where Fati appears; no child photograph"
+        },
+        {
+          "type": "video",
+          "source": "generate",
+          "description": "H3 Ref2VA; 192frames/24fps=8s; shot=6.800s; source_in=0.5s, source_out=7.300s; at least0.5s handles both ends; Picture1=scene, Picture2=v3 adult identity, Audio1=exact vocal slice"
+        },
+        {
+          "type": "audio",
+          "source": "provided",
+          "description": "lip_sync vocal_in=195.240 vocal_out=202.040; audio_generation_slice=194.740–202.740s; vocal stem at original timeline; selected hook IDs=l056,l057; clean view mouth >=30%frame height, yaw<=30deg; generated audio muted in final"
+        }
+      ]
+    }
+  ]
+}

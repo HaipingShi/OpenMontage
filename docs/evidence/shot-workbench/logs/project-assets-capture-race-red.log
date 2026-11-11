@@ -1,0 +1,100 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation[import] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-153/test_immutable_bytes_a...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-153/test_immutable_bytes_are_reche0/library'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bcfeec0>
+operation = 'import'
+
+    @pytest.mark.parametrize("operation", ["import", "load", "fork"])
+    def test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation(assets, monkeypatch, operation):
+        from lib import project_assets
+        source, project, library = assets
+        project_assets.publish_asset(source, "performer", "v1", library=library)
+        if operation == "import":
+            directory = library / "versions" / "artist" / "performer" / "v1" / "files"
+        else:
+            project_assets.import_asset(project, "performer", "v1", "lead", library=library)
+            directory = project / "assets" / "artists" / "lead"
+        capture = project_assets._capture
+        calls = []
+        def replace_after_first_verification(root):
+            if root == directory:
+                calls.append(root)
+                if len(calls) == 2:
+                    profile = yaml.safe_load((root / "artist.yaml").read_text())
+                    profile["identity"]["looks"][0]["wardrobe"] = "Unapproved replacement coat"
+                    (root / "artist.yaml").write_text(yaml.safe_dump(profile))
+            return capture(root)
+        monkeypatch.setattr(project_assets, "_capture", replace_after_first_verification)
+>       with pytest.raises(ShotError) as error:
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_project_assets.py:238: Failed
+_ test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation[load] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-153/test_immutable_bytes_a...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-153/test_immutable_bytes_are_reche1/library'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c0a3b20>
+operation = 'load'
+
+    @pytest.mark.parametrize("operation", ["import", "load", "fork"])
+    def test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation(assets, monkeypatch, operation):
+        from lib import project_assets
+        source, project, library = assets
+        project_assets.publish_asset(source, "performer", "v1", library=library)
+        if operation == "import":
+            directory = library / "versions" / "artist" / "performer" / "v1" / "files"
+        else:
+            project_assets.import_asset(project, "performer", "v1", "lead", library=library)
+            directory = project / "assets" / "artists" / "lead"
+        capture = project_assets._capture
+        calls = []
+        def replace_after_first_verification(root):
+            if root == directory:
+                calls.append(root)
+                if len(calls) == 2:
+                    profile = yaml.safe_load((root / "artist.yaml").read_text())
+                    profile["identity"]["looks"][0]["wardrobe"] = "Unapproved replacement coat"
+                    (root / "artist.yaml").write_text(yaml.safe_dump(profile))
+            return capture(root)
+        monkeypatch.setattr(project_assets, "_capture", replace_after_first_verification)
+>       with pytest.raises(ShotError) as error:
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_project_assets.py:238: Failed
+_ test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation[fork] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-153/test_immutable_bytes_a...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-153/test_immutable_bytes_are_reche2/library'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c075b70>
+operation = 'fork'
+
+    @pytest.mark.parametrize("operation", ["import", "load", "fork"])
+    def test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation(assets, monkeypatch, operation):
+        from lib import project_assets
+        source, project, library = assets
+        project_assets.publish_asset(source, "performer", "v1", library=library)
+        if operation == "import":
+            directory = library / "versions" / "artist" / "performer" / "v1" / "files"
+        else:
+            project_assets.import_asset(project, "performer", "v1", "lead", library=library)
+            directory = project / "assets" / "artists" / "lead"
+        capture = project_assets._capture
+        calls = []
+        def replace_after_first_verification(root):
+            if root == directory:
+                calls.append(root)
+                if len(calls) == 2:
+                    profile = yaml.safe_load((root / "artist.yaml").read_text())
+                    profile["identity"]["looks"][0]["wardrobe"] = "Unapproved replacement coat"
+                    (root / "artist.yaml").write_text(yaml.safe_dump(profile))
+            return capture(root)
+        monkeypatch.setattr(project_assets, "_capture", replace_after_first_verification)
+>       with pytest.raises(ShotError) as error:
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_project_assets.py:238: Failed
+=========================== short test summary info ============================
+FAILED tests/contracts/test_project_assets.py::test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation[import]
+FAILED tests/contracts/test_project_assets.py::test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation[load]
+FAILED tests/contracts/test_project_assets.py::test_immutable_bytes_are_rechecked_at_the_capture_consumed_by_the_operation[fork]
+3 failed, 21 deselected in 0.33s

@@ -43,6 +43,11 @@ class OpenAIImage(BaseTool):
     agent_skills = ["provider-model-refresh"]  # general image gen knowledge
 
     capabilities = ["generate_image", "generate_illustration", "text_to_image"]
+    limits = {
+        "max_reference_images": 16, "max_prompt_chars": 32000,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v", "i2v", "multi_ref"],
+    }
     supports = {
         "complex_instructions": True,
         "text_in_image": True,

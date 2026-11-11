@@ -1,0 +1,30 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_generic_imported_reference_is_version_bound_and_cannot_be_changed_by_resupplying_its_hash _
+
+api = (<starlette.testclient.TestClient object at 0x108e207c0>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-159/test_generic_imported_referenc0/projects/film'))
+
+    def test_generic_imported_reference_is_version_bound_and_cannot_be_changed_by_resupplying_its_hash(api):
+        import hashlib
+        from lib.project_assets import publish_asset, import_asset
+        client, tool, lease, project = api
+        source = project.parent / "environment-source"
+        source.mkdir()
+        (source / "background.png").write_bytes(base64.b64decode(png_uri("red").split(",")[1]))
+        library = project.parent / "library"
+        manifest = publish_asset(source, "room", "v1", kind="environment", library=library)
+        binding = import_asset(project, "room", "v1", "room", kind="environment", library=library)
+        relative = binding["snapshot_path"] + "/background.png"
+        spec = read_spec(client)
+        spec["route"] = "multi_ref"
+        spec["references"] = [{"asset_path": relative, "sha256": hashlib.sha256((project / relative).read_bytes()).hexdigest(), "role": "environment"}]
+        response = client.put("/api/shot/film/shot1", json={"spec": spec, "revision": spec["revision"], "lease_id": lease})
+        assert response.status_code == 200, response.text
+        spec, compiled = preview(client, lease)
+>       assert compiled["asset_bindings"][0]["kind"] == "environment"
+E       IndexError: list index out of range
+
+tests/contracts/test_shot_workbench_api.py:997: IndexError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_generic_imported_reference_is_version_bound_and_cannot_be_changed_by_resupplying_its_hash
+1 failed, 63 deselected in 0.76s

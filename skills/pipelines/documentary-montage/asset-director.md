@@ -9,7 +9,8 @@ clips that fill each slot. There are two paths:
 
 1. **Build the corpus** — fan the scene director's queries out across
    all available stock sources (Pexels, Pixabay Video, Coverr, Mixkit,
-   Archive.org, NARA, Library of Congress, Pond5 PD, Videvo, NASA, ESA,
+   Archive.org, NARA, Library of Congress, Pond5 PD when
+   `POND5_API_KEY` is configured, Videvo, NASA, ESA,
    JAXA, NOAA, Dareful, Wikimedia, Unsplash) and download/embed the candidates.
 2. **Pick per slot** — run CLIP retrieval against the corpus with each
    slot description and choose one winner per slot.
@@ -57,7 +58,7 @@ clip with full provenance.
 | Tool (fast path) | `direct_clip_search` | Lightweight multi-provider search + download |
 | Tool (standard path) | `corpus_builder` | Populates the retrieval index with CLIP embeddings |
 | Tool (standard path) | `clip_search` | Ranks clips against slot descriptions |
-| Tool (optional) | `music_gen`, user's `music_library/` | Score bed |
+| Tool (optional) | `music_gen`, user's the directory reported by `music_library` (default: `<user library>/music/`) | Score bed |
 
 ## Mental Model
 
@@ -407,7 +408,7 @@ montage-specific fields live in `metadata`:
     {
       "id": "asset_music_bed",
       "type": "music",
-      "path": "music_library/dawn_04.mp3",
+      "path": "assets/music/dawn_04.mp3",
       "source_tool": "music_library",
       "scene_id": "global",
       "subtype": "library",

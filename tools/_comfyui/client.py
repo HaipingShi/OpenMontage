@@ -32,6 +32,74 @@ class ComfyUIError(Exception):
         self.prompt_id = prompt_id
 
 
+def compact_execution_error(messages: Any, *, limit: int = 1500) -> str:
+    """Summarize ComfyUI ``status.messages`` into one actionable line.
+
+    A failed prompt reports an ``execution_error`` message whose payload embeds
+    the full exception content; rendering the raw list can run hundreds of
+    lines of JSON that neither an operator nor an agent log can act on. This
+    extracts the useful core — node, exception type, and the first line of the
+    exception message — and truncates defensively.
+    """
+    if isinstance(messages, list):
+        for item in messages:
+            if not (isinstance(item, (list, tuple)) and len(item) >= 2):
+                continue
+            kind, payload = item[0], item[1]
+            if kind == "execution_error" and isinstance(payload, dict):
+                node = payload.get("node_type") or payload.get("node_id")
+                exc = payload.get("exception_type") or "Error"
+                msg = str(payload.get("exception_message") or "").strip().splitlines()
+                first = msg[0] if msg else ""
+                text = f"{node}: {exc}: {first}"
+                return text[:limit]
+    text = json.dumps(messages, default=str) if not isinstance(messages, str) else messages
+    return text[:limit]
+
+
+def _timestamp_seconds(value: Any) -> float | None:
+    """Normalize a ComfyUI history timestamp to seconds.
+
+    Servers have been observed emitting both seconds and milliseconds.
+    """
+    if not isinstance(value, (int, float)):
+        return None
+    ts = float(value)
+    if ts > 1e11:  # implausibly large for epoch seconds → milliseconds
+        return ts / 1000.0
+    return ts
+
+
+def history_execution_seconds(entry: dict[str, Any]) -> float | None:
+    """Server-side execution time from ``execution_start`` → terminal event.
+
+    Reads the timestamps ComfyUI itself records in the history entry's
+    ``status.messages``, so the number reflects real workflow execution and
+    not queue wait or artifact download.
+    """
+    messages = (entry.get("status") or {}).get("messages") or []
+    if not isinstance(messages, list):
+        return None
+    start_ts = None
+    end_ts = None
+    for item in messages:
+        if not (isinstance(item, (list, tuple)) and len(item) >= 2):
+            continue
+        kind, payload = item[0], item[1]
+        if not isinstance(payload, dict):
+            continue
+        if kind == "execution_start":
+            start_ts = _timestamp_seconds(payload.get("timestamp"))
+        elif kind in {"execution_success", "execution_interrupted", "execution_error"}:
+            end_ts = _timestamp_seconds(payload.get("timestamp"))
+    if start_ts is None or end_ts is None:
+        return None
+    delta = end_ts - start_ts
+    if delta < 0:
+        return None
+    return round(delta, 3)
+
+
 class ComfyUIClient:
     """Client for the ComfyUI REST API.
 
@@ -60,9 +128,33 @@ class ComfyUIClient:
             server_url or self._capability_url() or os.environ.get("COMFYUI_SERVER_URL")
         )
         self.server_url = (resolved or "http://localhost:8188").rstrip("/")
+        configured_url = self._capability_url() or os.environ.get("COMFYUI_SERVER_URL")
+        capability_key = (
+            os.environ.get(f"COMFYUI_{capability.upper()}_API_KEY")
+            if capability else None
+        )
+        shared_url = os.environ.get("COMFYUI_SERVER_URL", "").rstrip("/")
+        token = capability_key or (
+            os.environ.get("COMFYUI_API_KEY")
+            if self.server_url == shared_url else None
+        )
+        # Never forward the configured credential to an explicit different server.
+        self._auth_headers = (
+            {"Authorization": f"Bearer {token}"}
+            if token and configured_url and self.server_url == configured_url.rstrip("/") else {}
+        )
+        self._auth_server_url = self.server_url
         # Scopes websocket execution events to this client (see wait_ws) and
         # is echoed back on /prompt so the server targets messages to us.
         self.client_id = str(uuid.uuid4())
+        # Populated by generate(): splits queue / execution / download so
+        # callers don't have to treat wall time as GPU time.
+        self.last_timing: dict[str, Any] | None = None
+
+    def _auth_options(self) -> dict:
+        if self._auth_headers and self.server_url == self._auth_server_url:
+            return {"headers": self._auth_headers}
+        return {}
 
     def _capability_url(self) -> str | None:
         if self._capability_env_var:
@@ -80,6 +172,11 @@ class ComfyUIClient:
 
     def unavailable_reason(self) -> str:
         """Human-readable explanation of why the server can't be reached."""
+        status = getattr(self, "_last_http_status", None)
+        if status in (401, 403):
+            return f"ComfyUI at {self.server_url} rejected authentication (HTTP {status}). The connection is configured; ask the service maintainer to check its service-level key."
+        if status == 404:
+            return f"ComfyUI at {self.server_url} returned HTTP 404. The connection is configured; check cloud service readiness and routing before changing its address."
         env_var_hint = self._capability_env_var or "COMFYUI_SERVER_URL"
         if self._capability_env_var:
             env_var_hint += " (or the shared COMFYUI_SERVER_URL)"
@@ -98,9 +195,11 @@ class ComfyUIClient:
     def is_available(self) -> bool:
         """Return True if the ComfyUI server is reachable."""
         try:
-            resp = requests.get(f"{self.server_url}/system_stats", timeout=5)
+            resp = requests.get(f"{self.server_url}/system_stats", timeout=5, **self._auth_options())
+            self._last_http_status = resp.status_code
             return resp.status_code == 200
         except Exception:
+            self._last_http_status = None
             return False
 
     # ------------------------------------------------------------------
@@ -131,7 +230,7 @@ class ComfyUIClient:
         for node_class, (field, group) in node_to_key.items():
             try:
                 resp = requests.get(
-                    f"{self.server_url}/object_info/{node_class}", timeout=10
+                    f"{self.server_url}/object_info/{node_class}", timeout=10, **self._auth_options()
                 )
                 resp.raise_for_status()
                 data = resp.json()
@@ -164,7 +263,7 @@ class ComfyUIClient:
         """Return whether the connected server exposes a node class."""
         try:
             response = requests.get(
-                f"{self.server_url}/object_info/{node_class}", timeout=10
+                f"{self.server_url}/object_info/{node_class}", timeout=10, **self._auth_options()
             )
             response.raise_for_status()
             return node_class in response.json()
@@ -180,7 +279,7 @@ class ComfyUIClient:
         resp = requests.post(
             f"{self.server_url}/prompt",
             json={"prompt": workflow, "client_id": self.client_id},
-            timeout=30,
+            timeout=30, **self._auth_options(),
         )
         try:
             data = resp.json()
@@ -223,7 +322,7 @@ class ComfyUIClient:
 
     def _history_entry(self, prompt_id: str) -> dict | None:
         """Return a completed history entry, or ``None`` while it is absent."""
-        resp = requests.get(f"{self.server_url}/history/{prompt_id}", timeout=10)
+        resp = requests.get(f"{self.server_url}/history/{prompt_id}", timeout=10, **self._auth_options())
         resp.raise_for_status()
         entry = resp.json().get(prompt_id)
         if entry is None:
@@ -231,7 +330,10 @@ class ComfyUIClient:
         status = entry.get("status", {})
         if status.get("status_str") == "error":
             msgs = status.get("messages", [])
-            raise ComfyUIError(f"Execution error: {msgs}", prompt_id=prompt_id)
+            raise ComfyUIError(
+                f"Execution error: {compact_execution_error(msgs)}",
+                prompt_id=prompt_id,
+            )
         return entry
 
     def _history_entry_if_reachable(self, prompt_id: str) -> dict | None:
@@ -280,7 +382,8 @@ class ComfyUIClient:
             "https://", "wss://", 1
         )
         conn = websocket.create_connection(
-            f"{ws_url}/ws?clientId={self.client_id}", timeout=10
+            f"{ws_url}/ws?clientId={self.client_id}", timeout=10,
+            **({"header": self._auth_options()["headers"]} if self._auth_options() else {})
         )
         try:
             conn.settimeout(interval)
@@ -383,7 +486,7 @@ class ComfyUIClient:
                 "subfolder": subfolder,
                 "type": folder_type,
             },
-            timeout=120,
+            timeout=120, **self._auth_options(),
         )
         resp.raise_for_status()
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -399,7 +502,7 @@ class ComfyUIClient:
             resp = requests.post(
                 f"{self.server_url}/upload/image",
                 files={"image": (name, f, "image/png")},
-                timeout=30,
+                timeout=30, **self._auth_options(),
             )
         resp.raise_for_status()
         return resp.json()["name"]
@@ -429,8 +532,15 @@ class ComfyUIClient:
         detection, optional live ``on_progress`` callback) and transparently
         falls back to REST polling if ``websocket-client`` isn't installed or
         the connection can't be used. See :meth:`_wait`.
+
+        After a successful run, :attr:`last_timing` holds a dict splitting
+        ``submit_s``, ``client_queue_and_poll_s``, ``comfy_prompt_exec_s``
+        (server-side, when history timestamps are present) and ``download_s``.
         """
+        self.last_timing = None
+        t0 = time.perf_counter()
         prompt_id = resume_prompt_id or self.submit(workflow)
+        t_submitted = time.perf_counter()
         if resume_prompt_id:
             # A prompt resumed by a new client instance was submitted with the
             # original instance's client_id, so its websocket events are not
@@ -440,6 +550,7 @@ class ComfyUIClient:
             entry = self._wait(
                 prompt_id, timeout=timeout, interval=interval, on_progress=on_progress
             )
+        t_polled = time.perf_counter()
 
         outputs = entry.get("outputs", {})
         node_output = outputs.get(output_node, {})
@@ -472,6 +583,17 @@ class ComfyUIClient:
                 item.get("type", "output"),
             )
             paths.append(target)
+        t_downloaded = time.perf_counter()
+        exec_s = history_execution_seconds(entry)
+        self.last_timing = {
+            "prompt_id": prompt_id,
+            "submit_s": round(t_submitted - t0, 3),
+            "client_queue_and_poll_s": round(t_polled - t_submitted, 3),
+            "comfy_prompt_exec_s": exec_s,
+            "download_s": round(t_downloaded - t_polled, 3),
+            "poll_interval_s": interval,
+            "timing_source": "history_messages" if exec_s is not None else "poll_wall",
+        }
         return paths
 
     # ------------------------------------------------------------------
@@ -481,7 +603,7 @@ class ComfyUIClient:
     @staticmethod
     def load_workflow(path: Path) -> dict:
         """Load a workflow JSON template from disk."""
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             return json.load(f)
 
     @staticmethod

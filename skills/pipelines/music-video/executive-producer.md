@@ -160,3 +160,28 @@ CHECK: Output
 - **Lip-syncing everything.** It is the most expensive and most fragile shot class. Spend it on hook lines and chorus close-ups; cover the rest with performance coverage that does not need mouths (wides, silhouettes, instruments, backs, slow motion with closed mouth).
 - **Chorus amnesia.** Each chorus should recall a signature image and escalate it. Three unrelated choruses read as three different videos.
 - **Silent downgrade.** If video generation is blocked mid-run, stop and escalate; do not quietly ship a Ken Burns slideshow.
+
+
+## AutoMV-informed optional tools and controls
+
+- stem_separator (optional demucs/htdemucs): content-hash cache, master sample
+  rate, vocal transcription/alignment and lip-sync; missing tool uses master.
+- song_beatmap: Suno-record > user > transcription lyric precedence; singer tags,
+  matched-token confidence and review_flags (<0.6 by default) shown at G1.
+- lib.timeline: configurable 3–15s narrative segments, quantized frame grid;
+  validate_timeline MUST run before scene_plan and edit artifacts are written.
+- Routes: story_i2v, performance_lipsync, cast_multi_ref, continuation. Exact
+  last-frame provenance from lib.frames; only verified predecessors can chain.
+- shot_verifier: optional selected multimodal reviewer after free checks, then
+  physical pass/fail, then per-artist scores (identity minimum). Optional model
+  absence requires manual evidence at G5, not fake automatic approval. Keyframes
+  <=3 candidates; clips default 2, <=3. All candidates count toward budget.
+- mv_judge: optional full-video + master review; AutoMV's twelve criteria with
+  20/20/30/30 weights. AI novelty excluded by default; report "仅供参考" and actual
+  model in final_review.metadata.judge. NEVER a publish gate.
+
+Review providers come from registry capability multimodal_review through existing
+explicit provider/tool/model routing; no Gemini/Doubao dependency. No SongFormer
+mandatory backend or new beat tracker. Section labels stay heuristic until the
+director confirms them. Optional tools are not preflight blockers; report
+UNAVAILABLE and the explicit degraded/manual path. See docs/automv-upgrade.md.

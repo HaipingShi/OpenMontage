@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>镜头工作台 · OpenMontage</title>
+<link rel="stylesheet" href="/ui/workbench.css">
+<script type="importmap">{"imports":{"three":"/ui/vendor/three-0.181.2/three.module.min.js"}}</script>
+</head>
+<body>
+<header class="workbench-header">
+  <div><a id="board-link" href="/">← Backlot</a><h1>镜头工作台</h1><p id="shot-label">正在读取镜头单…</p></div>
+  <div class="header-actions"><span id="revision-label"></span><button id="acquire" type="button">接管镜头</button><button id="save" type="button">保存镜头单</button><button id="release" type="button">保存并交回 Agent</button></div>
+</header>
+<div id="status" role="status" aria-live="polite" data-status>正在加载…</div>
+<div id="conflict" class="conflict" hidden><span>文件已有新版本。你的未保存草稿已保留；请复制需要的内容，或重新加载正本。</span><button id="reload" type="button">重新加载正本</button></div>
+<main class="workbench-grid">
+  <section class="panel refs-panel" aria-labelledby="refs-title"><h2 id="refs-title">01 · 参考图板</h2><p class="hint">拖入 PNG、JPG、WebP，或选择图片。角色和对应主体将写入镜头单。</p><div id="drop-zone"><input id="upload" type="file" accept="image/png,image/jpeg,image/webp" multiple aria-label="上传参考图"><span>拖入参考图</span></div><div id="reference-list"></div><details open><summary>艺人正式图与固定特征（只读）</summary><div id="artist-list"></div></details></section>
+  <section class="panel fields-panel" aria-labelledby="fields-title"><h2 id="fields-title">02 · 镜头字段</h2><form id="shot-form" novalidate></form><div id="subject-list"></div><button id="add-subject" type="button">添加主体</button></section>
+  <div class="right-column"><section class="panel stage-panel" aria-labelledby="stage-title"><div class="section-heading"><h2 id="stage-title">03 · 三维舞台</h2><button id="stage-export" type="button">导出并保存舞台参考</button></div><div id="stage"></div></section>
+  <section class="panel compile-panel" aria-labelledby="compile-title"><div class="section-heading"><h2 id="compile-title">04 · 编译预览</h2><button id="compile" type="button">编译草稿</button></div><div id="compile-state" class="hint">编译后在这里核对最终提示词、参考顺序、检查结果与费用。</div><div id="compiled-preview"></div><button id="render" type="button" disabled>生成这个镜头</button><div id="confirmation" hidden></div><h3>候选与废片</h3><div id="candidates"></div></section></div>
+</main>
+<script type="module" src="/ui/workbench.js"></script>
+</body>
+</html>

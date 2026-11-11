@@ -7,6 +7,11 @@ class OpenAIFalImage(FalMedia):
     name = "openai_fal_image"
     capability = "image_generation"
     capabilities = ["text_to_image", "image_edit"]
+    limits = {
+        "max_reference_images": 16, "max_prompt_chars": 32000,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v", "i2v", "multi_ref"],
+    }
     supports = {
         "image_edit": True,
         "mask": True,

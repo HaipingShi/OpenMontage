@@ -38,7 +38,7 @@ def client(projects_root, monkeypatch):
         return None
 
     monkeypatch.setattr(server_mod, "_watch_projects", no_watch)
-    with TestClient(server_mod.create_app()) as c:
+    with TestClient(server_mod.create_app(), base_url="http://127.0.0.1:4750") as c:
         yield c
 
 
@@ -153,6 +153,57 @@ class TestBacklotServerApi:
         assert passthrough.content == b"hello"
 
 
+class TestBacklotHostValidation:
+    @pytest.mark.parametrize(
+        "host",
+        ["127.0.0.1", "127.0.0.1:4750", "127.0.0.1:8080", "localhost", "localhost:4750"],
+    )
+    def test_accepts_local_hosts(self, client, host):
+        response = client.get("/api/health", headers={"Host": host})
+        assert response.status_code == 200
+        assert response.json() == {"ok": True, "app": "backlot"}
+
+    @pytest.mark.parametrize(
+        "host",
+        ["attacker.example", "attacker.example:4750", "127.0.0.1.attacker.example", "evil.localhost"],
+    )
+    def test_rejects_foreign_hosts(self, client, host):
+        response = client.get("/api/health", headers={"Host": host})
+        assert response.status_code == 400
+        assert response.text == "Invalid host header"
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "/",
+            "/p/film",
+            "/ui/board.js",
+            "/api/projects",
+            "/api/project/film/state",
+            "/api/project/film/events",
+            "/api/library/events",
+            "/media/film/artifacts/note.txt",
+            "/thumb/film/assets/images/sc1.png",
+        ],
+    )
+    def test_rejects_foreign_host_across_routes(self, client, projects_root, url):
+        project = _make_project(projects_root, "film")
+        (project / "artifacts" / "note.txt").write_text("private", encoding="utf-8")
+        _write_png(project / "assets" / "images" / "sc1.png")
+
+        response = client.get(url, headers={"Host": "attacker.example:4750"})
+
+        assert response.status_code == 400
+        assert response.text == "Invalid host header"
+
+    def test_forwarded_host_does_not_bypass_validation(self, client):
+        response = client.get(
+            "/api/health",
+            headers={"Host": "attacker.example", "X-Forwarded-Host": "localhost"},
+        )
+        assert response.status_code == 400
+
+
 class TestBacklotPerformanceBudgets:
     def test_projects_and_state_stay_within_loose_budgets(self, client, projects_root):
         for i in range(25):
@@ -203,3 +254,88 @@ class TestFindingsFixes:
         fake_video.write_bytes(b"\x00" * 4096)
         res = client.get("/thumb/vid/renders/final.mp4")
         assert res.status_code == 404  # never the raw video bytes (F-03)
+
+class TestShotReviews:
+    def test_dedicated_page_and_human_submission(self, client, projects_root):
+        import hashlib
+        project = self.setup_shots(projects_root)
+        page = client.get('/r/film')
+        assert page.status_code == 200
+        assert '完成标注，交给 Agent' in page.text
+        assert page.headers['cache-control'] == 'no-cache'
+        assert client.post('/api/project/film/reviews/submit').status_code == 422
+        before = (project / 'artifacts/asset_manifest.json').read_bytes()
+        issue = {'scene_id': 'sc2', 'start_seconds': 1.2, 'end_seconds': 2.4,
+                 'reasons': ['action', 'objects'], 'note': '道具漂浮',
+                 'severity': 'blocking', 'desired_change': '道具留在桌面'}
+        assert client.put('/api/project/film/reviews', json=self.payload(issues=[issue])).status_code == 200
+        handoff = client.post('/api/project/film/reviews/submit').json()
+        assert handoff['generation_authorized'] is False
+        assert handoff['sources'][0]['source_sha256'] == hashlib.sha256(b'video').hexdigest()
+        assert handoff['sources'][0]['issues'][0] == issue
+        snapshot = project / handoff['snapshot_path']
+        assert json.loads(snapshot.read_text()) == handoff
+        assert json.loads((project / 'reviews/review_handoff.json').read_text()) == handoff
+        assert (project / 'artifacts/asset_manifest.json').read_bytes() == before
+        assert client.put('/api/project/film/reviews', json=self.payload(revision=1, issues=[])).status_code == 200
+        assert json.loads(snapshot.read_text())['sources'][0]['issues'] == [issue]
+
+    def test_submission_origin_and_severity_validation(self, client, projects_root):
+        self.setup_shots(projects_root)
+        assert client.post('/api/project/film/reviews/submit', headers={'Origin':'https://other.example'}).status_code == 403
+        issue = {'scene_id':'sc2', 'reasons':['camera'], 'severity':'invalid'}
+        assert client.put('/api/project/film/reviews', json=self.payload(issues=[issue])).status_code == 422
+
+    def setup_shots(self, root):
+        project = _make_project(root)
+        (project / 'assets/video/source.mp4').write_bytes(b'video')
+        _write_json(project / 'artifacts/scene_plan.json', {
+            'scenes': [{'id': 'sc1'}, {'id': 'sc2'}],
+            'metadata': {'routing': [{'shot_id': 'sc2', 'reuse_of': 'sc1'}]},
+        })
+        _write_json(project / 'artifacts/asset_manifest.json', {'assets': [
+            {'id': 'a1', 'scene_id': 'sc1', 'type': 'video', 'path': 'assets/video/source.mp4'}
+        ]})
+        return project
+
+    def payload(self, **changes):
+        return {**{'scene_id': 'sc2', 'media_path': 'assets/video/source.mp4',
+                  'status': 'rejected', 'revision': 0,
+                  'issues': [{'scene_id': 'sc2', 'start_seconds': 1.2,
+                              'end_seconds': 2.4, 'reasons': ['lip_sync'], 'note': '口型错位'}]}, **changes}
+
+    def test_save_reload_reuse_and_fix_list(self, client, projects_root):
+        project = self.setup_shots(projects_root)
+        response = client.put('/api/project/film/reviews', json=self.payload())
+        assert response.status_code == 200
+        assert response.json()['linked_scene_ids'] == ['sc1', 'sc2']
+        assert response.json()['revision'] == 1
+        saved = json.loads((project / 'reviews/shot_reviews.json').read_text())
+        assert saved['sources']['assets/video/source.mp4']['issues'][0]['note'] == '口型错位'
+        body = client.get('/api/project/film/reviews').json()
+        assert len(body['fix_list']) == 1
+        assert body['sources'][0]['issues'][0]['scene_id'] == 'sc2'
+        assert client.put('/api/project/film/reviews', json=self.payload()).status_code == 409
+        assert client.put('/api/project/film/reviews', json=self.payload(revision=1, status='approved', issues=[])).status_code == 200
+        assert client.get('/api/project/film/reviews').json()['fix_list'] == []
+
+    @pytest.mark.parametrize('changes,status', [
+        ({'media_path': '../outside.mp4'}, 403),
+        ({'scene_id': 'unknown'}, 422),
+        ({'status': 'bogus'}, 422),
+        ({'issues': [{'scene_id': 'sc2', 'start_seconds': 3, 'end_seconds': 2, 'note': 'bad'}]}, 422),
+        ({'issues': [{'scene_id': 'unknown', 'note': 'bad'}]}, 422),
+        ({'issues': [{'scene_id': 'sc2', 'start_seconds': -1, 'note': 'bad'}]}, 422),
+    ])
+    def test_invalid_reviews(self, client, projects_root, changes, status):
+        project = self.setup_shots(projects_root)
+        assert client.put('/api/project/film/reviews', json=self.payload(**changes)).status_code == status
+        assert not (project / 'reviews/shot_reviews.json').exists()
+
+    def test_cross_origin_and_corrupt_storage(self, client, projects_root):
+        project = self.setup_shots(projects_root)
+        assert client.put('/api/project/film/reviews', json=self.payload(), headers={'Origin': 'https://other.example'}).status_code == 403
+        (project / 'reviews').mkdir()
+        (project / 'reviews/shot_reviews.json').write_text('broken')
+        assert client.put('/api/project/film/reviews', json=self.payload()).status_code == 409
+        assert (project / 'reviews/shot_reviews.json').read_text() == 'broken'

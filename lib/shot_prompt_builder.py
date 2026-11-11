@@ -140,7 +140,7 @@ def build_shot_prompt(
         if style_hint:
             layers.append(f"Style: {style_hint}")
 
-    return ". ".join(filter(None, layers))
+    return ". ".join(layer.strip().rstrip(".。 ") for layer in layers if layer.strip())
 
 
 def build_batch_prompts(

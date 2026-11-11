@@ -5,6 +5,10 @@ import {
   getJSON, mediaURL, subscribe, thumbURL, waveBars,
 } from "/ui/lib.js";
 
+import {openShotReview, sourceReview, reviewLabels, renderFixList} from "/ui/reviews.js";
+
+let reviews = {sources: [], fix_list: []};
+
 const rawProjectPath = location.pathname.split("/p/")[1] || "";
 const projectId = decodeURIComponent(rawProjectPath);
 const encodedProjectId = encodeURIComponent(projectId);
@@ -92,7 +96,11 @@ function renderSlate(s) {
   return el("header", { class: "slate" },
     el("div", { class: "clapper" }),
     el("div", {},
-      el("a", { class: "wordmark", href: "/", style: "text-decoration:none" }, "Backlot"),
+      el("a", {
+        class: "wordmark", style: "text-decoration:none",
+        href: s.series ? `/?${new URLSearchParams({ series: s.series })}` : "/",
+        title: s.series ? `Back to series ${s.series}` : "Back to library",
+      }, s.series ? `Backlot / ${s.series}` : "Backlot"),
       el("h1", {}, s.title),
     ),
     ...chips,
@@ -749,6 +757,13 @@ function sceneCard(s, card) {
   }
   wrap.append(thumb);
 
+  if (!replay && card.visual?.exists) {
+    const record = sourceReview(reviews, card.visual.path);
+    wrap.append(el("button", {type: "button", class: "shot-review-button",
+      onclick: () => openReview(card, card.visual)},
+      `${reviewLabels[record?.status || "unreviewed"]} · 标注`));
+  }
+
   // shot language chips
   const sl = card.shot_language;
   if (sl) {
@@ -767,7 +782,7 @@ function sceneCard(s, card) {
         || (t.path && t.path === card.visual.path)
         || (t.id && t.id === card.visual.id)
       );
-      const tk = el("span", { class: `tk${isActive ? " active" : ""}`, title: `take ${i + 1}` });
+      const tk = el("span", { class: `tk${isActive ? " active" : ""}`, title: `take ${i + 1} · 点击标注`, role: "button", tabindex: "0", onclick: () => { if (!replay && t.exists) openReview(card, t); }, onkeydown: (e) => { if (!replay && t.exists && (e.key === "Enter" || e.key === " ")) {e.preventDefault(); openReview(card, t);} } });
       if (t.exists && t.type === "image") tk.append(el("img", { src: thumbURL(s.project_id, t.path, 320), loading: "lazy", alt: "" }));
       takes.append(tk);
     });
@@ -798,6 +813,11 @@ function sceneCard(s, card) {
     wrap.append(wave);
   }
   return wrap;
+}
+
+function openReview(card, media) {
+  document.querySelectorAll(".filmstrip video").forEach(video => video.pause());
+  openShotReview({projectId, card, media, reviews, modal, onSaved: refresh});
 }
 
 function renderStoryboard(s) {
@@ -1085,15 +1105,20 @@ function render() {
   const storyboard = renderStoryboard(s);
   const found = renderFoundMedia(s);
   const renders = renderRenders(s);
+  const fixes = !replay && s.storyboard ? renderFixList(reviews, record => {
+    const card = state.storyboard.scenes.find(c => record.linked_scene_ids.includes(c.id));
+    const media = [card?.visual, ...(card?.takes || [])].find(m => m?.path === record.media_path);
+    if (card && media) openReview(card, media);
+  }) : null;
 
   if (approvalReview || script || decisions || activity) {
-    for (const section of [storyboard, found, renders]) {
+    for (const section of [storyboard, fixes, found, renders]) {
       if (section) main.append(section);
     }
     const hasAside = Boolean(decisions || activity);
     app.append(el("div", { class: `board${hasAside ? "" : " solo"}` }, main, hasAside ? aside : null));
   } else {
-    for (const section of [storyboard, found, renders]) {
+    for (const section of [storyboard, fixes, found, renders]) {
       if (section) app.append(section);
     }
   }
@@ -1126,7 +1151,20 @@ function normalize(s) {
 }
 
 async function refresh() {
-  state = normalize(await getJSON(`/api/project/${encodeURIComponent(projectId)}/state`));
+  const [board, feedback] = await Promise.all([
+    getJSON(`/api/project/${encodedProjectId}/state`),
+    getJSON(`/api/project/${encodedProjectId}/reviews`),
+  ]);
+  state = normalize(board);
+  reviews = feedback;
+  reviews.sceneLinks = {};
+  for (const card of state.storyboard?.scenes || []) {
+    for (const media of [card.visual, ...card.takes]) {
+      if (!media?.exists) continue;
+      const ids = reviews.sceneLinks[media.path] ||= [];
+      if (!ids.includes(card.id)) ids.push(card.id);
+    }
+  }
   render();
 }
 

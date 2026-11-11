@@ -1,0 +1,320 @@
+........................................................................ [ 85%]
+..FFF.FFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+_ test_real_video_adapter_agrees_with_compiled_reference_provenance[seedance_video-SeedanceVideo-t2v-5] _
+
+compiler = <function compile at 0x1077e9e10>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-75/test_real_video_adapter_agrees0')
+tool_module = 'seedance_video', tool_class = 'SeedanceVideo', route = 't2v'
+duration = 5
+
+    @pytest.mark.parametrize("tool_module,tool_class,route,duration", [
+        ("seedance_video", "SeedanceVideo", "t2v", 5),
+        ("seedance_video", "SeedanceVideo", "i2v", 5),
+        ("seedance_video", "SeedanceVideo", "first_last", 5),
+        ("seedance_video", "SeedanceVideo", "multi_ref", 5),
+        ("kling_video", "KlingVideo", "i2v", 5),
+        ("veo_video", "VeoVideo", "first_last", 8),
+    ])
+    def test_real_video_adapter_agrees_with_compiled_reference_provenance(compiler, tmp_path, tool_module, tool_class, route, duration):
+        """No network: compare compiler provenance to existing provider inputs."""
+        import base64
+        from PIL import Image
+        from lib.shot_execution import tool_inputs
+        tool = getattr(importlib.import_module(f"tools.video.{tool_module}"), tool_class)()
+        refs = [ref("identity"), ref("start", "first_frame", ""), ref("end", "last_frame", "")]
+        for reference in refs:
+            path = tmp_path / reference["asset_path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            Image.new("RGB", (16, 16), "red").save(path)
+        cfg = context(limits=tool.limits, tool_options={}, capability="video_generation")
+        result = compiler(spec(route=route, references=refs, duration_seconds=duration, target_resolution="1920x1080"), tool.name, cfg)
+        inputs = tool_inputs(result, tool, tmp_path)
+        supplied = set()
+        for field, value in inputs.items():
+            if "image" not in field and "frame" not in field:
+                continue
+            for item in value if isinstance(value, list) else [value]:
+                if not isinstance(item, str):
+                    continue
+                if item.startswith("data:"):
+                    supplied.update(r["asset_path"] for r in refs if (tmp_path / r["asset_path"]).read_bytes() == base64.b64decode(item.split(",", 1)[1]))
+                elif Path(item).is_file():
+                    supplied.add(Path(item).relative_to(tmp_path).as_posix())
+        expected = {r["asset_path"] for r in result["payload"]["references"]}
+>       assert expected == supplied
+E       AssertionError: assert {'assets/refs...fs/start.png'} == set()
+E
+E         Extra items in the left set:
+E         'assets/refs/identity.png'
+E         'assets/refs/start.png'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:494: AssertionError
+_ test_real_video_adapter_agrees_with_compiled_reference_provenance[seedance_video-SeedanceVideo-i2v-5] _
+
+compiler = <function compile at 0x1077e9e10>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-75/test_real_video_adapter_agrees1')
+tool_module = 'seedance_video', tool_class = 'SeedanceVideo', route = 'i2v'
+duration = 5
+
+    @pytest.mark.parametrize("tool_module,tool_class,route,duration", [
+        ("seedance_video", "SeedanceVideo", "t2v", 5),
+        ("seedance_video", "SeedanceVideo", "i2v", 5),
+        ("seedance_video", "SeedanceVideo", "first_last", 5),
+        ("seedance_video", "SeedanceVideo", "multi_ref", 5),
+        ("kling_video", "KlingVideo", "i2v", 5),
+        ("veo_video", "VeoVideo", "first_last", 8),
+    ])
+    def test_real_video_adapter_agrees_with_compiled_reference_provenance(compiler, tmp_path, tool_module, tool_class, route, duration):
+        """No network: compare compiler provenance to existing provider inputs."""
+        import base64
+        from PIL import Image
+        from lib.shot_execution import tool_inputs
+        tool = getattr(importlib.import_module(f"tools.video.{tool_module}"), tool_class)()
+        refs = [ref("identity"), ref("start", "first_frame", ""), ref("end", "last_frame", "")]
+        for reference in refs:
+            path = tmp_path / reference["asset_path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            Image.new("RGB", (16, 16), "red").save(path)
+        cfg = context(limits=tool.limits, tool_options={}, capability="video_generation")
+        result = compiler(spec(route=route, references=refs, duration_seconds=duration, target_resolution="1920x1080"), tool.name, cfg)
+        inputs = tool_inputs(result, tool, tmp_path)
+        supplied = set()
+        for field, value in inputs.items():
+            if "image" not in field and "frame" not in field:
+                continue
+            for item in value if isinstance(value, list) else [value]:
+                if not isinstance(item, str):
+                    continue
+                if item.startswith("data:"):
+                    supplied.update(r["asset_path"] for r in refs if (tmp_path / r["asset_path"]).read_bytes() == base64.b64decode(item.split(",", 1)[1]))
+                elif Path(item).is_file():
+                    supplied.add(Path(item).relative_to(tmp_path).as_posix())
+        expected = {r["asset_path"] for r in result["payload"]["references"]}
+>       assert expected == supplied
+E       AssertionError: assert {'assets/refs...fs/start.png'} == {'assets/refs...fs/start.png'}
+E
+E         Extra items in the right set:
+E         'assets/refs/end.png'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:494: AssertionError
+_ test_real_video_adapter_agrees_with_compiled_reference_provenance[seedance_video-SeedanceVideo-first_last-5] _
+
+compiler = <function compile at 0x1077e9e10>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-75/test_real_video_adapter_agrees2')
+tool_module = 'seedance_video', tool_class = 'SeedanceVideo'
+route = 'first_last', duration = 5
+
+    @pytest.mark.parametrize("tool_module,tool_class,route,duration", [
+        ("seedance_video", "SeedanceVideo", "t2v", 5),
+        ("seedance_video", "SeedanceVideo", "i2v", 5),
+        ("seedance_video", "SeedanceVideo", "first_last", 5),
+        ("seedance_video", "SeedanceVideo", "multi_ref", 5),
+        ("kling_video", "KlingVideo", "i2v", 5),
+        ("veo_video", "VeoVideo", "first_last", 8),
+    ])
+    def test_real_video_adapter_agrees_with_compiled_reference_provenance(compiler, tmp_path, tool_module, tool_class, route, duration):
+        """No network: compare compiler provenance to existing provider inputs."""
+        import base64
+        from PIL import Image
+        from lib.shot_execution import tool_inputs
+        tool = getattr(importlib.import_module(f"tools.video.{tool_module}"), tool_class)()
+        refs = [ref("identity"), ref("start", "first_frame", ""), ref("end", "last_frame", "")]
+        for reference in refs:
+            path = tmp_path / reference["asset_path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            Image.new("RGB", (16, 16), "red").save(path)
+        cfg = context(limits=tool.limits, tool_options={}, capability="video_generation")
+        result = compiler(spec(route=route, references=refs, duration_seconds=duration, target_resolution="1920x1080"), tool.name, cfg)
+        inputs = tool_inputs(result, tool, tmp_path)
+        supplied = set()
+        for field, value in inputs.items():
+            if "image" not in field and "frame" not in field:
+                continue
+            for item in value if isinstance(value, list) else [value]:
+                if not isinstance(item, str):
+                    continue
+                if item.startswith("data:"):
+                    supplied.update(r["asset_path"] for r in refs if (tmp_path / r["asset_path"]).read_bytes() == base64.b64decode(item.split(",", 1)[1]))
+                elif Path(item).is_file():
+                    supplied.add(Path(item).relative_to(tmp_path).as_posix())
+        expected = {r["asset_path"] for r in result["payload"]["references"]}
+>       assert expected == supplied
+E       AssertionError: assert {'assets/refs...fs/start.png'} == {'assets/refs...fs/start.png'}
+E
+E         Extra items in the right set:
+E         'assets/refs/end.png'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:494: AssertionError
+_ test_real_video_adapter_agrees_with_compiled_reference_provenance[kling_video-KlingVideo-i2v-5] _
+
+compiler = <function compile at 0x1077e9e10>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-75/test_real_video_adapter_agrees4')
+tool_module = 'kling_video', tool_class = 'KlingVideo', route = 'i2v'
+duration = 5
+
+    @pytest.mark.parametrize("tool_module,tool_class,route,duration", [
+        ("seedance_video", "SeedanceVideo", "t2v", 5),
+        ("seedance_video", "SeedanceVideo", "i2v", 5),
+        ("seedance_video", "SeedanceVideo", "first_last", 5),
+        ("seedance_video", "SeedanceVideo", "multi_ref", 5),
+        ("kling_video", "KlingVideo", "i2v", 5),
+        ("veo_video", "VeoVideo", "first_last", 8),
+    ])
+    def test_real_video_adapter_agrees_with_compiled_reference_provenance(compiler, tmp_path, tool_module, tool_class, route, duration):
+        """No network: compare compiler provenance to existing provider inputs."""
+        import base64
+        from PIL import Image
+        from lib.shot_execution import tool_inputs
+        tool = getattr(importlib.import_module(f"tools.video.{tool_module}"), tool_class)()
+        refs = [ref("identity"), ref("start", "first_frame", ""), ref("end", "last_frame", "")]
+        for reference in refs:
+            path = tmp_path / reference["asset_path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            Image.new("RGB", (16, 16), "red").save(path)
+        cfg = context(limits=tool.limits, tool_options={}, capability="video_generation")
+        result = compiler(spec(route=route, references=refs, duration_seconds=duration, target_resolution="1920x1080"), tool.name, cfg)
+        inputs = tool_inputs(result, tool, tmp_path)
+        supplied = set()
+        for field, value in inputs.items():
+            if "image" not in field and "frame" not in field:
+                continue
+            for item in value if isinstance(value, list) else [value]:
+                if not isinstance(item, str):
+                    continue
+                if item.startswith("data:"):
+                    supplied.update(r["asset_path"] for r in refs if (tmp_path / r["asset_path"]).read_bytes() == base64.b64decode(item.split(",", 1)[1]))
+                elif Path(item).is_file():
+                    supplied.add(Path(item).relative_to(tmp_path).as_posix())
+        expected = {r["asset_path"] for r in result["payload"]["references"]}
+>       assert expected == supplied
+E       AssertionError: assert {'assets/refs/identity.png'} == {'assets/refs...fs/start.png'}
+E
+E         Extra items in the right set:
+E         'assets/refs/end.png'
+E         'assets/refs/start.png'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:494: AssertionError
+_ test_real_video_adapter_agrees_with_compiled_reference_provenance[veo_video-VeoVideo-first_last-8] _
+
+compiler = <function compile at 0x1077e9e10>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-75/test_real_video_adapter_agrees5')
+tool_module = 'veo_video', tool_class = 'VeoVideo', route = 'first_last'
+duration = 8
+
+    @pytest.mark.parametrize("tool_module,tool_class,route,duration", [
+        ("seedance_video", "SeedanceVideo", "t2v", 5),
+        ("seedance_video", "SeedanceVideo", "i2v", 5),
+        ("seedance_video", "SeedanceVideo", "first_last", 5),
+        ("seedance_video", "SeedanceVideo", "multi_ref", 5),
+        ("kling_video", "KlingVideo", "i2v", 5),
+        ("veo_video", "VeoVideo", "first_last", 8),
+    ])
+    def test_real_video_adapter_agrees_with_compiled_reference_provenance(compiler, tmp_path, tool_module, tool_class, route, duration):
+        """No network: compare compiler provenance to existing provider inputs."""
+        import base64
+        from PIL import Image
+        from lib.shot_execution import tool_inputs
+        tool = getattr(importlib.import_module(f"tools.video.{tool_module}"), tool_class)()
+        refs = [ref("identity"), ref("start", "first_frame", ""), ref("end", "last_frame", "")]
+        for reference in refs:
+            path = tmp_path / reference["asset_path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            Image.new("RGB", (16, 16), "red").save(path)
+        cfg = context(limits=tool.limits, tool_options={}, capability="video_generation")
+        result = compiler(spec(route=route, references=refs, duration_seconds=duration, target_resolution="1920x1080"), tool.name, cfg)
+        inputs = tool_inputs(result, tool, tmp_path)
+        supplied = set()
+        for field, value in inputs.items():
+            if "image" not in field and "frame" not in field:
+                continue
+            for item in value if isinstance(value, list) else [value]:
+                if not isinstance(item, str):
+                    continue
+                if item.startswith("data:"):
+                    supplied.update(r["asset_path"] for r in refs if (tmp_path / r["asset_path"]).read_bytes() == base64.b64decode(item.split(",", 1)[1]))
+                elif Path(item).is_file():
+                    supplied.add(Path(item).relative_to(tmp_path).as_posix())
+        expected = {r["asset_path"] for r in result["payload"]["references"]}
+>       assert expected == supplied
+E       AssertionError: assert {'assets/refs...fs/start.png'} == {'assets/refs...fs/start.png'}
+E
+E         Extra items in the left set:
+E         'assets/refs/identity.png'
+E         Extra items in the right set:
+E         'assets/refs/end.png'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:494: AssertionError
+______ test_i2v_same_path_identity_and_composition_are_actually_preserved ______
+
+compiler = <function compile at 0x1077e9e10>
+
+    def test_i2v_same_path_identity_and_composition_are_actually_preserved(compiler):
+        refs = [ref("shared"), ref("shared", "composition", "")]
+        result = compiler(spec(route="i2v", references=refs), "mock", context())
+        assert result["generatable"]
+>       assert result["payload"]["reference_images"] == [refs[0]["asset_path"]]
+E       AssertionError: assert ['assets/refs...s/shared.png'] == ['assets/refs/shared.png']
+E
+E         Left contains one more item: 'assets/refs/shared.png'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:504: AssertionError
+___________ test_i2v_identity_is_not_a_composition_frame_by_accident ___________
+
+compiler = <function compile at 0x1077e9e10>
+
+    def test_i2v_identity_is_not_a_composition_frame_by_accident(compiler):
+        result = compiler(spec(route="i2v", references=[ref("face")]), "mock", context())
+>       assert not result["generatable"]
+E       assert not True
+
+tests/contracts/test_shot_compiler.py:511: AssertionError
+____ test_t2v_dropped_style_reference_is_explicit_and_image_edit_keeps_refs ____
+
+compiler = <function compile at 0x1077e9e10>
+
+    def test_t2v_dropped_style_reference_is_explicit_and_image_edit_keeps_refs(compiler):
+        value = spec(references=[ref("style", "style", "")])
+        video = compiler(value, "mock", context())
+>       assert video["payload"]["references"] == []
+E       AssertionError: assert [{'asset_path...ect_ref': ''}] == []
+E
+E         Left contains one more item: {'asset_path': 'assets/refs/style.png', 'sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'role': 'style', 'subject_ref': ''}
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:520: AssertionError
+_________ test_actual_frame_and_control_metadata_survive_in_provenance _________
+
+compiler = <function compile at 0x1077e9e10>
+
+    def test_actual_frame_and_control_metadata_survive_in_provenance(compiler):
+        refs = [ref("last", "last_frame", "amor"), ref("start", "first_frame", "fati"), ref("depth", "depth", "")]
+        cfg = context(); cfg["limits"]["control_inputs"] = ["depth"]
+        result = compiler(spec(route="first_last", references=refs), "workflow", cfg)
+        assert result["generatable"]
+>       assert {r["asset_path"] for r in result["payload"]["references"]} == {r["asset_path"] for r in refs}
+E       AssertionError: assert {'assets/refs/start.png'} == {'assets/refs...fs/start.png'}
+E
+E         Extra items in the right set:
+E         'assets/refs/depth.png'
+E         'assets/refs/last.png'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_compiler.py:533: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_compiler.py::test_real_video_adapter_agrees_with_compiled_reference_provenance[seedance_video-SeedanceVideo-t2v-5]
+FAILED tests/contracts/test_shot_compiler.py::test_real_video_adapter_agrees_with_compiled_reference_provenance[seedance_video-SeedanceVideo-i2v-5]
+FAILED tests/contracts/test_shot_compiler.py::test_real_video_adapter_agrees_with_compiled_reference_provenance[seedance_video-SeedanceVideo-first_last-5]
+FAILED tests/contracts/test_shot_compiler.py::test_real_video_adapter_agrees_with_compiled_reference_provenance[kling_video-KlingVideo-i2v-5]
+FAILED tests/contracts/test_shot_compiler.py::test_real_video_adapter_agrees_with_compiled_reference_provenance[veo_video-VeoVideo-first_last-8]
+FAILED tests/contracts/test_shot_compiler.py::test_i2v_same_path_identity_and_composition_are_actually_preserved
+FAILED tests/contracts/test_shot_compiler.py::test_i2v_identity_is_not_a_composition_frame_by_accident
+FAILED tests/contracts/test_shot_compiler.py::test_t2v_dropped_style_reference_is_explicit_and_image_edit_keeps_refs
+FAILED tests/contracts/test_shot_compiler.py::test_actual_frame_and_control_metadata_survive_in_provenance
+9 failed, 75 passed in 0.24s

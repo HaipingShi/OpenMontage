@@ -1,0 +1,8 @@
+....                                                                     [100%]
+=============================== warnings summary ===============================
+../../../../projects/OpenMontage/.venv/lib/python3.10/site-packages/_pytest/cacheprovider.py:469
+  /Users/geesh/projects/OpenMontage/.venv/lib/python3.10/site-packages/_pytest/cacheprovider.py:469: PytestCacheWarning: could not create cache path /.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/pytest-cache-files-zdus234g'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+4 passed, 44 deselected, 1 warning in 1.25s

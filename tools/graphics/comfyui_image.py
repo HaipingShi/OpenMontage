@@ -65,6 +65,13 @@ class ComfyUIImage(BaseTool):
     agent_skills = ["comfyui", "flux-best-practices"]
 
     capabilities = ["text_to_image"]
+    limits = {
+        # Custom workflows require an explicit, verified node/input mapping;
+        # the bundled txt2img workflow consumes neither references nor controls.
+        "max_reference_images": 0, "max_prompt_chars": None,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v"],
+    }
     supports = {
         "seed": True,
         "custom_size": True,

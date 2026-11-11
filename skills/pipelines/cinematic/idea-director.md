@@ -8,7 +8,6 @@ Do not use this pipeline just because the user said "make it look cinematic." If
 
 ## Reference Inputs
 
-- `docs/cinematic-best-practices.md`
 - `skills/creative/cinematic.md`
 - `skills/creative/storytelling.md`
 
@@ -88,10 +87,10 @@ Cinematic videos live and die by their audio. **Surface the music situation befo
 
 Check availability in this order:
 
-1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect `music_library/`. List available tracks with durations and moods.
+1. **User music library:** Check `registry.get_by_capability("music_library")` and inspect the directory reported by `music_library` (default: `<user library>/music/`). List available tracks with durations and moods.
 2. **Royalty-free search:** Check `registry.get_by_capability("music_search")`. Report available providers, licensing constraints, and any key requirement.
 3. **Music generation APIs:** Check `registry.get_by_capability("music_generation")`. Report status, quota, cost, and quality tradeoffs.
-4. **Bring your own:** The user can drop a track from another licensed source into `music_library/`.
+4. **Bring your own:** The user can drop a track from another licensed source into the directory reported by `music_library` (default: `<user library>/music/`).
 
 Present explicit options:
 
@@ -100,7 +99,7 @@ MUSIC PLAN
 ├── Your music library: [N tracks / empty]
 ├── Royalty-free search: [providers / unavailable]
 ├── AI generation: [provider] — [AVAILABLE/UNAVAILABLE] [cost]
-└── Bring your own: Drop a track in music_library/ before asset stage
+└── Bring your own: Drop a track in the configured user library music directory before asset stage
 
 Options:
   (a) Use a library track (which one?)

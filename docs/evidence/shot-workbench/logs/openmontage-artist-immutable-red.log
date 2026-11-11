@@ -1,0 +1,129 @@
+FFFF.                                                                    [100%]
+=================================== FAILURES ===================================
+___ test_all_voice_mutations_reject_imported_snapshots_before_copy[bind_api] ___
+
+imported_artist = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutatio...s/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec0/film/assets/artists'))
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bc1ace0>
+entrypoint = 'bind_api'
+
+    @pytest.mark.parametrize("entrypoint", ["bind_api", "bind_cli_root", "audio_api", "audio_cli_root"])
+    def test_all_voice_mutations_reject_imported_snapshots_before_copy(imported_artist, tmp_path, monkeypatch, entrypoint):
+        from lib.project_assets import load_project_artist
+        project, root = imported_artist
+        before = (root / "lead/artist.yaml").read_bytes()
+        audio = tmp_path / "source.wav"
+        audio.write_bytes(b"never opened for an immutable imported artist")
+        monkeypatch.setattr(ap.shutil, "copyfile", lambda *args: pytest.fail("Immutable artist audio must be rejected before copying"))
+>       with pytest.raises(ValueError, match="fork"):
+E       Failed: DID NOT RAISE ValueError
+
+tests/contracts/test_artist_voice_safety.py:173: Failed
+_ test_all_voice_mutations_reject_imported_snapshots_before_copy[bind_cli_root] _
+
+imported_artist = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutatio...s/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec1/film/assets/artists'))
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bfcba90>
+entrypoint = 'bind_cli_root'
+
+    @pytest.mark.parametrize("entrypoint", ["bind_api", "bind_cli_root", "audio_api", "audio_cli_root"])
+    def test_all_voice_mutations_reject_imported_snapshots_before_copy(imported_artist, tmp_path, monkeypatch, entrypoint):
+        from lib.project_assets import load_project_artist
+        project, root = imported_artist
+        before = (root / "lead/artist.yaml").read_bytes()
+        audio = tmp_path / "source.wav"
+        audio.write_bytes(b"never opened for an immutable imported artist")
+        monkeypatch.setattr(ap.shutil, "copyfile", lambda *args: pytest.fail("Immutable artist audio must be rejected before copying"))
+>       with pytest.raises(ValueError, match="fork"):
+E       Failed: DID NOT RAISE ValueError
+
+tests/contracts/test_artist_voice_safety.py:173: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "kind": "voice",
+  "name": "Selected take",
+  "url": "",
+  "source_song_url": "",
+  "confirmed": true,
+  "confirmed_on": "2026-10-06"
+}
+__ test_all_voice_mutations_reject_imported_snapshots_before_copy[audio_api] ___
+
+imported_artist = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutatio...s/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec2/film/assets/artists'))
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bf27190>
+entrypoint = 'audio_api'
+
+    @pytest.mark.parametrize("entrypoint", ["bind_api", "bind_cli_root", "audio_api", "audio_cli_root"])
+    def test_all_voice_mutations_reject_imported_snapshots_before_copy(imported_artist, tmp_path, monkeypatch, entrypoint):
+        from lib.project_assets import load_project_artist
+        project, root = imported_artist
+        before = (root / "lead/artist.yaml").read_bytes()
+        audio = tmp_path / "source.wav"
+        audio.write_bytes(b"never opened for an immutable imported artist")
+        monkeypatch.setattr(ap.shutil, "copyfile", lambda *args: pytest.fail("Immutable artist audio must be rejected before copying"))
+        with pytest.raises(ValueError, match="fork"):
+            if entrypoint == "bind_api":
+                ap.bind_suno_voice("lead", kind="voice", name="Selected take", confirmed=True, root=root)
+            elif entrypoint == "bind_cli_root":
+                ap._main(["--root", str(root), "bind-suno", "lead", "--kind", "voice", "--name", "Selected take", "--confirm"])
+            elif entrypoint == "audio_api":
+>               ap.import_voice_reference("lead", audio, approved=True, root=root)
+
+tests/contracts/test_artist_voice_safety.py:179:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/artist_profile.py:438: in import_voice_reference
+    shutil.copyfile(source, temp)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutatio...x00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec2/film/assets/artists/lead/voice/tmp2otviok1.wav'))
+
+>   monkeypatch.setattr(ap.shutil, "copyfile", lambda *args: pytest.fail("Immutable artist audio must be rejected before copying"))
+E   Failed: Immutable artist audio must be rejected before copying
+
+tests/contracts/test_artist_voice_safety.py:172: Failed
+_ test_all_voice_mutations_reject_imported_snapshots_before_copy[audio_cli_root] _
+
+imported_artist = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutatio...s/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec3/film/assets/artists'))
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bf276a0>
+entrypoint = 'audio_cli_root'
+
+    @pytest.mark.parametrize("entrypoint", ["bind_api", "bind_cli_root", "audio_api", "audio_cli_root"])
+    def test_all_voice_mutations_reject_imported_snapshots_before_copy(imported_artist, tmp_path, monkeypatch, entrypoint):
+        from lib.project_assets import load_project_artist
+        project, root = imported_artist
+        before = (root / "lead/artist.yaml").read_bytes()
+        audio = tmp_path / "source.wav"
+        audio.write_bytes(b"never opened for an immutable imported artist")
+        monkeypatch.setattr(ap.shutil, "copyfile", lambda *args: pytest.fail("Immutable artist audio must be rejected before copying"))
+        with pytest.raises(ValueError, match="fork"):
+            if entrypoint == "bind_api":
+                ap.bind_suno_voice("lead", kind="voice", name="Selected take", confirmed=True, root=root)
+            elif entrypoint == "bind_cli_root":
+                ap._main(["--root", str(root), "bind-suno", "lead", "--kind", "voice", "--name", "Selected take", "--confirm"])
+            elif entrypoint == "audio_api":
+                ap.import_voice_reference("lead", audio, approved=True, root=root)
+            else:
+>               ap._main(["--root", str(root), "import-voice", "lead", str(audio), "--approve"])
+
+tests/contracts/test_artist_voice_safety.py:181:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/artist_profile.py:539: in _main
+    print(json.dumps(import_voice_reference(args.artist_id, args.source, approved=args.approve,
+lib/artist_profile.py:438: in import_voice_reference
+    shutil.copyfile(source, temp)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutatio...x00000gn/T/pytest-of-geesh/pytest-167/test_all_voice_mutations_rejec3/film/assets/artists/lead/voice/tmptr5dcnmx.wav'))
+
+>   monkeypatch.setattr(ap.shutil, "copyfile", lambda *args: pytest.fail("Immutable artist audio must be rejected before copying"))
+E   Failed: Immutable artist audio must be rejected before copying
+
+tests/contracts/test_artist_voice_safety.py:172: Failed
+=========================== short test summary info ============================
+FAILED tests/contracts/test_artist_voice_safety.py::test_all_voice_mutations_reject_imported_snapshots_before_copy[bind_api]
+FAILED tests/contracts/test_artist_voice_safety.py::test_all_voice_mutations_reject_imported_snapshots_before_copy[bind_cli_root]
+FAILED tests/contracts/test_artist_voice_safety.py::test_all_voice_mutations_reject_imported_snapshots_before_copy[audio_api]
+FAILED tests/contracts/test_artist_voice_safety.py::test_all_voice_mutations_reject_imported_snapshots_before_copy[audio_cli_root]
+4 failed, 1 passed, 21 deselected in 1.20s

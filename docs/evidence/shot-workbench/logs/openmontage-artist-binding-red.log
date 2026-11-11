@@ -1,0 +1,93 @@
+........................F.                                               [100%]
+=================================== FAILURES ===================================
+_ test_project_cli_rejects_imported_mutation_and_allows_explicit_private_fork __
+
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-131/test_project_cli_rejects_impor0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bbefc70>
+capsys = <_pytest.capture.CaptureFixture object at 0x10b4a5c60>
+
+    def test_project_cli_rejects_imported_mutation_and_allows_explicit_private_fork(tmp_path, monkeypatch, capsys):
+        from lib import shot_spec
+        from lib.project_assets import publish_asset, import_asset, fork_asset
+        project = tmp_path / "projects/film"
+        project.mkdir(parents=True)
+        (project / "project.json").write_text('{}')
+        source = tmp_path / "source"
+        write_artist(source, "solo")
+        library = tmp_path / "catalog"
+        publish_asset(source / "solo", "fixture-performer", "v1", library=library)
+        import_asset(project, "fixture-performer", "v1", "bound", library=library)
+        monkeypatch.setattr(shot_spec, "PROJECTS_DIR", project.parent)
+        arguments = ["bind-suno", "bound", "--kind", "voice", "--name", "Test binding", "--confirm"]
+        with pytest.raises(ValueError, match="fork"):
+            ap._main(["--project", "film", *arguments])
+        assert not (project / "assets/artists/bound/ledger.jsonl").exists()
+        fork_asset(project, "bound", "private")
+        arguments[1] = "private"
+>       assert ap._main(["--project", "film", *arguments]) == 0
+
+tests/contracts/test_artist_profile.py:271:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+argv = ['--project', 'film', 'bind-suno', 'private', '--kind', 'voice', ...]
+
+    def _main(argv: list[str]) -> int:
+        parser = argparse.ArgumentParser(prog="python -m lib.artist_profile")
+        scope = parser.add_mutually_exclusive_group()
+        scope.add_argument("--root", type=Path, help="Explicit artist catalog root (before the command)")
+        scope.add_argument("--project", help="Project id; use only its assets/artists catalog (before the command)")
+        sub = parser.add_subparsers(dest="cmd", required=True)
+        sub.add_parser("list")
+        p_check = sub.add_parser("check")
+        p_check.add_argument("artist_id")
+        p_check.add_argument("--voice-route", choices=["local_reference", "suno_web", "suno_music", "visual_only"], default="local_reference")
+        p_bind = sub.add_parser("bind-suno")
+        p_bind.add_argument("artist_id")
+        p_bind.add_argument("--kind", choices=["persona", "voice"], required=True)
+        p_bind.add_argument("--name", default="")
+        p_bind.add_argument("--url", default="")
+        p_bind.add_argument("--source-song-url", default="")
+        p_bind.add_argument("--confirm", action="store_true")
+        p_import = sub.add_parser("import-voice")
+        p_import.add_argument("artist_id")
+        p_import.add_argument("source", type=Path)
+        p_import.add_argument("--approve", action="store_true")
+        p_import.add_argument("--source-url", default="")
+        p_import.add_argument("--notes", default="")
+        p_prompt = sub.add_parser("prompt")
+        p_prompt.add_argument("artist_id")
+        p_prompt.add_argument("shot")
+        p_prompt.add_argument("--look")
+        p_style = sub.add_parser("style")
+        p_style.add_argument("artist_id")
+        p_style.add_argument("extra", nargs="?", default="")
+        p_cast = sub.add_parser("cast")
+        p_cast.add_argument("artist_ids", help="comma-separated artist ids or project aliases")
+        p_cast.add_argument("shot")
+        p_duet = sub.add_parser("duet-style")
+        p_duet.add_argument("artist_ids", help="comma-separated artist ids or project aliases")
+        p_duet.add_argument("extra", nargs="?", default="")
+        args = parser.parse_args(argv)
+        root = args.root.expanduser().resolve() if args.root else None
+        selected_project = None
+        if args.project:
+            from lib.shot_spec import project_path, safe_path
+            selected_project = project_path(args.project)
+            root = safe_path(selected_project, "assets/artists")
+
+        def scoped_artist(artist_id: str) -> dict[str, Any]:
+            if selected_project is not None:
+                from lib.project_assets import load_project_artist
+                return load_project_artist(selected_project, artist_id)
+            return load_artist(artist_id, root)
+
+        if selected_project is not None and args.cmd in ("bind-suno", "import-voice"):
+            from lib.project_assets import verify_binding
+            if verify_binding(selected_project, args.artist_id) is not None:
+>               raise ValueError("Imported artist snapshots are immutable; fork this asset to a private alias before editing")
+E               ValueError: Imported artist snapshots are immutable; fork this asset to a private alias before editing
+
+lib/artist_profile.py:529: ValueError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_artist_profile.py::test_project_cli_rejects_imported_mutation_and_allows_explicit_private_fork
+1 failed, 25 passed in 3.70s

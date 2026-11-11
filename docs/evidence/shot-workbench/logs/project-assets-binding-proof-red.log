@@ -1,0 +1,68 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_binding_provenance_cannot_claim_a_different_or_malformed_source_version[sha256-invalid] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-163/test_binding_provenanc...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-163/test_binding_provenance_cannot0/library'))
+field = 'sha256', value = 'invalid'
+
+    @pytest.mark.parametrize("field,value", [("sha256", "invalid"), ("version", "v2"),
+        ("source_files", [{"path": "/outside/profile.yaml", "sha256": "0" * 64, "size_bytes": 1}])])
+    def test_binding_provenance_cannot_claim_a_different_or_malformed_source_version(assets, field, value):
+        from lib.project_assets import publish_asset, import_asset, load_project_artist
+        source, project, library = assets
+        publish_asset(source, "performer", "v1", library=library)
+        import_asset(project, "performer", "v1", "lead", library=library)
+        path = project / "assets" / "bindings.json"
+        data = json.loads(path.read_text())
+        data["bindings"][0][field] = value
+        path.write_text(json.dumps(data))
+>       with pytest.raises(ShotError):
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_project_assets.py:261: Failed
+_ test_binding_provenance_cannot_claim_a_different_or_malformed_source_version[version-v2] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-163/test_binding_provenanc...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-163/test_binding_provenance_cannot1/library'))
+field = 'version', value = 'v2'
+
+    @pytest.mark.parametrize("field,value", [("sha256", "invalid"), ("version", "v2"),
+        ("source_files", [{"path": "/outside/profile.yaml", "sha256": "0" * 64, "size_bytes": 1}])])
+    def test_binding_provenance_cannot_claim_a_different_or_malformed_source_version(assets, field, value):
+        from lib.project_assets import publish_asset, import_asset, load_project_artist
+        source, project, library = assets
+        publish_asset(source, "performer", "v1", library=library)
+        import_asset(project, "performer", "v1", "lead", library=library)
+        path = project / "assets" / "bindings.json"
+        data = json.loads(path.read_text())
+        data["bindings"][0][field] = value
+        path.write_text(json.dumps(data))
+>       with pytest.raises(ShotError):
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_project_assets.py:261: Failed
+_ test_binding_provenance_cannot_claim_a_different_or_malformed_source_version[source_files-value2] _
+
+assets = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-163/test_binding_provenanc...e/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-163/test_binding_provenance_cannot2/library'))
+field = 'source_files'
+value = [{'path': '/outside/profile.yaml', 'sha256': '0000000000000000000000000000000000000000000000000000000000000000', 'size_bytes': 1}]
+
+    @pytest.mark.parametrize("field,value", [("sha256", "invalid"), ("version", "v2"),
+        ("source_files", [{"path": "/outside/profile.yaml", "sha256": "0" * 64, "size_bytes": 1}])])
+    def test_binding_provenance_cannot_claim_a_different_or_malformed_source_version(assets, field, value):
+        from lib.project_assets import publish_asset, import_asset, load_project_artist
+        source, project, library = assets
+        publish_asset(source, "performer", "v1", library=library)
+        import_asset(project, "performer", "v1", "lead", library=library)
+        path = project / "assets" / "bindings.json"
+        data = json.loads(path.read_text())
+        data["bindings"][0][field] = value
+        path.write_text(json.dumps(data))
+>       with pytest.raises(ShotError):
+E       Failed: DID NOT RAISE ShotError
+
+tests/contracts/test_project_assets.py:261: Failed
+=========================== short test summary info ============================
+FAILED tests/contracts/test_project_assets.py::test_binding_provenance_cannot_claim_a_different_or_malformed_source_version[sha256-invalid]
+FAILED tests/contracts/test_project_assets.py::test_binding_provenance_cannot_claim_a_different_or_malformed_source_version[version-v2]
+FAILED tests/contracts/test_project_assets.py::test_binding_provenance_cannot_claim_a_different_or_malformed_source_version[source_files-value2]
+3 failed, 24 deselected in 0.61s

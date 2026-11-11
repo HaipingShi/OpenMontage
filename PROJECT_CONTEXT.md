@@ -62,6 +62,9 @@ Each tool's `agent_skills[]` field bridges Layer 1 → Layer 3. See `skills/INDE
 |------|---------|
 | `config.yaml` | Global configuration |
 | `lib/config_model.py` | Runtime config loader (Pydantic) |
+| `lib/paths.py` | Configurable user data, project and library roots independent of the application checkout |
+| `lib/project_assets.py` | Explicit versioned library publication/import, project snapshots and private forks |
+| `lib/asset_migration.py` | Verified copy migration of legacy user assets and workspaces |
 | `lib/checkpoint.py` | Checkpoint writer/reader |
 | `lib/pipeline_loader.py` | Pipeline manifest loader + helpers |
 | `lib/media_profiles.py` | Platform-specific render profiles |
@@ -97,11 +100,14 @@ Each tool's `agent_skills[]` field bridges Layer 1 → Layer 3. See `skills/INDE
 | `podcast-repurpose` | `pipeline_defs/podcast-repurpose.yaml` | Podcast repurposing |
 | `cinematic` | `pipeline_defs/cinematic.yaml` | Cinematic edit |
 | `music-video` | `pipeline_defs/music-video.yaml` | Song-first MTV, lyric videos, and beat-synced footage (beta) |
+
+| `documentary-montage` | `pipeline_defs/documentary-montage.yaml` | Retrieval-first documentary montage |
 | `animation` | `pipeline_defs/animation.yaml` | Animation-first |
 | `character-animation` | `pipeline_defs/character-animation.yaml` | Local rigged character animation |
 | `hybrid` | `pipeline_defs/hybrid.yaml` | Source-plus-support hybrid |
 | `avatar-spokesperson` | `pipeline_defs/avatar-spokesperson.yaml` | Avatar presenter |
 | `localization-dub` | `pipeline_defs/localization-dub.yaml` | Localization and dubbing |
+| `documentary-montage` | `pipeline_defs/documentary-montage.yaml` | Retrieval-first thematic montage |
 | `framework-smoke` | `pipeline_defs/framework-smoke.yaml` | Test harness |
 
 ## When Building New Pipelines

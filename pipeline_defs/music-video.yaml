@@ -36,6 +36,7 @@ extensions:
   custom_tools: false
 
 required_skills:
+  - meta/shot-workbench
   - pipelines/music-video/executive-producer
   - pipelines/music-video/idea-director
   - pipelines/music-video/song-analysis-director
@@ -47,6 +48,8 @@ required_skills:
   - pipelines/music-video/compose-director
   - pipelines/music-video/publish-director
   - creative/beat-sync-editing
+  - meta/shot-verifier
+  - meta/mv-judge
   - meta/reviewer
   - meta/checkpoint-protocol
   - meta/animation-runtime-selector
@@ -127,12 +130,14 @@ stages:
     required_tools:
       - song_beatmap
     optional_tools:
+      - stem_separator
       - transcriber
       - audio_probe
       - audio_energy
       - suno_music
       - music_gen
     tools_available:
+      - stem_separator
       - song_beatmap
       - transcriber
       - audio_probe
@@ -146,6 +151,9 @@ stages:
       - Section labels were confirmed by listening and lyric content, not left heuristic
       - Lyric alignment coverage is reported honestly; unaligned lines are fixed or flagged
       - rhythmic_confidence matches what the song actually does (no hard cuts on an imposed grid)
+      - Lyrics source follows Suno generation record then user then transcript; singer tags are retained
+      - Low-confidence lyric review_flags are shown individually at the song_analysis human gate
+      - Optional stem separator absence is recorded and master fallback is explicit
     success_criteria:
       - Schema-valid song_map artifact
       - Every section label_confidence is "confirmed"
@@ -205,6 +213,8 @@ stages:
       - script sections tile the full song duration with no gaps or overlaps
 
   - name: scene_plan
+    required_tools:
+      - shot_compiler
     skill: pipelines/music-video/scene-director
     required_artifacts_in:
       - script
@@ -216,15 +226,19 @@ stages:
     optional_tools:
       - frame_sampler
     tools_available:
+      - shot_compiler
       - frame_sampler
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Every shot boundary is a song_map cut point (beat_cut) or phrase boundary (phrase_flow)
       - Shot lengths respect provider clip limits with handles for trimming
       - Performance shots needing lip-sync are flagged with exact vocal in/out times
       - "Continuity — every shot featuring cast references the performer bible"
       - Hero moments sit on the first downbeat of choruses, drops, and the final chorus
+      - Narrative segments retain one visual intention; frame-grid validate_timeline passes before artifact write
+      - Generated scenes have segment_id and explicit render_route; continuation predecessor is identified
     success_criteria:
       - Schema-valid scene_plan artifact
       - Shot list covers the full song duration
@@ -239,7 +253,11 @@ stages:
       - proposal_packet
     produces:
       - asset_manifest
+    required_tools:
+      - shot_compiler
+      - frame_sampler
     optional_tools:
+      - shot_verifier
       - video_selector
       - image_selector
       - kling_lip_sync
@@ -250,6 +268,9 @@ stages:
       - subtitle_gen
       - audio_probe
     tools_available:
+      - shot_compiler
+      - shot_verifier
+      - frame_sampler
       - video_selector
       - image_selector
       - kling_lip_sync
@@ -263,11 +284,17 @@ stages:
     checkpoint_required: true
     human_approval_default: true
     review_focus:
+      - Complex generated shots have a revisioned shot spec and no unresolved lint errors
       - Performer bible images exist and every cast shot was generated from them
       - Generated clips are at least as long as their shot plus handles
       - Lip-synced shots were driven by the exact song slice for their timeline window
       - No still-image substitutes for motion shots unless the user approved it
       - Budget gate honored; per-shot cost recorded
+      - Candidate budget includes all attempts and verification calls; bounded counts and selected_candidate are recorded
+      - Deterministic identity submission and person-count checks precede physical checks and scoring
+      - Every artist is scored against their own official identity; minimum identity score is used
+      - Continuation first frame is exact decoded last frame from a verified predecessor with provenance
+      - Lip-sync generation_summary records vocal_source and exact song-relative window
     success_criteria:
       - Schema-valid asset_manifest artifact
       - All referenced asset files exist on disk
@@ -294,6 +321,8 @@ stages:
       - Lip-synced shots are placed at the timeline position their vocal slice came from
       - Lyric graphics (if any) use song_map line times, not estimates
       - Energy contour of the edit follows the song (density rises into choruses)
+      - validate_timeline passes on scene plan and cut timeline; total frames equal rounded master duration times fps
+      - Generated cut sources resolve to selected verified candidates
     success_criteria:
       - Schema-valid edit_decisions artifact
       - edit_decisions.render_runtime equals proposal_packet.production_plan.render_runtime
@@ -312,6 +341,7 @@ stages:
     required_tools:
       - video_compose
     optional_tools:
+      - mv_judge
       - hyperframes_compose
       - scene_detect
       - frame_sampler
@@ -322,6 +352,7 @@ stages:
       - video_trimmer
       - audio_probe
     tools_available:
+      - mv_judge
       - video_compose
       - hyperframes_compose
       - scene_detect
@@ -339,6 +370,8 @@ stages:
       - Rendered duration equals the song duration within one frame; audio is the untouched master
       - Sync spot-checks pass at the first chorus downbeat, every hard stop, and the final hit
       - Grade is consistent across generated shots from different providers
+      - Optional mv_judge report records actual model and advisory-only status; missing reviewer degrades without blocking
+      - AI novelty is separate and excluded by default; judge never changes publish eligibility
     success_criteria:
       - Schema-valid render_report artifact
       - Output file exists and passes ffprobe validation

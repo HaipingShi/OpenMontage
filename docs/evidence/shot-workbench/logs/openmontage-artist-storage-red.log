@@ -1,0 +1,234 @@
+....................FFF.                                                 [100%]
+=================================== FAILURES ===================================
+______________ test_default_catalog_uses_user_library_from_paths _______________
+
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_default_catalog_uses_user0')
+
+    def test_default_catalog_uses_user_library_from_paths(tmp_path):
+        library = tmp_path / "user-library"
+        env = {**os.environ, "OPENMONTAGE_LIBRARY_DIR": str(library),
+               "OPENMONTAGE_DATA_DIR": str(tmp_path / "data"),
+               "OPENMONTAGE_PROJECTS_DIR": str(tmp_path / "projects")}
+        process = subprocess.run([sys.executable, "-c", "from lib.artist_profile import ARTISTS_DIR; print(ARTISTS_DIR)"],
+                                 env=env, capture_output=True, text=True, check=True)
+>       assert Path(process.stdout.strip()) == library / "artists"
+E       AssertionError: assert PosixPath('/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/artists') == (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_default_catalog_uses_user0/user-library') / 'artists')
+E        +  where PosixPath('/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/artists') = Path('/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/artists')
+E        +    where '/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/artists' = <built-in method strip of str object at 0x10afe3a30>()
+E        +      where <built-in method strip of str object at 0x10afe3a30> = '/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/artists\n'.strip
+E        +        where '/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/artists\n' = CompletedProcess(args=['/Users/geesh/projects/OpenMontage/.venv/bin/python', '-c', 'from lib.artist_profile import ART...t(ARTISTS_DIR)'], returncode=0, stdout='/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/artists\n', stderr='').stdout
+
+tests/contracts/test_artist_profile.py:218: AssertionError
+__________ test_cli_explicit_root_never_falls_back_to_default_catalog __________
+
+self = ArgumentParser(prog='python -m lib.artist_profile', usage=None, description=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+args = ['--root', '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_cli_explicit_root_never_f0/selected-catalog', 'list']
+namespace = Namespace(cmd=None)
+
+    def parse_known_args(self, args=None, namespace=None):
+        if args is None:
+            # args default to the system args
+            args = _sys.argv[1:]
+        else:
+            # make sure that args are mutable
+            args = list(args)
+
+        # default Namespace built from parser defaults
+        if namespace is None:
+            namespace = Namespace()
+
+        # add any action defaults that aren't present
+        for action in self._actions:
+            if action.dest is not SUPPRESS:
+                if not hasattr(namespace, action.dest):
+                    if action.default is not SUPPRESS:
+                        setattr(namespace, action.dest, action.default)
+
+        # add any parser defaults that aren't present
+        for dest in self._defaults:
+            if not hasattr(namespace, dest):
+                setattr(namespace, dest, self._defaults[dest])
+
+        # parse the arguments and exit if there are any errors
+        if self.exit_on_error:
+            try:
+>               namespace, args = self._parse_known_args(args, namespace)
+
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1866:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2082: in _parse_known_args
+    stop_index = consume_positionals(start_index)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2038: in consume_positionals
+    take_action(action, args)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1927: in take_action
+    argument_values = self._get_values(action, argument_strings)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2472: in _get_values
+    self._check_value(action, value[0])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ArgumentParser(prog='python -m lib.artist_profile', usage=None, description=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+action = _SubParsersAction(option_strings=[], dest='cmd', nargs='A...', const=None, default=None, type=None, choices={'list': A...ss=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)}, required=True, help=None, metavar=None)
+value = '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_cli_explicit_root_never_f0/selected-catalog'
+
+    def _check_value(self, action, value):
+        # converted value must be one of the choices (if specified)
+        if action.choices is not None and value not in action.choices:
+            args = {'value': value,
+                    'choices': ', '.join(map(repr, action.choices))}
+            msg = _('invalid choice: %(value)r (choose from %(choices)s)')
+>           raise ArgumentError(action, msg % args)
+E           argparse.ArgumentError: argument cmd: invalid choice: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_cli_explicit_root_never_f0/selected-catalog' (choose from 'list', 'check', 'bind-suno', 'import-voice', 'prompt', 'style', 'cast', 'duet-style')
+
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2519: ArgumentError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_cli_explicit_root_never_f0')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b4568c0>
+
+    def test_cli_explicit_root_never_falls_back_to_default_catalog(tmp_path, capsys):
+        root = tmp_path / "selected-catalog"
+        write_library(root)
+>       assert ap._main(["--root", str(root), "list"]) == 0
+
+tests/contracts/test_artist_profile.py:224:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/artist_profile.py:505: in _main
+    args = parser.parse_args(argv)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1833: in parse_args
+    args, argv = self.parse_known_args(args, namespace)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1869: in parse_known_args
+    self.error(str(err))
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2594: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ArgumentParser(prog='python -m lib.artist_profile', usage=None, description=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = "python -m lib.artist_profile: error: argument cmd: invalid choice: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00...elected-catalog' (choose from 'list', 'check', 'bind-suno', 'import-voice', 'prompt', 'style', 'cast', 'duet-style')\n"
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2581: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: python -m lib.artist_profile [-h]
+                                    {list,check,bind-suno,import-voice,prompt,style,cast,duet-style}
+                                    ...
+python -m lib.artist_profile: error: argument cmd: invalid choice: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_cli_explicit_root_never_f0/selected-catalog' (choose from 'list', 'check', 'bind-suno', 'import-voice', 'prompt', 'style', 'cast', 'duet-style')
+______ test_cli_project_scope_reads_private_artist_without_global_catalog ______
+
+self = ArgumentParser(prog='python -m lib.artist_profile', usage=None, description=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+args = ['--project', 'film', 'prompt', 'private', 'quiet room']
+namespace = Namespace(cmd=None)
+
+    def parse_known_args(self, args=None, namespace=None):
+        if args is None:
+            # args default to the system args
+            args = _sys.argv[1:]
+        else:
+            # make sure that args are mutable
+            args = list(args)
+
+        # default Namespace built from parser defaults
+        if namespace is None:
+            namespace = Namespace()
+
+        # add any action defaults that aren't present
+        for action in self._actions:
+            if action.dest is not SUPPRESS:
+                if not hasattr(namespace, action.dest):
+                    if action.default is not SUPPRESS:
+                        setattr(namespace, action.dest, action.default)
+
+        # add any parser defaults that aren't present
+        for dest in self._defaults:
+            if not hasattr(namespace, dest):
+                setattr(namespace, dest, self._defaults[dest])
+
+        # parse the arguments and exit if there are any errors
+        if self.exit_on_error:
+            try:
+>               namespace, args = self._parse_known_args(args, namespace)
+
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1866:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2082: in _parse_known_args
+    stop_index = consume_positionals(start_index)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2038: in consume_positionals
+    take_action(action, args)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1927: in take_action
+    argument_values = self._get_values(action, argument_strings)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2472: in _get_values
+    self._check_value(action, value[0])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ArgumentParser(prog='python -m lib.artist_profile', usage=None, description=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+action = _SubParsersAction(option_strings=[], dest='cmd', nargs='A...', const=None, default=None, type=None, choices={'list': A...ss=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)}, required=True, help=None, metavar=None)
+value = 'film'
+
+    def _check_value(self, action, value):
+        # converted value must be one of the choices (if specified)
+        if action.choices is not None and value not in action.choices:
+            args = {'value': value,
+                    'choices': ', '.join(map(repr, action.choices))}
+            msg = _('invalid choice: %(value)r (choose from %(choices)s)')
+>           raise ArgumentError(action, msg % args)
+E           argparse.ArgumentError: argument cmd: invalid choice: 'film' (choose from 'list', 'check', 'bind-suno', 'import-voice', 'prompt', 'style', 'cast', 'duet-style')
+
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2519: ArgumentError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-123/test_cli_project_scope_reads_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b4ef820>
+capsys = <_pytest.capture.CaptureFixture object at 0x10b4eddb0>
+
+    def test_cli_project_scope_reads_private_artist_without_global_catalog(tmp_path, monkeypatch, capsys):
+        import lib.paths as paths
+        import lib.shot_spec as shot_spec
+        project = tmp_path / "projects" / "film"
+        project.mkdir(parents=True)
+        (project / "project.json").write_text('{}')
+        write_artist = __import__("tests.fixtures.artist_factory", fromlist=["write_artist"]).write_artist
+        write_artist(project / "assets/artists", "private")
+        monkeypatch.setattr(paths, "PROJECTS_DIR", project.parent)
+        monkeypatch.setattr(shot_spec, "PROJECTS_DIR", project.parent)
+>       assert ap._main(["--project", "film", "prompt", "private", "quiet room"]) == 0
+
+tests/contracts/test_artist_profile.py:240:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+lib/artist_profile.py:505: in _main
+    args = parser.parse_args(argv)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1833: in parse_args
+    args, argv = self.parse_known_args(args, namespace)
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:1869: in parse_known_args
+    self.error(str(err))
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2594: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ArgumentParser(prog='python -m lib.artist_profile', usage=None, description=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = "python -m lib.artist_profile: error: argument cmd: invalid choice: 'film' (choose from 'list', 'check', 'bind-suno', 'import-voice', 'prompt', 'style', 'cast', 'duet-style')\n"
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/argparse.py:2581: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: python -m lib.artist_profile [-h]
+                                    {list,check,bind-suno,import-voice,prompt,style,cast,duet-style}
+                                    ...
+python -m lib.artist_profile: error: argument cmd: invalid choice: 'film' (choose from 'list', 'check', 'bind-suno', 'import-voice', 'prompt', 'style', 'cast', 'duet-style')
+=========================== short test summary info ============================
+FAILED tests/contracts/test_artist_profile.py::test_default_catalog_uses_user_library_from_paths
+FAILED tests/contracts/test_artist_profile.py::test_cli_explicit_root_never_falls_back_to_default_catalog
+FAILED tests/contracts/test_artist_profile.py::test_cli_project_scope_reads_private_artist_without_global_catalog
+3 failed, 21 passed in 3.52s

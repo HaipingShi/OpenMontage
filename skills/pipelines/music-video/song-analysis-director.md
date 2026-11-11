@@ -20,6 +20,8 @@ Second stage of `music-video`. You **lock the song master** and produce the `son
 
 - **User file / library track:** copy it to `projects/<id>/assets/music/master.<ext>` unchanged (no transcoding). Keep the original extension; WAV/FLAC preferred.
 - **Generate:** announce tool/provider/model/cost first. With `suno_music`, use `custom_mode: true`, `instrumental: false`, the approved lyrics as `prompt` (with `[Verse] [Chorus] [Bridge]` tags), `style`, and `title`; prefer `V4_5`/`V5` for songs longer than 4 minutes. Each call returns 2 takes — let the user listen and pick (`track_index`). Write to `projects/<id>/assets/music/master.mp3`.
+- **Persistent artist:** set `style` to `lib.artist_profile.music_style(profile, "<song-specific additions>")` — never hand-write it — and use `voice.model`. If an existing Suno Persona/Voice is bound, use the approved Suno web workflow and manually select that binding; import the downloaded result. The current `suno_music` tool cannot transmit that binding or reference audio, so do not generate a replacement voice with it. Text style and singer tags do not enforce timbre. Before the user picks, compare each take against the artist's canonical voice track (register, breathiness, vibrato, accent) and flag drifted takes.
+- **Joint release:** set `style` to `lib.artist_profile.duet_style(profiles, "<song-specific additions>")` and mark every lyric section with its singer (`[Verse 1: Singer A]`, `[Verse 2: Singer B]`, `[Chorus: Singer A & Singer B]`). Compare each singer's parts against that singer's own canonical track. Do not assume one web voice selection or a duet style prompt enforces two saved voices. If the current Suno interface cannot select both, explain that limitation and obtain approval for separately generated singer parts and an assembled duet.
 
 Record a `music_source` decision in `decision_log` (category `music_source`, subject `Song master`).
 
@@ -30,11 +32,25 @@ Record a `music_source` decision in `decision_log` (category `music_source`, sub
 3. Cut sample-accurately with ffmpeg (`-ss`/`-to` **after** `-i`, re-encode to WAV), add a short fade-out only if the end is not a natural stop, and save as `master_excerpt.wav`.
 4. Re-run `song_beatmap` on the excerpt so all times are video-timeline times. Record the excerpt in `song_map.audio.excerpt_of`.
 
-### Step 3: Lyric timing
+### Step 3: Vocal separation, then lyric timing
+
+Run optional `stem_separator` on the locked master first, with `output_dir` under
+`projects/<id>/assets/audio/stems/`. It uses htdemucs, caches by the input bytes,
+and restores the master's sample rate for both stems. On success write only
+`{vocals, accompaniment, model}` into `song_map.audio.stems`. Reuse a supplied
+vocal stem when present. UNAVAILABLE/failure is a reported analysis degradation:
+use the master for transcription; do not install dependencies or crash silently.
+
+Lyrics precedence is Suno generation-record lyrics (`suno_lyrics_text`) > user
+lyrics (`lyrics_text`) > transcription. Pass both sources to song_beatmap so it
+records the real source. Do not fetch lyrics from the internet. Preserve singer
+tags such as `[Verse 1: Singer A]` and `[Chorus: Singer A & Singer B]`; the analyzer records
+the tag and singer for every following line. Never infer singer from timbre.
+
 
 If the song has vocals:
 
-1. Best: run `transcriber` on the **vocal stem** (`brief.metadata.song_source.has_vocal_stem`). Otherwise run it on the full mix — sung vocals over a full mix transcribe poorly, so use `model_size: "large-v3"` and set `language` explicitly.
+1. Best: run `transcriber` on the **vocal stem** (`song_map.audio.stems.vocals`, or a supplied vocal stem). Otherwise run it on the full mix — sung vocals over a full mix transcribe poorly, so use `model_size: "large-v3"` and set `language` explicitly.
 2. If the user supplied lyrics (or lyrics were used to generate the song), pass them as `lyrics_text`. They are authoritative; the transcript only provides timing. Chinese, Japanese, and Korean lyrics align per character — no word segmentation needed.
 
 ### Step 4: Run the analyzer
@@ -47,6 +63,9 @@ result = registry.get("song_beatmap").execute({
     "output_path": "projects/<id>/artifacts/song_map.json",
     "transcript_path": "projects/<id>/assets/audio/master_transcript.json",  # optional
     "lyrics_text": "<authoritative lyrics, one line per row>",              # optional
+    "suno_lyrics_text": "<approved generation-record lyrics>",             # optional; higher priority
+    "lyrics_confidence_threshold": 0.6,
+    "stems": {"vocals": "<separated vocals.wav>", "accompaniment": "<accompaniment.wav>", "model": "htdemucs"},  # only on success
     "language": "zh",                                                       # optional
     "source_type": "user_supplied",
 })
@@ -75,6 +94,13 @@ The tool's labels are **heuristic** (energy-based). You must confirm them:
 
 - ffprobe the master; its duration must match `song_map.audio.duration_seconds` within 0.05 s.
 - Validate the song_map against its schema.
+- Each lyric line has confidence based on matched timed tokens, not a claim of
+  semantic accuracy. Default threshold is 0.6 (user-configurable). Display EVERY
+  `song_map.review_flags` line with id, text, singer, confidence and time range at
+  the `song_analysis` checkpoint; require human confirmation/correction. Preserve
+  flags until explicitly resolved, recording corrections in checkpoint metadata.
+  Wordless transcript segments are timed but carry confidence 0, not invented
+  confidence 1. Confirmed corrections must not relabel all timings as certain.
 - Present to the user: BPM and feel, a section table (label, time range, bars, energy), lyric coverage (e.g. "38 of 41 lines timed; 3 ad-libs unaligned"), the hook line, and the cutdown windows. Ask them to confirm the section map — they know their song.
 
 ## Common Pitfalls

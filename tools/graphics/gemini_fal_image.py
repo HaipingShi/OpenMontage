@@ -7,11 +7,22 @@ class GeminiFalImage(FalMedia):
     name = "gemini_fal_image"
     capability = "image_generation"
     capabilities = ["text_to_image", "image_edit"]
+    limits = {
+        # The checked-in endpoint schema has no native maxItems; this is the
+        # conservative Gemini multi-reference limit used by the direct tool.
+        "max_reference_images": 14, "max_prompt_chars": 50000,
+        "negative_prompt_field": None, "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v", "i2v", "multi_ref"],
+    }
     supports = {"image_edit": True, "multiple_reference_images": True}
     best_for = ["Gemini 3 Pro Image with an existing fal account"]
     routes = {
         "gemini-3-pro-image": {
             "generate": "fal-ai/nano-banana-pro",
             "edit": "fal-ai/nano-banana-pro/edit",
-        }
+        },
+        "gemini-nano-banana-2.1": {
+            "generate": "google/nano-banana-2.1",
+            "edit": "google/nano-banana-2.1/edit",
+        },
     }

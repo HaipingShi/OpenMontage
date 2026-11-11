@@ -2,7 +2,7 @@
 
 The watcher observes ``projects/`` with watchfiles; on any change it bumps a
 per-project version and wakes SSE subscribers, who tell the browser to
-refetch state. The server never writes to project directories.
+refetch state. User shot reviews are written separately under reviews/.
 """
 
 from __future__ import annotations
@@ -15,10 +15,19 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from backlot.state import PROJECTS_DIR, REPO_ROOT, list_projects, load_board_state, summarize_project
+from backlot.reviews import ShotReview, load_reviews, save_review, submit_reviews
+from backlot.state import (
+    PROJECTS_DIR,
+    REPO_ROOT,
+    list_projects,
+    load_board_state,
+    series_from_disk,
+    summarize_project,
+)
 
 UI_DIR = Path(__file__).resolve().parent / "ui"
 THUMB_CACHE_DIR = REPO_ROOT / ".backlot" / "thumbs"
@@ -96,6 +105,7 @@ def _cached_summaries() -> list[dict]:
             except Exception:
                 cached = {
                     "project_id": entry.name, "title": entry.name,
+                    "series": series_from_disk(entry),
                     "pipeline_type": "unknown", "has_pipeline_state": False,
                     "poster": None, "live": False, "last_activity": 0,
                     "active_stage": None, "awaiting_human": False,
@@ -165,6 +175,9 @@ async def _lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     app = FastAPI(title="Backlot", docs_url=None, redoc_url=None, lifespan=_lifespan)
 
+    from backlot.workbench import install as install_workbench
+    install_workbench(app, _safe_project_dir, hub)
+
     # ---- API ----------------------------------------------------------
 
     @app.get("/api/health")
@@ -179,6 +192,30 @@ def create_app() -> FastAPI:
     async def project_state(project_id: str) -> dict:
         project_dir = _safe_project_dir(project_id)
         return await asyncio.to_thread(load_board_state, project_dir)
+
+    @app.get("/api/project/{project_id}/reviews")
+    async def project_reviews(project_id: str) -> dict:
+        return await asyncio.to_thread(load_reviews, _safe_project_dir(project_id))
+
+    @app.put("/api/project/{project_id}/reviews")
+    async def update_review(project_id: str, review: ShotReview, request: Request) -> dict:
+        # Local writes must originate from this board, not a foreign web page.
+        origin = request.headers.get("origin")
+        if origin and origin.rstrip("/") != str(request.base_url).rstrip("/"):
+            raise HTTPException(403, "cross-origin review write denied")
+        result = await asyncio.to_thread(save_review, _safe_project_dir(project_id), review)
+        _invalidate_summary(project_id)
+        hub.publish(project_id)
+        return result
+
+    @app.post("/api/project/{project_id}/reviews/submit")
+    async def submit_project_reviews(project_id: str, request: Request) -> dict:
+        origin = request.headers.get("origin")
+        if origin and origin.rstrip("/") != str(request.base_url).rstrip("/"):
+            raise HTTPException(403, "cross-origin review write denied")
+        result = await asyncio.to_thread(submit_reviews, _safe_project_dir(project_id))
+        hub.publish(project_id)
+        return result
 
     @app.get("/api/project/{project_id}/events")
     async def project_events(project_id: str, request: Request) -> StreamingResponse:
@@ -277,6 +314,11 @@ def create_app() -> FastAPI:
 
     # ---- UI ------------------------------------------------------------
 
+    @app.get("/r/{project_id}")
+    async def review_page(project_id: str) -> HTMLResponse:
+        _safe_project_dir(project_id)
+        return _ui_html("review.html", ("review.css", "review.js"))
+
     @app.get("/p/{project_id}")
     async def board_page(project_id: str) -> HTMLResponse:
         return _ui_html("board.html", ("board.css", "board.js"))
@@ -300,10 +342,14 @@ def create_app() -> FastAPI:
     async def ui_no_cache(request, call_next):
         response = await call_next(request)
         path = request.url.path
-        if path == "/" or path.startswith("/ui") or path.startswith("/p/"):
+        if path == "/" or path.startswith("/ui") or path.startswith("/p/") or path.startswith("/w/") or path.startswith("/r/"):
             response.headers["Cache-Control"] = "no-cache"
         return response
 
+    # Loopback binding alone does not prevent browser DNS-rebinding requests.
+    app.add_middleware(
+        TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"], www_redirect=False,
+    )
     return app
 
 

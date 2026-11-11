@@ -1,0 +1,989 @@
+....FFFFFFFFFFFFFFFFFFFFFFF.F.FFFF                                       [100%]
+=================================== FAILURES ===================================
+_ test_main_writes_under_configured_projects_root[argv0-kling-animated-explainer-e2e] _
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4491376912'>, '_env_status': <Mock id='4491376240'>, '_tool_statuses': <Mock id='4491375808'>, ...})
+argv = [], slug = 'kling-animated-explainer-e2e'
+
+    @pytest.mark.parametrize("argv,slug", [([], "kling-animated-explainer-e2e"), (["--project", "test-shot_2"], "test-shot_2")])
+    def test_main_writes_under_configured_projects_root(isolated_main, argv, slug):
+        script, projects, checkout, mocks = isolated_main
+
+        assert script.main(argv) == 0
+
+        report_path = projects / slug / "artifacts" / "kling_official_animated_explainer_e2e_report.json"
+>       report = json.loads(report_path.read_text())
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_main_writes_under_configu0/user-data/projects/kling-animated-explainer-e2e/artifacts/kling_official_animated_explainer_e2e_report.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_main_writes_under_configu0/user-data/projects/kling-animated-explainer-e2e/artifacts/kling_official_animated_explainer_e2e_report.json'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1119: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_main_writes_under_configu0/application/projects/kling-animated-explainer-e2e/artifacts/kling_official_animated_explainer_e2e_report.json
+______ test_main_writes_under_configured_projects_root[argv1-test-shot_2] ______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4491370432'>, '_env_status': <Mock id='4491370672'>, '_tool_statuses': <Mock id='4491370960'>, ...})
+argv = ['--project', 'test-shot_2'], slug = 'test-shot_2'
+
+    @pytest.mark.parametrize("argv,slug", [([], "kling-animated-explainer-e2e"), (["--project", "test-shot_2"], "test-shot_2")])
+    def test_main_writes_under_configured_projects_root(isolated_main, argv, slug):
+        script, projects, checkout, mocks = isolated_main
+
+        assert script.main(argv) == 0
+
+        report_path = projects / slug / "artifacts" / "kling_official_animated_explainer_e2e_report.json"
+>       report = json.loads(report_path.read_text())
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_main_writes_under_configu1/user-data/projects/test-shot_2/artifacts/kling_official_animated_explainer_e2e_report.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_main_writes_under_configu1/user-data/projects/test-shot_2/artifacts/kling_official_animated_explainer_e2e_report.json'
+
+/Users/geesh/.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1119: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_main_writes_under_configu1/application/projects/test-shot_2/artifacts/kling_official_animated_explainer_e2e_report.json
+______ test_live_cli_uses_the_same_configured_root_with_mocked_execution _______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493031120'>, '_env_status': <Mock id='4493031600'>, '_tool_statuses': <Mock id='4493031456'>, ...})
+
+    def test_live_cli_uses_the_same_configured_root_with_mocked_execution(isolated_main):
+        script, projects, checkout, mocks = isolated_main
+
+        assert script.main(["--project", "mock-live", "--live-tts"]) == 0
+
+>       assert mocks["_run_live_tts"].call_args.args == (projects / "mock-live",)
+E       AssertionError: assert (PosixPath('/.../mock-live'),) == (PosixPath('/.../mock-live'),)
+E
+E         At index 0 diff: PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_live_cli_uses_the_same_co0/application/projects/mock-live') != PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_live_cli_uses_the_same_co0/user-data/projects/mock-live')
+E         Use -v to get more diff
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:155: AssertionError
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_live_cli_uses_the_same_co0/application/projects/mock-live/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+_______ test_invalid_project_slug_is_rejected_before_discovery_or_live[] _______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492576272'>, '_env_status': <Mock id='4492575504'>, '_tool_statuses': <Mock id='4492575216'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r0')
+slug = ''
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r0/application/projects/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+______ test_invalid_project_slug_is_rejected_before_discovery_or_live[.] _______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493019024'>, '_env_status': <Mock id='4493021520'>, '_tool_statuses': <Mock id='4493019312'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r1')
+slug = '.'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r1/application/projects/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+______ test_invalid_project_slug_is_rejected_before_discovery_or_live[..] ______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492789840'>, '_env_status': <Mock id='4492790176'>, '_tool_statuses': <Mock id='4492800448'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r2')
+slug = '..'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r2/application/projects/../artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+__ test_invalid_project_slug_is_rejected_before_discovery_or_live[../escape] ___
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493013728'>, '_env_status': <Mock id='4493013776'>, '_tool_statuses': <Mock id='4493012144'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r3')
+slug = '../escape'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r3/application/projects/../escape/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+_ test_invalid_project_slug_is_rejected_before_discovery_or_live[nested/project] _
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492589088'>, '_env_status': <Mock id='4492575024'>, '_tool_statuses': <Mock id='4492576992'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r4')
+slug = 'nested/project'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r4/application/projects/nested/project/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+_ test_invalid_project_slug_is_rejected_before_discovery_or_live[nested\\project] _
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493027088'>, '_env_status': <Mock id='4493026848'>, '_tool_statuses': <Mock id='4493033232'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r5')
+slug = 'nested\\project'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r5/application/projects/nested\project/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+__ test_invalid_project_slug_is_rejected_before_discovery_or_live[/absolute] ___
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492589712'>, '_env_status': <Mock id='4492590144'>, '_tool_statuses': <Mock id='4492590336'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r6')
+slug = '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r6/absolute'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r6/absolute/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+__ test_invalid_project_slug_is_rejected_before_discovery_or_live[has spaces] __
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4491983888'>, '_env_status': <Mock id='4491981008'>, '_tool_statuses': <Mock id='4491983648'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r7')
+slug = 'has spaces'
+
+    @pytest.mark.parametrize("slug", ["", ".", "..", "../escape", "nested/project", "nested\\project", "/absolute", "has spaces"])
+    def test_invalid_project_slug_is_rejected_before_discovery_or_live(isolated_main, tmp_path, slug):
+        script, _, _, mocks = isolated_main
+        if slug == "/absolute":
+            slug = str(tmp_path / "absolute")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:165: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_invalid_project_slug_is_r7/application/projects/has spaces/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+______ test_symlink_escape_is_rejected_before_discovery_or_live[project] _______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492738768'>, '_env_status': <Mock id='4492749520'>, '_tool_statuses': <Mock id='4492749424'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte0')
+boundary = 'project'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte0/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+_____ test_symlink_escape_is_rejected_before_discovery_or_live[artifacts] ______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493019072'>, '_env_status': <Mock id='4493032032'>, '_tool_statuses': <Mock id='4493031264'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte1')
+boundary = 'artifacts'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte1/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+_______ test_symlink_escape_is_rejected_before_discovery_or_live[report] _______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492744144'>, '_env_status': <Mock id='4492750960'>, '_tool_statuses': <Mock id='4492749376'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte2')
+boundary = 'report'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte2/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+_______ test_symlink_escape_is_rejected_before_discovery_or_live[assets] _______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493028960'>, '_env_status': <Mock id='4493023920'>, '_tool_statuses': <Mock id='4493018928'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte3')
+boundary = 'assets'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte3/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+____ test_symlink_escape_is_rejected_before_discovery_or_live[assets/audio] ____
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492782000'>, '_env_status': <Mock id='4492781712'>, '_tool_statuses': <Mock id='4492781664'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte4')
+boundary = 'assets/audio'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte4/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+___ test_symlink_escape_is_rejected_before_discovery_or_live[assets/images] ____
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493027616'>, '_env_status': <Mock id='4493024400'>, '_tool_statuses': <Mock id='4493031504'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte5')
+boundary = 'assets/images'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte5/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+____ test_symlink_escape_is_rejected_before_discovery_or_live[assets/video] ____
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4493028048'>, '_env_status': <Mock id='4493017824'>, '_tool_statuses': <Mock id='4493025744'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte6')
+boundary = 'assets/video'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte6/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+______ test_symlink_escape_is_rejected_before_discovery_or_live[renders] _______
+
+isolated_main = (<module 'kling_official_animated_explainer_e2e' from '/Users/geesh/projects/OpenMontage/scripts/kling_official_animat...scover': <Mock id='4492743376'>, '_env_status': <Mock id='4492753840'>, '_tool_statuses': <Mock id='4492747888'>, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte7')
+boundary = 'renders'
+
+    @pytest.mark.parametrize("boundary", ["project", "artifacts", "report", "assets", "assets/audio", "assets/images", "assets/video", "renders"])
+    def test_symlink_escape_is_rejected_before_discovery_or_live(isolated_main, tmp_path, boundary):
+        script, projects, checkout, mocks = isolated_main
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        report_name = "kling_official_animated_explainer_e2e_report.json"
+        # Both old and configured roots are synthetic; reproducing the bug cannot
+        # write into this checkout or any real workspace.
+        for root in (projects, checkout / "projects"):
+            project = root / "escape-test"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            elif boundary == "report":
+                artifacts = project / "artifacts"
+                artifacts.mkdir(parents=True)
+                (artifacts / report_name).symlink_to(outside / report_name)
+            else:
+                target = project / boundary
+                target.parent.mkdir(parents=True)
+                target.symlink_to(outside, target_is_directory=True)
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_kling_official_e2e_script.py:196: Failed
+----------------------------- Captured stdout call -----------------------------
+report: /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_symlink_escape_is_rejecte7/application/projects/escape-test/artifacts/kling_official_animated_explainer_e2e_report.json
+narration: mock.mp3
+_______________ test_main_defaults_to_configured_user_data_root ________________
+
+fixture_cli = (<module 'automv_dry_run_workspace' from '/Users/geesh/projects/OpenMontage/scripts/automv_dry_run.py'>, PosixPath('/p...figured-projects'), <Mock id='4492753216'>, {'duration_seconds': 30, 'timeline': {}, 'shots': 3, 'candidates': 6, ...})
+capsys = <_pytest.capture.CaptureFixture object at 0x10bbe49d0>
+
+    def test_main_defaults_to_configured_user_data_root(fixture_cli, capsys):
+        script, projects, run, report = fixture_cli
+
+>       assert script.main([]) == 0
+E       AttributeError: module 'automv_dry_run_workspace' has no attribute 'main'
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_automv_dry_run_workspace.py:36: AttributeError
+_______________ test_explicit_output_keeps_user_override[False] ________________
+
+fixture_cli = (<module 'automv_dry_run_workspace' from '/Users/geesh/projects/OpenMontage/scripts/automv_dry_run.py'>, PosixPath('/p...figured-projects'), <Mock id='4492785696'>, {'duration_seconds': 30, 'timeline': {}, 'shots': 3, 'candidates': 6, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_explicit_output_keeps_use0')
+capsys = <_pytest.capture.CaptureFixture object at 0x10bca5780>
+absolute = False
+
+    @pytest.mark.parametrize("absolute", [False, True])
+    def test_explicit_output_keeps_user_override(fixture_cli, tmp_path, capsys, absolute):
+        script, _, run, report = fixture_cli
+        output = str(tmp_path / "custom-output") if absolute else "custom-output"
+
+>       assert script.main(["--output", output]) == 0
+E       AttributeError: module 'automv_dry_run_workspace' has no attribute 'main'
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_automv_dry_run_workspace.py:49: AttributeError
+________________ test_explicit_output_keeps_user_override[True] ________________
+
+fixture_cli = (<module 'automv_dry_run_workspace' from '/Users/geesh/projects/OpenMontage/scripts/automv_dry_run.py'>, PosixPath('/p...figured-projects'), <Mock id='4491999792'>, {'duration_seconds': 30, 'timeline': {}, 'shots': 3, 'candidates': 6, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_explicit_output_keeps_use1')
+capsys = <_pytest.capture.CaptureFixture object at 0x10bc82e90>, absolute = True
+
+    @pytest.mark.parametrize("absolute", [False, True])
+    def test_explicit_output_keeps_user_override(fixture_cli, tmp_path, capsys, absolute):
+        script, _, run, report = fixture_cli
+        output = str(tmp_path / "custom-output") if absolute else "custom-output"
+
+>       assert script.main(["--output", output]) == 0
+E       AttributeError: module 'automv_dry_run_workspace' has no attribute 'main'
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_automv_dry_run_workspace.py:49: AttributeError
+_ test_video_analysis_execute_preserves_output_override_and_uses_user_default[False] _
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_video_analysis_execute_pr0/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bca40a0>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_video_analysis_execute_pr0')
+explicit = False
+
+    @pytest.mark.parametrize("explicit", [False, True])
+    def test_video_analysis_execute_preserves_output_override_and_uses_user_default(projects, monkeypatch, tmp_path, explicit):
+        source = tmp_path / "synthetic.mp4"
+        source.write_bytes(b"synthetic input; probing is mocked")
+        tool = video_analyzer.VideoAnalyzer()
+        probe = Mock(return_value=8.0)
+        command = Mock(side_effect=AssertionError("no FFmpeg or other process in this regression"))
+        monkeypatch.setattr(tool, "_get_duration", probe)
+        monkeypatch.setattr(tool, "run_command", command)
+        monkeypatch.setattr(video_analyzer.time, "time", lambda: 1234567890)
+        inputs = {"source": str(source), "analysis_depth": "transcript_only"}
+        expected = projects / "_analysis" / "analysis_1234567890"
+        if explicit:
+            inputs["output_dir"] = "custom-analysis"
+            expected = Path("custom-analysis")
+
+        result = tool.execute(inputs)
+
+        assert result.success
+>       assert result.artifacts == [str(expected / "video_analysis_brief.json")]
+E       AssertionError: assert ['projects/_a...s_brief.json'] == ['/private/va...s_brief.json']
+E
+E         At index 0 diff: 'projects/_analysis/analysis_1234567890/video_analysis_brief.json' != '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_video_analysis_execute_pr0/configured-projects/_analysis/analysis_1234567890/video_analysis_brief.json'
+E         Use -v to get more diff
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:45: AssertionError
+_ test_character_execute_preserves_output_override_and_uses_user_default[False] _
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_execute_preserv0/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bcdd1b0>
+explicit = False
+
+    @pytest.mark.parametrize("explicit", [False, True])
+    def test_character_execute_preserves_output_override_and_uses_user_default(projects, monkeypatch, explicit):
+        render = Mock(side_effect=AssertionError("no browser or FFmpeg render in this regression"))
+        monkeypatch.setattr(character_animation, "_render_preview_mp4", render)
+        inputs = {"action_timeline": {"scenes": [{"id": "scene", "end_seconds": 1, "actions": []}]}}
+        expected = projects / "character-preview" / "preview.html"
+        if explicit:
+            inputs["output_path"] = "custom-preview/index.html"
+            expected = Path("custom-preview/index.html")
+
+        result = character_animation.CharacterRigRenderer().execute(inputs)
+
+        assert result.success
+>       assert result.data["preview_path"] == str(expected)
+E       AssertionError: assert 'projects/cha.../preview.html' == '/private/var.../preview.html'
+E
+E         - /private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_execute_preserv0/configured-projects/character-preview/preview.html
+E         + projects/character-preview/preview.html
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:65: AssertionError
+________ test_analysis_default_rejects_existing_symlink_before_probing _________
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_analysis_default_rejects_0/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bca7550>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_analysis_default_rejects_0')
+
+    def test_analysis_default_rejects_existing_symlink_before_probing(projects, monkeypatch, tmp_path):
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        for root in (projects, Path.cwd() / "projects"):
+            root.mkdir(parents=True, exist_ok=True)
+            (root / "_analysis").symlink_to(outside, target_is_directory=True)
+        source = tmp_path / "synthetic.mp4"
+        source.write_bytes(b"fixture")
+        tool = video_analyzer.VideoAnalyzer()
+        probe = Mock(return_value=8.0)
+        monkeypatch.setattr(tool, "_get_duration", probe)
+
+        result = tool.execute({"source": str(source), "analysis_depth": "transcript_only"})
+
+>       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = ToolResult(success=True, data={'version': '1.0', 'source': {'type': 'local_file', 'duration_seconds': 8.0, 'local_path...analysis_1791333545/video_analysis_brief.json'], error=None, cost_usd=0.0, duration_seconds=0.0, seed=None, model=None).success
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:87: AssertionError
+___ test_character_default_rejects_existing_symlinks_before_writing[project] ___
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_default_rejects0/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bbe7400>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_default_rejects0')
+boundary = 'project'
+
+    @pytest.mark.parametrize("boundary", ["project", "preview", "workspace"])
+    def test_character_default_rejects_existing_symlinks_before_writing(projects, monkeypatch, tmp_path, boundary):
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        for root in (projects, Path.cwd() / "projects"):
+            project = root / "character-preview"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            else:
+                project.mkdir()
+                target = project / ("preview.html" if boundary == "preview" else "hyperframes")
+                target.symlink_to(outside / "preview.html" if boundary == "preview" else outside,
+                                  target_is_directory=boundary == "workspace")
+        render = Mock(side_effect=AssertionError("no media render"))
+        monkeypatch.setattr(character_animation, "_render_preview_mp4", render)
+
+        result = character_animation.CharacterRigRenderer().execute({"action_timeline": {"scenes": []}})
+
+>       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = ToolResult(success=True, data={'preview_path': 'projects/character-preview/preview.html', 'render_package': 'hyperfram...hyperframes/compositions/character-scene.html'], error=None, cost_usd=0.0, duration_seconds=0.0, seed=None, model=None).success
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:112: AssertionError
+___ test_character_default_rejects_existing_symlinks_before_writing[preview] ___
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_default_rejects1/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bbe55a0>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_default_rejects1')
+boundary = 'preview'
+
+    @pytest.mark.parametrize("boundary", ["project", "preview", "workspace"])
+    def test_character_default_rejects_existing_symlinks_before_writing(projects, monkeypatch, tmp_path, boundary):
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        for root in (projects, Path.cwd() / "projects"):
+            project = root / "character-preview"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            else:
+                project.mkdir()
+                target = project / ("preview.html" if boundary == "preview" else "hyperframes")
+                target.symlink_to(outside / "preview.html" if boundary == "preview" else outside,
+                                  target_is_directory=boundary == "workspace")
+        render = Mock(side_effect=AssertionError("no media render"))
+        monkeypatch.setattr(character_animation, "_render_preview_mp4", render)
+
+        result = character_animation.CharacterRigRenderer().execute({"action_timeline": {"scenes": []}})
+
+>       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = ToolResult(success=True, data={'preview_path': 'projects/character-preview/preview.html', 'render_package': 'hyperfram...hyperframes/compositions/character-scene.html'], error=None, cost_usd=0.0, duration_seconds=0.0, seed=None, model=None).success
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:112: AssertionError
+__ test_character_default_rejects_existing_symlinks_before_writing[workspace] __
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_default_rejects2/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bc9cbe0>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-209/test_character_default_rejects2')
+boundary = 'workspace'
+
+    @pytest.mark.parametrize("boundary", ["project", "preview", "workspace"])
+    def test_character_default_rejects_existing_symlinks_before_writing(projects, monkeypatch, tmp_path, boundary):
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        for root in (projects, Path.cwd() / "projects"):
+            project = root / "character-preview"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            else:
+                project.mkdir()
+                target = project / ("preview.html" if boundary == "preview" else "hyperframes")
+                target.symlink_to(outside / "preview.html" if boundary == "preview" else outside,
+                                  target_is_directory=boundary == "workspace")
+        render = Mock(side_effect=AssertionError("no media render"))
+        monkeypatch.setattr(character_animation, "_render_preview_mp4", render)
+
+        result = character_animation.CharacterRigRenderer().execute({"action_timeline": {"scenes": []}})
+
+>       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = ToolResult(success=True, data={'preview_path': 'projects/character-preview/preview.html', 'render_package': 'hyperfram...hyperframes/compositions/character-scene.html'], error=None, cost_usd=0.0, duration_seconds=0.0, seed=None, model=None).success
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:112: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_main_writes_under_configured_projects_root[argv0-kling-animated-explainer-e2e]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_main_writes_under_configured_projects_root[argv1-test-shot_2]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_live_cli_uses_the_same_configured_root_with_mocked_execution
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[.]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[..]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[../escape]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[nested/project]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[nested\\project]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[/absolute]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_invalid_project_slug_is_rejected_before_discovery_or_live[has spaces]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[project]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[artifacts]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[report]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[assets]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[assets/audio]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[assets/images]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[assets/video]
+FAILED tests/contracts/test_kling_official_e2e_script.py::test_symlink_escape_is_rejected_before_discovery_or_live[renders]
+FAILED tests/contracts/test_automv_dry_run_workspace.py::test_main_defaults_to_configured_user_data_root
+FAILED tests/contracts/test_automv_dry_run_workspace.py::test_explicit_output_keeps_user_override[False]
+FAILED tests/contracts/test_automv_dry_run_workspace.py::test_explicit_output_keeps_user_override[True]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_video_analysis_execute_preserves_output_override_and_uses_user_default[False]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_character_execute_preserves_output_override_and_uses_user_default[False]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_analysis_default_rejects_existing_symlink_before_probing
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_character_default_rejects_existing_symlinks_before_writing[project]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_character_default_rejects_existing_symlinks_before_writing[preview]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_character_default_rejects_existing_symlinks_before_writing[workspace]
+28 failed, 6 passed in 0.19s
+..........................FF......FF...F                                 [100%]
+=================================== FAILURES ===================================
+_ test_default_workspace_symlink_is_rejected_before_running_fixture[workspace] _
+
+fixture_cli = (<module 'automv_dry_run_workspace' from '/Users/geesh/projects/OpenMontage/scripts/automv_dry_run.py'>, PosixPath('/p...figured-projects'), <Mock id='4425926016'>, {'duration_seconds': 30, 'timeline': {}, 'shots': 3, 'candidates': 6, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_default_workspace_symlink0')
+boundary = 'workspace'
+
+    @pytest.mark.parametrize("boundary", ["workspace", "nested"])
+    def test_default_workspace_symlink_is_rejected_before_running_fixture(fixture_cli, tmp_path, boundary):
+        script, projects, run, _ = fixture_cli
+        output = projects / "automv-upgrade-dry-run"
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        projects.mkdir()
+        if boundary == "workspace":
+            output.symlink_to(outside, target_is_directory=True)
+        else:
+            output.mkdir()
+            (output / "nested-output.json").symlink_to(outside / "output.json")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_automv_dry_run_workspace.py:69: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "duration_seconds": 30,
+  "timeline": {},
+  "shots": 3,
+  "candidates": 6,
+  "external_calls": 0,
+  "master_unchanged": true
+}
+__ test_default_workspace_symlink_is_rejected_before_running_fixture[nested] ___
+
+fixture_cli = (<module 'automv_dry_run_workspace' from '/Users/geesh/projects/OpenMontage/scripts/automv_dry_run.py'>, PosixPath('/p...figured-projects'), <Mock id='4426086576'>, {'duration_seconds': 30, 'timeline': {}, 'shots': 3, 'candidates': 6, ...})
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_default_workspace_symlink1')
+boundary = 'nested'
+
+    @pytest.mark.parametrize("boundary", ["workspace", "nested"])
+    def test_default_workspace_symlink_is_rejected_before_running_fixture(fixture_cli, tmp_path, boundary):
+        script, projects, run, _ = fixture_cli
+        output = projects / "automv-upgrade-dry-run"
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        projects.mkdir()
+        if boundary == "workspace":
+            output.symlink_to(outside, target_is_directory=True)
+        else:
+            output.mkdir()
+            (output / "nested-output.json").symlink_to(outside / "output.json")
+
+>       with pytest.raises(SystemExit) as exc:
+E       Failed: DID NOT RAISE SystemExit
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_automv_dry_run_workspace.py:69: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "duration_seconds": 30,
+  "timeline": {},
+  "shots": 3,
+  "candidates": 6,
+  "external_calls": 0,
+  "master_unchanged": true
+}
+_ test_analysis_default_rejects_internal_symlinks_before_child_tools[scenes.json] _
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_analysis_default_rejects_1/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107d16440>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_analysis_default_rejects_1')
+boundary = 'scenes.json'
+
+    @pytest.mark.parametrize("boundary", ["scenes.json", "keyframes"])
+    def test_analysis_default_rejects_internal_symlinks_before_child_tools(projects, monkeypatch, tmp_path, boundary):
+        from tools.analysis.audio_energy import AudioEnergy
+        from tools.analysis.frame_sampler import FrameSampler
+        from tools.analysis.scene_detect import SceneDetect
+
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        for root in (projects, Path.cwd() / "projects"):
+            output = root / "_analysis" / "analysis_1234567890"
+            output.mkdir(parents=True)
+            (output / boundary).symlink_to(outside / "scenes.json" if boundary == "scenes.json" else outside,
+                                          target_is_directory=boundary == "keyframes")
+        source = tmp_path / "synthetic.mp4"
+        source.write_bytes(b"fixture")
+        probe = Mock(return_value=8.0)
+        monkeypatch.setattr(video_analyzer.time, "time", lambda: 1234567890)
+        tool = video_analyzer.VideoAnalyzer()
+        monkeypatch.setattr(tool, "_get_duration", probe)
+
+        def write_scenes(inputs):
+            Path(inputs["output_path"]).write_text('{"scenes": []}')
+            return ToolResult(success=True, data={"scenes": []})
+
+        def write_frame(inputs):
+            directory = Path(inputs["output_dir"])
+            directory.mkdir(parents=True, exist_ok=True)
+            (directory / "frame.jpg").write_bytes(b"synthetic frame")
+            return ToolResult(success=True, data={"frames": []})
+
+        scenes = Mock(side_effect=write_scenes)
+        frames = Mock(side_effect=write_frame)
+        monkeypatch.setattr(SceneDetect, "execute", scenes)
+        monkeypatch.setattr(FrameSampler, "execute", frames)
+        monkeypatch.setattr(AudioEnergy, "execute", Mock(return_value=ToolResult(success=False, error="fixture skipped")))
+
+        result = tool.execute({"source": str(source)})
+
+>       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = ToolResult(success=True, data={'version': '1.0', 'source': {'type': 'local_file', 'duration_seconds': 8.0, 'local_path...rojects/_analysis/analysis_1234567890/keyframes'], error=None, cost_usd=0.0, duration_seconds=0, seed=None, model=None).success
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:132: AssertionError
+_ test_analysis_default_rejects_internal_symlinks_before_child_tools[keyframes] _
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_analysis_default_rejects_2/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107d43fd0>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_analysis_default_rejects_2')
+boundary = 'keyframes'
+
+    @pytest.mark.parametrize("boundary", ["scenes.json", "keyframes"])
+    def test_analysis_default_rejects_internal_symlinks_before_child_tools(projects, monkeypatch, tmp_path, boundary):
+        from tools.analysis.audio_energy import AudioEnergy
+        from tools.analysis.frame_sampler import FrameSampler
+        from tools.analysis.scene_detect import SceneDetect
+
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        for root in (projects, Path.cwd() / "projects"):
+            output = root / "_analysis" / "analysis_1234567890"
+            output.mkdir(parents=True)
+            (output / boundary).symlink_to(outside / "scenes.json" if boundary == "scenes.json" else outside,
+                                          target_is_directory=boundary == "keyframes")
+        source = tmp_path / "synthetic.mp4"
+        source.write_bytes(b"fixture")
+        probe = Mock(return_value=8.0)
+        monkeypatch.setattr(video_analyzer.time, "time", lambda: 1234567890)
+        tool = video_analyzer.VideoAnalyzer()
+        monkeypatch.setattr(tool, "_get_duration", probe)
+
+        def write_scenes(inputs):
+            Path(inputs["output_path"]).write_text('{"scenes": []}')
+            return ToolResult(success=True, data={"scenes": []})
+
+        def write_frame(inputs):
+            directory = Path(inputs["output_dir"])
+            directory.mkdir(parents=True, exist_ok=True)
+            (directory / "frame.jpg").write_bytes(b"synthetic frame")
+            return ToolResult(success=True, data={"frames": []})
+
+        scenes = Mock(side_effect=write_scenes)
+        frames = Mock(side_effect=write_frame)
+        monkeypatch.setattr(SceneDetect, "execute", scenes)
+        monkeypatch.setattr(FrameSampler, "execute", frames)
+        monkeypatch.setattr(AudioEnergy, "execute", Mock(return_value=ToolResult(success=False, error="fixture skipped")))
+
+        result = tool.execute({"source": str(source)})
+
+>       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = ToolResult(success=True, data={'version': '1.0', 'source': {'type': 'local_file', 'duration_seconds': 8.0, 'local_path...rojects/_analysis/analysis_1234567890/keyframes'], error=None, cost_usd=0.0, duration_seconds=0, seed=None, model=None).success
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:132: AssertionError
+___ test_character_default_rejects_existing_symlinks_before_writing[frames] ____
+
+projects = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_character_default_rejects3/configured-projects')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107cb86d0>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-215/test_character_default_rejects3')
+boundary = 'frames'
+
+    @pytest.mark.parametrize("boundary", ["project", "preview", "workspace", "frames"])
+    def test_character_default_rejects_existing_symlinks_before_writing(projects, monkeypatch, tmp_path, boundary):
+        outside = tmp_path / "other-project"
+        outside.mkdir()
+        for root in (projects, Path.cwd() / "projects"):
+            project = root / "character-preview"
+            root.mkdir(parents=True, exist_ok=True)
+            if boundary == "project":
+                project.symlink_to(outside, target_is_directory=True)
+            else:
+                project.mkdir()
+                target = project / {"preview": "preview.html", "workspace": "hyperframes", "frames": "preview_frames"}[boundary]
+                target.symlink_to(outside / "preview.html" if boundary == "preview" else outside,
+                                  target_is_directory=boundary != "preview")
+
+        def write_render(preview_path, video_path, duration_seconds, fps):
+            frames = video_path.parent / f"{video_path.stem}_frames"
+            frames.mkdir(parents=True, exist_ok=True)
+            (frames / "frame_0000.png").write_bytes(b"synthetic rendered frame")
+
+        render = Mock(side_effect=write_render)
+        monkeypatch.setattr(character_animation, "_render_preview_mp4", render)
+
+        result = character_animation.CharacterRigRenderer().execute({"action_timeline": {"scenes": []}, "render_video": True})
+
+>       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = ToolResult(success=True, data={'preview_path': '/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-gee...igured-projects/character-preview/preview.mp4'], error=None, cost_usd=0.0, duration_seconds=0.0, seed=None, model=None).success
+
+/Users/geesh/projects/OpenMontage/tests/contracts/test_tool_workspace_defaults.py:165: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_automv_dry_run_workspace.py::test_default_workspace_symlink_is_rejected_before_running_fixture[workspace]
+FAILED tests/contracts/test_automv_dry_run_workspace.py::test_default_workspace_symlink_is_rejected_before_running_fixture[nested]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_analysis_default_rejects_internal_symlinks_before_child_tools[scenes.json]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_analysis_default_rejects_internal_symlinks_before_child_tools[keyframes]
+FAILED tests/contracts/test_tool_workspace_defaults.py::test_character_default_rejects_existing_symlinks_before_writing[frames]
+5 failed, 35 passed in 0.13s

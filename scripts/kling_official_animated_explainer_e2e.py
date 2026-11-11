@@ -15,6 +15,7 @@ import argparse
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -31,6 +32,7 @@ from lib.env_loader import load_env  # noqa: E402
 
 load_env(ROOT)
 
+from lib.paths import PROJECTS_DIR  # noqa: E402
 from lib.pipeline_loader import load_pipeline  # noqa: E402
 from tools.tool_registry import registry  # noqa: E402
 from tools.video.video_compose import VideoCompose  # noqa: E402
@@ -649,6 +651,50 @@ def _run_live_all(
     }
 
 
+def _project_slug(value: str) -> str:
+    if len(value) > 128 or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", value):
+        raise argparse.ArgumentTypeError("project must be a 1-128 character slug containing letters, numbers, '-' or '_'")
+    return value
+
+
+def _project_workspace(slug: str) -> Path:
+    project_dir = PROJECTS_DIR / slug
+    # Check before discovery or any provider call, without following directory
+    # symlinks. No existing output may redirect writes to another workspace.
+    path = project_dir
+    while path != PROJECTS_DIR:
+        if path.is_symlink():
+            raise ValueError(f"project workspace contains a symlink: {path}")
+        path = path.parent
+    for path in project_dir.rglob("*"):
+        if path.is_symlink():
+            raise ValueError(f"project workspace contains a symlink: {path}")
+    # A paid run also needs usable destinations for its media and receipts.
+    for relative in (
+        "artifacts/kling_official_animated_explainer_e2e_report.json",
+        "artifacts/kling_avatar_live_partial.json",
+        "artifacts/kling_lip_sync_faces.json",
+        "assets/audio/narration.mp3",
+        "assets/images/hero_frame.png",
+        "assets/images/avatar_portrait.png",
+        "assets/video/kling_i2v_clip.mp4",
+        "assets/video/kling_avatar_smoke.mp4",
+        "assets/video/kling_lip_sync_smoke.mp4",
+        "renders/final_kling_e2e_smoke.mp4",
+    ):
+        target = project_dir / relative
+        if target.exists() and not target.is_file():
+            raise ValueError(f"project output must be a regular file: {target}")
+        parent = target.parent
+        while True:
+            if parent.exists() and not parent.is_dir():
+                raise ValueError(f"project output parent must be a directory: {parent}")
+            if parent == PROJECTS_DIR:
+                break
+            parent = parent.parent
+    return project_dir
+
+
 def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     live = parser.add_mutually_exclusive_group()
@@ -678,8 +724,13 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--timeout-seconds", type=int, default=300)
     parser.add_argument("--poll-interval", type=float, default=3.0)
     parser.add_argument("--include-account-usage", action="store_true")
-    parser.add_argument("--project", default=DEFAULT_PROJECT)
-    return parser.parse_args(argv)
+    parser.add_argument("--project", default=DEFAULT_PROJECT, type=_project_slug)
+    args = parser.parse_args(argv)
+    try:
+        args.project_dir = _project_workspace(args.project)
+    except (ValueError, OSError) as exc:
+        parser.error(str(exc))
+    return args
 
 
 def _execution_mode(args: argparse.Namespace) -> str:
@@ -697,7 +748,7 @@ def _execution_mode(args: argparse.Namespace) -> str:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parse_args(argv)
     mode = _execution_mode(args)
-    project_dir = ROOT / "projects" / args.project
+    project_dir = args.project_dir
     report_path = project_dir / "artifacts" / "kling_official_animated_explainer_e2e_report.json"
 
     manifest = load_pipeline("animated-explainer")

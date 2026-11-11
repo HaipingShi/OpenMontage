@@ -1,0 +1,91 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____ test_default_zero_actual_cost_is_unknown_for_a_quoted_paid_call[False] ____
+
+api = (<starlette.testclient.TestClient object at 0x10a69e260>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-113/test_default_zero_actual_cost_0/projects/film'))
+success = False
+
+    @pytest.mark.parametrize("success", [False, True])
+    def test_default_zero_actual_cost_is_unknown_for_a_quoted_paid_call(api, success):
+        client, tool, lease, project = api
+        tool.actual = 0
+        tool.fail = not success
+        body = render_body(client, lease)
+        pending = client.post("/api/shot/film/shot1/render", json=body).json()
+        body.update(confirmation_token=pending["confirmation_token"], request_id=pending["request_id"])
+        result = client.post("/api/shot/film/shot1/render", json=body).json()
+>       assert result["status"] == "unknown"
+E       AssertionError: assert 'failed' == 'unknown'
+E
+E         - unknown
+E         + failed
+
+tests/contracts/test_shot_workbench_api.py:876: AssertionError
+____ test_default_zero_actual_cost_is_unknown_for_a_quoted_paid_call[True] _____
+
+api = (<starlette.testclient.TestClient object at 0x10a6f9c60>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-113/test_default_zero_actual_cost_1/projects/film'))
+success = True
+
+    @pytest.mark.parametrize("success", [False, True])
+    def test_default_zero_actual_cost_is_unknown_for_a_quoted_paid_call(api, success):
+        client, tool, lease, project = api
+        tool.actual = 0
+        tool.fail = not success
+        body = render_body(client, lease)
+        pending = client.post("/api/shot/film/shot1/render", json=body).json()
+        body.update(confirmation_token=pending["confirmation_token"], request_id=pending["request_id"])
+        result = client.post("/api/shot/film/shot1/render", json=body).json()
+>       assert result["status"] == "unknown"
+E       AssertionError: assert 'succeeded' == 'unknown'
+E
+E         - unknown
+E         + succeeded
+
+tests/contracts/test_shot_workbench_api.py:876: AssertionError
+______ test_real_seedance_adapter_polling_timeout_keeps_paid_reservation _______
+
+api = (<starlette.testclient.TestClient object at 0x10aef4e20>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-113/test_real_seedance_adapter_pol0/projects/film'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10acdb940>
+
+    def test_real_seedance_adapter_polling_timeout_keeps_paid_reservation(api, monkeypatch):
+        import requests
+        from lib import shot_execution
+        from tools.video.seedance_video import SeedanceVideo
+        import tools.video.seedance_video as adapter
+        client, mock, lease, project = api
+        tool = SeedanceVideo()
+        monkeypatch.setattr(tool, "_get_api_key", lambda: "offline-fixture")
+        registry = SimpleNamespace(get=lambda name: tool if name == tool.name else None,
+            get_by_capability=lambda capability: [tool] if capability == tool.capability else [])
+        monkeypatch.setattr(shot_execution, "get_registry", lambda: registry)
+        submissions = []
+        def submit(url, **kwargs):
+            submissions.append(kwargs["json"])
+            return SimpleNamespace(raise_for_status=lambda: None, json=lambda: {
+                "status_url": "https://offline.invalid/status", "response_url": "https://offline.invalid/result"})
+        def timeout(*args, **kwargs):
+            raise requests.Timeout("Offline accepted submission; response unavailable")
+        monkeypatch.setattr(requests, "post", submit)
+        monkeypatch.setattr(requests, "get", timeout)
+        monkeypatch.setattr(adapter.time, "sleep", lambda seconds: None)
+        spec = read_spec(client)
+        compiled = client.post("/api/shot/film/shot1/compile", json={"revision": spec["revision"],
+            "tool_name": tool.name, "lease_id": lease}).json()
+        assert compiled["generatable"], compiled
+        body = {"revision": spec["revision"], "tool_name": tool.name, "compiled_hash": compiled["compiled_hash"], "lease_id": lease}
+        pending = client.post("/api/shot/film/shot1/render", json=body).json()
+        body.update(confirmation_token=pending["confirmation_token"], request_id=pending["request_id"])
+        result = client.post("/api/shot/film/shot1/render", json=body).json()
+>       assert result["status"] == "unknown", result
+E       AssertionError: {'request_id': '6e8fc220448447e2ae80225be9e33046', 'status': 'failed', 'shot_id': 'shot1', 'revision': 0, ...}
+E       assert 'failed' == 'unknown'
+E
+E         - unknown
+E         + failed
+
+tests/contracts/test_shot_workbench_api.py:913: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_default_zero_actual_cost_is_unknown_for_a_quoted_paid_call[False]
+FAILED tests/contracts/test_shot_workbench_api.py::test_default_zero_actual_cost_is_unknown_for_a_quoted_paid_call[True]
+FAILED tests/contracts/test_shot_workbench_api.py::test_real_seedance_adapter_polling_timeout_keeps_paid_reservation
+3 failed, 58 deselected in 1.14s

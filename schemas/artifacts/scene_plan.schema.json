@@ -40,7 +40,7 @@
                 "type": "string",
                 "enum": ["static", "pan_left", "pan_right", "tilt_up", "tilt_down", "dolly_in", "dolly_out", "tracking_left", "tracking_right", "crane_up", "crane_down", "handheld", "steadicam", "whip_pan", "orbital", "zoom_in", "zoom_out", "rack_focus"]
               },
-              "lens_mm": { "type": "integer", "enum": [14, 24, 35, 50, 85, 135, 200] },
+              "lens_mm": { "type": "number", "minimum": 1, "maximum": 2000 },
               "lighting_key": {
                 "type": "string",
                 "enum": ["high_key", "low_key", "natural", "golden_hour", "blue_hour", "tungsten_warm", "neon", "silhouette", "rim_lit", "volumetric", "overcast_soft"]
@@ -105,6 +105,72 @@
               },
               "required": ["type", "description", "source"]
             }
+          },
+          "segment_id": {
+            "type": "string"
+          },
+          "render_route": {
+            "type": "string",
+            "enum": [
+              "story_i2v",
+              "performance_lipsync",
+              "continuation",
+              "cast_multi_ref"
+            ]
+          },
+          "generation_context": {
+            "type": "object",
+            "properties": {
+              "artist_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "performance": {
+                "type": "boolean"
+              },
+              "lip_sync": {
+                "type": "boolean"
+              },
+              "vocal_in": {
+                "type": "number",
+                "minimum": 0
+              },
+              "vocal_out": {
+                "type": "number",
+                "minimum": 0
+              },
+              "handles_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "generation_duration_seconds": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "continuation_of": {
+                "type": "string"
+              },
+              "first_frame": {
+                "type": "object"
+              }
+            },
+            "additionalProperties": false
+          },
+          "shot_spec_path": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "shot_spec_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "shot_complexity": {
+            "enum": [
+              "simple",
+              "complex"
+            ]
           }
         },
         "additionalProperties": false

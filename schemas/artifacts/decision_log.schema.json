@@ -39,8 +39,10 @@
               "concept_selection",
               "voice_selection",
               "capability_extension",
+              "approval_policy",
               "playbook_override",
-              "visual_accuracy_check"
+              "visual_accuracy_check",
+              "shot_handoff"
             ],
             "description": "What class of decision this is"
           },
@@ -93,6 +95,30 @@
             "minimum": 0,
             "maximum": 1,
             "description": "Agent's confidence in this decision (0 = uncertain, 1 = certain)"
+          },
+          "timestamp": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "shot_id": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "holder": {
+            "enum": [
+              "agent",
+              "user"
+            ]
+          },
+          "changed_fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 1000
+            }
+          },
+          "handoff": {
+            "type": "object"
           }
         },
         "additionalProperties": false

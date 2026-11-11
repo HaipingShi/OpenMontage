@@ -1,0 +1,21 @@
+{
+  "protocol": "devboard.runtime/v1",
+  "id": "openmontage-backlot",
+  "execution": {
+    "mode": "shell",
+    "command": ".venv/bin/python -m backlot serve --port {{port}}",
+    "env": {
+      "BACKLOT_PORT": "{{port}}",
+      "PYTHONUNBUFFERED": "1"
+    }
+  },
+  "endpoint": {
+    "id": "main",
+    "protocol": "http",
+    "host": "127.0.0.1",
+    "port": "{{port}}"
+  },
+  "readiness": {
+    "type": "tcp"
+  }
+}

@@ -1,0 +1,142 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+________ test_official_reference_provenance_cannot_be_downgraded[save] _________
+
+api = (<starlette.testclient.TestClient object at 0x10a0b5e70>, <tests.contracts.test_shot_workbench_api.MockGenerator objec.../folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-99/test_official_reference_proven0/projects/film'))
+operation = 'save'
+
+    @pytest.mark.parametrize("operation", ["save", "upload"])
+    def test_official_reference_provenance_cannot_be_downgraded(api, operation):
+        from lib.shot_spec import atomic_json
+        client, tool, lease, project = api
+        spec = read_spec(client)
+        uploaded = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+            "lease_id": lease, "role": "identity", "data": png_uri()}).json()
+        spec = uploaded["spec"]
+        spec["references"][0].update(read_only=True, source_artist="fati", parent_asset="artists/fati/face.png")
+        atomic_json(project / "shots" / "shot1.json", spec)
+        original = copy.deepcopy(spec)
+        if operation == "save":
+            for key in ("read_only", "source_artist", "parent_asset"):
+                spec["references"][0].pop(key)
+            response = client.put("/api/shot/film/shot1", json={"spec": spec,
+                "revision": spec["revision"], "lease_id": lease})
+        else:
+            response = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+                "lease_id": lease, "role": "identity", "data": png_uri()})
+>       assert response.status_code == 403
+E       assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:760: AssertionError
+_______ test_official_reference_provenance_cannot_be_downgraded[upload] ________
+
+api = (<starlette.testclient.TestClient object at 0x10a116ad0>, <tests.contracts.test_shot_workbench_api.MockGenerator objec.../folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-99/test_official_reference_proven1/projects/film'))
+operation = 'upload'
+
+    @pytest.mark.parametrize("operation", ["save", "upload"])
+    def test_official_reference_provenance_cannot_be_downgraded(api, operation):
+        from lib.shot_spec import atomic_json
+        client, tool, lease, project = api
+        spec = read_spec(client)
+        uploaded = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+            "lease_id": lease, "role": "identity", "data": png_uri()}).json()
+        spec = uploaded["spec"]
+        spec["references"][0].update(read_only=True, source_artist="fati", parent_asset="artists/fati/face.png")
+        atomic_json(project / "shots" / "shot1.json", spec)
+        original = copy.deepcopy(spec)
+        if operation == "save":
+            for key in ("read_only", "source_artist", "parent_asset"):
+                spec["references"][0].pop(key)
+            response = client.put("/api/shot/film/shot1", json={"spec": spec,
+                "revision": spec["revision"], "lease_id": lease})
+        else:
+            response = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+                "lease_id": lease, "role": "identity", "data": png_uri()})
+>       assert response.status_code == 403
+E       assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:760: AssertionError
+______ test_confirmed_reference_bytes_are_frozen_for_provider_consumption ______
+
+api = (<starlette.testclient.TestClient object at 0x10a2d9570>, <tests.contracts.test_shot_workbench_api.MockGenerator objec.../folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-99/test_confirmed_reference_bytes0/projects/film'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a32f7f0>
+
+    def test_confirmed_reference_bytes_are_frozen_for_provider_consumption(api, monkeypatch):
+        import hashlib
+        client, tool, lease, project = api
+        spec = read_spec(client)
+        upload = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+            "lease_id": lease, "role": "style", "data": png_uri("red")}).json()
+        spec = upload["spec"]
+        spec["route"] = "multi_ref"
+        assert client.put("/api/shot/film/shot1", json={"spec": spec,
+            "revision": spec["revision"], "lease_id": lease}).status_code == 200
+        body = render_body(client, lease)
+        pending = client.post("/api/shot/film/shot1/render", json=body).json()
+        body.update(confirmation_token=pending["confirmation_token"], request_id=pending["request_id"])
+        consumed = []
+        execute = tool.execute
+        def consume_after_source_edit(inputs):
+            (project / upload["reference"]["asset_path"]).write_bytes(base64.b64decode(png_uri("blue").split(",")[1]))
+            consumed.extend(hashlib.sha256(Path(path).read_bytes()).hexdigest()
+                            for path in inputs["reference_image_paths"])
+            return execute(inputs)
+        monkeypatch.setattr(tool, "execute", consume_after_source_edit)
+        response = client.post("/api/shot/film/shot1/render", json=body)
+        assert response.status_code == 200, response.text
+        recorded = response.json()["asset"]["references"][0]
+>       assert consumed == [recorded["sha256"]] == [upload["reference"]["sha256"]]
+E       AssertionError: assert ['623ee974051...a75048a89acb'] == ['29d1d4712cd...34e544ae2c4f']
+E
+E         At index 0 diff: '623ee974051ef1f015a90bfd87bd4db8ce9b73da66a77c0be25ca75048a89acb' != '29d1d4712cdef1287061c9e803fa24000ecd788c00ab0e31b0d534e544ae2c4f'
+E         Use -v to get more diff
+
+tests/contracts/test_shot_workbench_api.py:789: AssertionError
+_____________ test_all_provider_reference_channels_are_snapshotted _____________
+
+api = (<starlette.testclient.TestClient object at 0x10a313490>, <tests.contracts.test_shot_workbench_api.MockGenerator objec.../folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-99/test_all_provider_reference_ch0/projects/film'))
+
+    def test_all_provider_reference_channels_are_snapshotted(api):
+        import hashlib
+>       from lib.shot_execution import _freeze_references
+E       ImportError: cannot import name '_freeze_references' from 'lib.shot_execution' (/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/lib/shot_execution.py)
+
+tests/contracts/test_shot_workbench_api.py:797: ImportError
+______ test_reference_change_at_snapshot_boundary_never_reserves_or_bills ______
+
+api = (<starlette.testclient.TestClient object at 0x10a203160>, <tests.contracts.test_shot_workbench_api.MockGenerator objec.../folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-99/test_reference_change_at_snaps0/projects/film'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a5c7490>
+
+    def test_reference_change_at_snapshot_boundary_never_reserves_or_bills(api, monkeypatch):
+        from lib import shot_execution
+        client, tool, lease, project = api
+        spec = read_spec(client)
+        upload = client.post("/api/shot/film/shot1/references", json={"revision": spec["revision"],
+            "lease_id": lease, "role": "style", "data": png_uri("red")}).json()
+        spec = upload["spec"]
+        spec["route"] = "multi_ref"
+        client.put("/api/shot/film/shot1", json={"spec": spec, "revision": spec["revision"], "lease_id": lease})
+        body = render_body(client, lease)
+        pending = client.post("/api/shot/film/shot1/render", json=body).json()
+        body.update(confirmation_token=pending["confirmation_token"], request_id=pending["request_id"])
+        tracker = shot_execution._tracker
+        def edit_after_quote(project):
+            value = tracker(project)
+            (project / upload["reference"]["asset_path"]).write_bytes(base64.b64decode(png_uri("blue").split(",")[1]))
+            return value
+        monkeypatch.setattr(shot_execution, "_tracker", edit_after_quote)
+        response = client.post("/api/shot/film/shot1/render", json=body)
+>       assert response.status_code == 409
+E       assert 200 == 409
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/contracts/test_shot_workbench_api.py:839: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_api.py::test_official_reference_provenance_cannot_be_downgraded[save]
+FAILED tests/contracts/test_shot_workbench_api.py::test_official_reference_provenance_cannot_be_downgraded[upload]
+FAILED tests/contracts/test_shot_workbench_api.py::test_confirmed_reference_bytes_are_frozen_for_provider_consumption
+FAILED tests/contracts/test_shot_workbench_api.py::test_all_provider_reference_channels_are_snapshotted
+FAILED tests/contracts/test_shot_workbench_api.py::test_reference_change_at_snapshot_boundary_never_reserves_or_bills
+5 failed, 52 deselected in 1.99s

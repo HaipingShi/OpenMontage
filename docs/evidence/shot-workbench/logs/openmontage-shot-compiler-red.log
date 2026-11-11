@@ -1,0 +1,1170 @@
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEF                        [100%]
+==================================== ERRORS ====================================
+__________ ERROR at setup of test_five_layers_and_notes_are_compiled ___________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_reference_role_order_and_actual_map_after_truncation __
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+________ ERROR at setup of test_truncated_artist_gets_specific_warning _________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_________ ERROR at setup of test_full_face_keeps_identity_and_wardrobe _________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_hands_and_back_crop_full_face[parts0-Right wrist brass compass bracelet] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_hands_and_back_crop_full_face[parts1-Short dark hair] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_____ ERROR at setup of test_complete_profile_snapshot_uses_selected_look ______
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_real_fati_negative_canon_normalizes_without_losing_positive_identity _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_multi_artist_descriptions_preserve_distinct_names_and_refs _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____________ ERROR at setup of test_exclusions_go_only_to_negative _____________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____ ERROR at setup of test_exclusions_rewrite_or_warn_for_no_negative_tool ____
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____ ERROR at setup of test_final_positive_negation_is_an_error[no people] _____
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+__ ERROR at setup of test_final_positive_negation_is_an_error[without people] __
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+___ ERROR at setup of test_final_positive_negation_is_an_error[not a person] ___
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_final_positive_negation_is_an_error[\u6ca1\u6709\u4eba\u7269] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_final_positive_negation_is_an_error[\u4e0d\u51fa\u73b0\u4eba\u7269] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+________ ERROR at setup of test_negation_does_not_match_word_fragments _________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+________ ERROR at setup of test_nonstatic_movement_requires_cause[None] ________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+__________ ERROR at setup of test_nonstatic_movement_requires_cause[] __________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_________ ERROR at setup of test_nonstatic_movement_requires_cause[ ] __________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_empty_drawer_motion_is_warned_and_reason_is_compiled __
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____________ ERROR at setup of test_prop_is_not_a_person_for_motion ____________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____________ ERROR at setup of test_insert_identity_reference_warns ____________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_contradictions_block_generation[\u706f\u4eae\uff0c\u706f\u4e0d\u4eae-environment0-subjects0] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_contradictions_block_generation[the lamp is on, the lamp is off-environment1-subjects1] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_contradictions_block_generation[\u6ca1\u6709\u4eba\u7269-environment2-subjects2] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_contradictions_block_generation[no people-environment3-subjects3] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_contradictions_block_generation[Quiet room-environment4-subjects4] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_contradictions_block_generation[\u5b89\u9759\u623f\u95f4-environment5-subjects5] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+___ ERROR at setup of test_warm_night_interior_is_not_false_palette_conflict ___
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____ ERROR at setup of test_fine_hand_action_warns_for_insert[\u7f1d\u8865] ____
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_fine_hand_action_warns_for_insert[\u7ebf\u7a7f\u8fc7\u9488\u773c\uff0c\u624b\u6307\u6536\u62e2] _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+__ ERROR at setup of test_fine_hand_action_warns_for_insert[write with a pen] __
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+___ ERROR at setup of test_fine_hand_action_warns_for_insert[playing piano] ____
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____ ERROR at setup of test_fine_hand_action_warns_for_insert[sewing linen] ____
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_________ ERROR at setup of test_fine_hand_warning_not_needed_for_wide _________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+____________ ERROR at setup of test_missing_limits_are_conservative ____________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+__________ ERROR at setup of test_variant_limit_is_not_global_maximum __________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+________________ ERROR at setup of test_first_last_frames_route ________________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+__ ERROR at setup of test_required_route_inputs_are_errors[first_last-refs0] ___
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+______ ERROR at setup of test_required_route_inputs_are_errors[i2v-refs1] ______
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_______ ERROR at setup of test_unsupported_route_is_not_silently_changed _______
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_______ ERROR at setup of test_composition_fallback_and_control_routing ________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_duration_constraints_and_prompt_limit_block_generation _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+__________ ERROR at setup of test_unknown_cost_is_null_and_never_free __________
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_hash_stable_without_mutating_or_accessing_external_state _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_ ERROR at setup of test_hash_tracks_actual_inputs_but_excludes_revision_and_quote _
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+_______ ERROR at setup of test_registry_wrapper_only_calls_pure_compiler _______
+
+    @pytest.fixture
+    def compiler():
+        # Missing implementation is the intended RED signal, not test collection setup.
+>       return importlib.import_module("lib.shot_compiler").compile
+
+tests/contracts/test_shot_compiler.py:15:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1050: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1027: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'lib.shot_compiler', import_ = <function _gcd_import at 0x104fbf400>
+
+>   ???
+E   ModuleNotFoundError: No module named 'lib.shot_compiler'
+
+<frozen importlib._bootstrap>:1004: ModuleNotFoundError
+=================================== FAILURES ===================================
+____________ test_tool_metadata_limits_expose_real_supported_inputs ____________
+
+    def test_tool_metadata_limits_expose_real_supported_inputs():
+        from tools.video.seedance_video import SeedanceVideo
+        from tools.video.kling_video import KlingVideo
+        from tools.video.h3_max_video import H3MaxVideo
+        from tools.graphics.flux_image import FluxImage
+        from tools.graphics.openai_image import OpenAIImage
+>       assert SeedanceVideo.limits["max_reference_images"] == 9
+E       AttributeError: type object 'SeedanceVideo' has no attribute 'limits'
+
+tests/contracts/test_shot_compiler.py:328: AttributeError
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_compiler.py::test_tool_metadata_limits_expose_real_supported_inputs
+ERROR tests/contracts/test_shot_compiler.py::test_five_layers_and_notes_are_compiled
+ERROR tests/contracts/test_shot_compiler.py::test_reference_role_order_and_actual_map_after_truncation
+ERROR tests/contracts/test_shot_compiler.py::test_truncated_artist_gets_specific_warning
+ERROR tests/contracts/test_shot_compiler.py::test_full_face_keeps_identity_and_wardrobe
+ERROR tests/contracts/test_shot_compiler.py::test_hands_and_back_crop_full_face[parts0-Right wrist brass compass bracelet]
+ERROR tests/contracts/test_shot_compiler.py::test_hands_and_back_crop_full_face[parts1-Short dark hair]
+ERROR tests/contracts/test_shot_compiler.py::test_complete_profile_snapshot_uses_selected_look
+ERROR tests/contracts/test_shot_compiler.py::test_real_fati_negative_canon_normalizes_without_losing_positive_identity
+ERROR tests/contracts/test_shot_compiler.py::test_multi_artist_descriptions_preserve_distinct_names_and_refs
+ERROR tests/contracts/test_shot_compiler.py::test_exclusions_go_only_to_negative
+ERROR tests/contracts/test_shot_compiler.py::test_exclusions_rewrite_or_warn_for_no_negative_tool
+ERROR tests/contracts/test_shot_compiler.py::test_final_positive_negation_is_an_error[no people]
+ERROR tests/contracts/test_shot_compiler.py::test_final_positive_negation_is_an_error[without people]
+ERROR tests/contracts/test_shot_compiler.py::test_final_positive_negation_is_an_error[not a person]
+ERROR tests/contracts/test_shot_compiler.py::test_final_positive_negation_is_an_error[\u6ca1\u6709\u4eba\u7269]
+ERROR tests/contracts/test_shot_compiler.py::test_final_positive_negation_is_an_error[\u4e0d\u51fa\u73b0\u4eba\u7269]
+ERROR tests/contracts/test_shot_compiler.py::test_negation_does_not_match_word_fragments
+ERROR tests/contracts/test_shot_compiler.py::test_nonstatic_movement_requires_cause[None]
+ERROR tests/contracts/test_shot_compiler.py::test_nonstatic_movement_requires_cause[]
+ERROR tests/contracts/test_shot_compiler.py::test_nonstatic_movement_requires_cause[ ]
+ERROR tests/contracts/test_shot_compiler.py::test_empty_drawer_motion_is_warned_and_reason_is_compiled
+ERROR tests/contracts/test_shot_compiler.py::test_prop_is_not_a_person_for_motion
+ERROR tests/contracts/test_shot_compiler.py::test_insert_identity_reference_warns
+ERROR tests/contracts/test_shot_compiler.py::test_contradictions_block_generation[\u706f\u4eae\uff0c\u706f\u4e0d\u4eae-environment0-subjects0]
+ERROR tests/contracts/test_shot_compiler.py::test_contradictions_block_generation[the lamp is on, the lamp is off-environment1-subjects1]
+ERROR tests/contracts/test_shot_compiler.py::test_contradictions_block_generation[\u6ca1\u6709\u4eba\u7269-environment2-subjects2]
+ERROR tests/contracts/test_shot_compiler.py::test_contradictions_block_generation[no people-environment3-subjects3]
+ERROR tests/contracts/test_shot_compiler.py::test_contradictions_block_generation[Quiet room-environment4-subjects4]
+ERROR tests/contracts/test_shot_compiler.py::test_contradictions_block_generation[\u5b89\u9759\u623f\u95f4-environment5-subjects5]
+ERROR tests/contracts/test_shot_compiler.py::test_warm_night_interior_is_not_false_palette_conflict
+ERROR tests/contracts/test_shot_compiler.py::test_fine_hand_action_warns_for_insert[\u7f1d\u8865]
+ERROR tests/contracts/test_shot_compiler.py::test_fine_hand_action_warns_for_insert[\u7ebf\u7a7f\u8fc7\u9488\u773c\uff0c\u624b\u6307\u6536\u62e2]
+ERROR tests/contracts/test_shot_compiler.py::test_fine_hand_action_warns_for_insert[write with a pen]
+ERROR tests/contracts/test_shot_compiler.py::test_fine_hand_action_warns_for_insert[playing piano]
+ERROR tests/contracts/test_shot_compiler.py::test_fine_hand_action_warns_for_insert[sewing linen]
+ERROR tests/contracts/test_shot_compiler.py::test_fine_hand_warning_not_needed_for_wide
+ERROR tests/contracts/test_shot_compiler.py::test_missing_limits_are_conservative
+ERROR tests/contracts/test_shot_compiler.py::test_variant_limit_is_not_global_maximum
+ERROR tests/contracts/test_shot_compiler.py::test_first_last_frames_route - M...
+ERROR tests/contracts/test_shot_compiler.py::test_required_route_inputs_are_errors[first_last-refs0]
+ERROR tests/contracts/test_shot_compiler.py::test_required_route_inputs_are_errors[i2v-refs1]
+ERROR tests/contracts/test_shot_compiler.py::test_unsupported_route_is_not_silently_changed
+ERROR tests/contracts/test_shot_compiler.py::test_composition_fallback_and_control_routing
+ERROR tests/contracts/test_shot_compiler.py::test_duration_constraints_and_prompt_limit_block_generation
+ERROR tests/contracts/test_shot_compiler.py::test_unknown_cost_is_null_and_never_free
+ERROR tests/contracts/test_shot_compiler.py::test_hash_stable_without_mutating_or_accessing_external_state
+ERROR tests/contracts/test_shot_compiler.py::test_hash_tracks_actual_inputs_but_excludes_revision_and_quote
+ERROR tests/contracts/test_shot_compiler.py::test_registry_wrapper_only_calls_pure_compiler
+1 failed, 48 errors in 0.35s

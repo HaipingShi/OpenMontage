@@ -40,6 +40,11 @@ class FluxImage(BaseTool):
     agent_skills = ["flux-best-practices", "bfl-api"]
 
     capabilities = ["generate_image", "generate_illustration", "text_to_image"]
+    limits = {
+        "max_reference_images": 0, "max_prompt_chars": None,
+        "negative_prompt_field": "negative_prompt", "durations": None,
+        "first_last_frame": False, "control_inputs": [], "routes": ["t2v"],
+    }
     supports = {
         "negative_prompt": True,
         "seed": True,

@@ -164,7 +164,74 @@
       "enum": ["present_to_user", "re_render", "revise_edit", "revise_assets", "block", "re_author"],
       "description": "What the agent should do next based on the review findings"
     },
-    "metadata": { "type": "object" }
+    "metadata": { "type": "object",
+      "properties": {
+        "judge": {
+          "type": "object",
+          "properties": {
+            "advisory_only": {
+              "type": "boolean",
+              "const": true
+            },
+            "notice": {
+              "type": "string"
+            },
+            "publish_gate": {
+              "type": "boolean",
+              "const": false
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "unavailable",
+                "failed",
+                "scored"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "total_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "ai_novelty": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "ai_novelty_in_total": {
+              "type": "boolean"
+            },
+            "criteria": {
+              "type": "object"
+            },
+            "categories": {
+              "type": "object"
+            },
+            "weights": {
+              "type": "object"
+            },
+            "provider": {
+              "type": "string"
+            },
+            "reviewer_tool": {
+              "type": "string"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    }
   },
   "additionalProperties": false
 }

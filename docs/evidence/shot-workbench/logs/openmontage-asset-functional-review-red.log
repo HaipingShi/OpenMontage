@@ -1,0 +1,36 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_dropped_reference_does_not_claim_source_asset_binding __________
+
+api = (<starlette.testclient.TestClient object at 0x10caf8e50>, <tests.contracts.test_shot_workbench_api.MockGenerator objec...folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-179/test_dropped_reference_does_no0/projects/film'))
+
+    def test_dropped_reference_does_not_claim_source_asset_binding(api):
+        from lib.project_assets import publish_asset, import_asset
+        client, tool, lease, directory = api
+        source = directory.parent / "background-source"
+        source.mkdir()
+        (source / "background.png").write_bytes(base64.b64decode(png_uri().split(",")[1]))
+        library = directory.parent / "fixture-library"
+        publish_asset(source, "background", "v1", kind="environment", library=library)
+        binding = import_asset(directory, "background", "v1", "room", kind="environment", library=library)
+        relative = binding["snapshot_path"] + "/background.png"
+        spec = read_spec(client)
+        spec["route"] = "t2v"
+        spec["references"] = [{"asset_path": relative, "sha256": hashlib.sha256((directory / relative).read_bytes()).hexdigest(), "role": "environment"}]
+        saved = client.put("/api/shot/film/shot1", json={"spec": spec, "revision": spec["revision"], "lease_id": lease})
+        assert saved.status_code == 200, saved.text
+        spec, compiled = preview(client, lease)
+        assert compiled["generatable"], compiled
+        assert compiled["payload"]["references"] == []
+        assert compiled["payload"]["reference_images"] == []
+>       assert compiled["asset_bindings"] == [], "No shared environment version was submitted, but provenance claims it as a source"
+E       AssertionError: No shared environment version was submitted, but provenance claims it as a source
+E       assert [{'alias': 'r...d68adc', ...}] == []
+E
+E         Left contains one more item: {'alias': 'room', 'kind': 'environment', 'mode': 'imported', 'library_id': 'f01cb8e4fb3e48e9a1d62ed07fd68adc', ...}
+E         Use -v to get more diff
+
+/tmp/test_asset_functional_review.py:28: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/test_asset_functional_review.py::test_dropped_reference_does_not_claim_source_asset_binding
+1 failed in 0.66s

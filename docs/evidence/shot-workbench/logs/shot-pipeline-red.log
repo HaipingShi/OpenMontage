@@ -1,0 +1,43 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+_____________ test_complex_shot_contract_is_in_pipeline[cinematic] _____________
+tests/contracts/test_shot_workbench_pipeline.py:15: in test_complex_shot_contract_is_in_pipeline
+    assert 'meta/shot-workbench' in pipeline['required_skills']
+E   AssertionError: assert 'meta/shot-workbench' in ['pipelines/cinematic/executive-producer', 'pipelines/cinematic/research-director', 'pipelines/cinematic/proposal-dire...'pipelines/cinematic/script-director', 'pipelines/cinematic/scene-director', 'pipelines/cinematic/asset-director', ...]
+________ test_complex_shot_contract_is_in_pipeline[character-animation] ________
+tests/contracts/test_shot_workbench_pipeline.py:15: in test_complex_shot_contract_is_in_pipeline
+    assert 'meta/shot-workbench' in pipeline['required_skills']
+E   AssertionError: assert 'meta/shot-workbench' in ['pipelines/character-animation/executive-producer', 'pipelines/character-animation/research-director', 'pipelines/cha...or', 'pipelines/character-animation/character-design-director', 'pipelines/character-animation/rig-plan-director', ...]
+_____________ test_complex_shot_contract_is_in_pipeline[animation] _____________
+tests/contracts/test_shot_workbench_pipeline.py:15: in test_complex_shot_contract_is_in_pipeline
+    assert 'meta/shot-workbench' in pipeline['required_skills']
+E   AssertionError: assert 'meta/shot-workbench' in ['pipelines/animation/executive-producer', 'pipelines/animation/research-director', 'pipelines/animation/proposal-dire...'pipelines/animation/script-director', 'pipelines/animation/scene-director', 'pipelines/animation/asset-director', ...]
+____________ test_complex_shot_contract_is_in_pipeline[music-video] ____________
+tests/contracts/test_shot_workbench_pipeline.py:15: in test_complex_shot_contract_is_in_pipeline
+    assert 'meta/shot-workbench' in pipeline['required_skills']
+E   AssertionError: assert 'meta/shot-workbench' in ['pipelines/music-video/executive-producer', 'pipelines/music-video/idea-director', 'pipelines/music-video/song-analys...s/music-video/proposal-director', 'pipelines/music-video/script-director', 'pipelines/music-video/scene-director', ...]
+______________ test_complex_shot_contract_is_in_pipeline[hybrid] _______________
+tests/contracts/test_shot_workbench_pipeline.py:15: in test_complex_shot_contract_is_in_pipeline
+    assert 'meta/shot-workbench' in pipeline['required_skills']
+E   AssertionError: assert 'meta/shot-workbench' in ['pipelines/hybrid/executive-producer', 'pipelines/hybrid/idea-director', 'pipelines/hybrid/script-director', 'pipelines/hybrid/scene-director', 'pipelines/hybrid/asset-director', 'pipelines/hybrid/edit-director', ...]
+________ test_complex_shot_contract_is_in_pipeline[animated-explainer] _________
+tests/contracts/test_shot_workbench_pipeline.py:15: in test_complex_shot_contract_is_in_pipeline
+    assert 'meta/shot-workbench' in pipeline['required_skills']
+E   AssertionError: assert 'meta/shot-workbench' in ['pipelines/explainer/executive-producer', 'pipelines/explainer/research-director', 'pipelines/explainer/proposal-dire...'pipelines/explainer/script-director', 'pipelines/explainer/scene-director', 'pipelines/explainer/asset-director', ...]
+____________ test_meta_skill_requires_handoff_and_offline_contract _____________
+tests/contracts/test_shot_workbench_pipeline.py:26: in test_meta_skill_requires_handoff_and_offline_contract
+    text = (ROOT/'skills/meta/shot-workbench.md').read_text()
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+../../../../.local/share/uv/python/cpython-3.10.19-macos-aarch64-none/lib/python3.10/pathlib.py:1119: in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/skills/meta/shot-workbench.md'
+=========================== short test summary info ============================
+FAILED tests/contracts/test_shot_workbench_pipeline.py::test_complex_shot_contract_is_in_pipeline[cinematic]
+FAILED tests/contracts/test_shot_workbench_pipeline.py::test_complex_shot_contract_is_in_pipeline[character-animation]
+FAILED tests/contracts/test_shot_workbench_pipeline.py::test_complex_shot_contract_is_in_pipeline[animation]
+FAILED tests/contracts/test_shot_workbench_pipeline.py::test_complex_shot_contract_is_in_pipeline[music-video]
+FAILED tests/contracts/test_shot_workbench_pipeline.py::test_complex_shot_contract_is_in_pipeline[hybrid]
+FAILED tests/contracts/test_shot_workbench_pipeline.py::test_complex_shot_contract_is_in_pipeline[animated-explainer]
+FAILED tests/contracts/test_shot_workbench_pipeline.py::test_meta_skill_requires_handoff_and_offline_contract
+7 failed in 0.18s

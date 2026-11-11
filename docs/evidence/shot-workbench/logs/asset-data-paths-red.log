@@ -1,0 +1,89 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+____________ test_user_data_is_independent_of_application_checkout _____________
+
+paths = <function paths.<locals>.<lambda> at 0x10b68e4d0>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-120/test_user_data_is_independent_0')
+
+    def test_user_data_is_independent_of_application_checkout(paths, tmp_path):
+        result = paths()
+>       assert result['DATA_DIR'] == tmp_path / 'OpenMontageData'
+E       KeyError: 'DATA_DIR'
+
+tests/contracts/test_data_paths.py:21: KeyError
+_________ test_data_root_can_be_selected_without_changing_application __________
+
+paths = <function paths.<locals>.<lambda> at 0x10b734ca0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b6d0490>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-120/test_data_root_can_be_selected0')
+
+    def test_data_root_can_be_selected_without_changing_application(paths, monkeypatch, tmp_path):
+        chosen = tmp_path / 'studio'
+        monkeypatch.setenv('OPENMONTAGE_DATA_DIR', str(chosen))
+        result = paths()
+>       assert result['PROJECTS_DIR'] == chosen / 'projects'
+E       AssertionError: assert PosixPath('/Users/geesh/.codex/worktrees/shot-workbench/OpenMontage/projects') == (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-120/test_data_root_can_be_selected0/studio') / 'projects')
+
+tests/contracts/test_data_paths.py:33: AssertionError
+_________ test_independent_project_and_library_roots_remain_supported __________
+
+paths = <function paths.<locals>.<lambda> at 0x10b734d30>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b6ecd60>
+tmp_path = PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-120/test_independent_project_and_l0')
+
+    def test_independent_project_and_library_roots_remain_supported(paths, monkeypatch, tmp_path):
+        monkeypatch.setenv('OPENMONTAGE_PROJECTS_DIR', str(tmp_path / 'works'))
+        monkeypatch.setenv('OPENMONTAGE_LIBRARY_DIR', str(tmp_path / 'shared'))
+        result = paths()
+        assert result['PROJECTS_DIR'] == tmp_path / 'works'
+>       assert result['ARTISTS_DIR'] == tmp_path / 'shared/artists'
+E       KeyError: 'ARTISTS_DIR'
+
+tests/contracts/test_data_paths.py:42: KeyError
+_ test_relative_data_configuration_does_not_follow_checkout[OPENMONTAGE_DATA_DIR] _
+
+paths = <function paths.<locals>.<lambda> at 0x10b734f70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b6ed0f0>
+variable = 'OPENMONTAGE_DATA_DIR'
+
+    @pytest.mark.parametrize('variable', ['OPENMONTAGE_DATA_DIR', 'OPENMONTAGE_PROJECTS_DIR', 'OPENMONTAGE_LIBRARY_DIR'])
+    def test_relative_data_configuration_does_not_follow_checkout(paths, monkeypatch, variable):
+        monkeypatch.setenv(variable, 'relative-user-data')
+>       with pytest.raises(ValueError, match='absolute'):
+E       Failed: DID NOT RAISE ValueError
+
+tests/contracts/test_data_paths.py:48: Failed
+_ test_relative_data_configuration_does_not_follow_checkout[OPENMONTAGE_PROJECTS_DIR] _
+
+paths = <function paths.<locals>.<lambda> at 0x10b734af0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b6d3700>
+variable = 'OPENMONTAGE_PROJECTS_DIR'
+
+    @pytest.mark.parametrize('variable', ['OPENMONTAGE_DATA_DIR', 'OPENMONTAGE_PROJECTS_DIR', 'OPENMONTAGE_LIBRARY_DIR'])
+    def test_relative_data_configuration_does_not_follow_checkout(paths, monkeypatch, variable):
+        monkeypatch.setenv(variable, 'relative-user-data')
+>       with pytest.raises(ValueError, match='absolute'):
+E       Failed: DID NOT RAISE ValueError
+
+tests/contracts/test_data_paths.py:48: Failed
+_ test_relative_data_configuration_does_not_follow_checkout[OPENMONTAGE_LIBRARY_DIR] _
+
+paths = <function paths.<locals>.<lambda> at 0x10b734c10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b6ae830>
+variable = 'OPENMONTAGE_LIBRARY_DIR'
+
+    @pytest.mark.parametrize('variable', ['OPENMONTAGE_DATA_DIR', 'OPENMONTAGE_PROJECTS_DIR', 'OPENMONTAGE_LIBRARY_DIR'])
+    def test_relative_data_configuration_does_not_follow_checkout(paths, monkeypatch, variable):
+        monkeypatch.setenv(variable, 'relative-user-data')
+>       with pytest.raises(ValueError, match='absolute'):
+E       Failed: DID NOT RAISE ValueError
+
+tests/contracts/test_data_paths.py:48: Failed
+=========================== short test summary info ============================
+FAILED tests/contracts/test_data_paths.py::test_user_data_is_independent_of_application_checkout
+FAILED tests/contracts/test_data_paths.py::test_data_root_can_be_selected_without_changing_application
+FAILED tests/contracts/test_data_paths.py::test_independent_project_and_library_roots_remain_supported
+FAILED tests/contracts/test_data_paths.py::test_relative_data_configuration_does_not_follow_checkout[OPENMONTAGE_DATA_DIR]
+FAILED tests/contracts/test_data_paths.py::test_relative_data_configuration_does_not_follow_checkout[OPENMONTAGE_PROJECTS_DIR]
+FAILED tests/contracts/test_data_paths.py::test_relative_data_configuration_does_not_follow_checkout[OPENMONTAGE_LIBRARY_DIR]
+6 failed in 0.10s

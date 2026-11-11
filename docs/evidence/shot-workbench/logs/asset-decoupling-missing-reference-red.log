@@ -1,0 +1,130 @@
+...........................FFFFFFF.                                      [100%]
+=================================== FAILURES ===================================
+_ test_missing_project_relative_media_inputs_fail_before_copy[reference_images] _
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_r...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_relative_0/user-data'))
+field = 'reference_images'
+
+    @pytest.mark.parametrize("field", ["reference_images", "reference_image", "image_path", "video_path", "audio_path", "first_frame", "master_path"])
+    def test_missing_project_relative_media_inputs_fail_before_copy(legacy, field):
+        source, data = legacy
+        path = source / "projects/first-film/artifacts/scene_plan.json"
+        document = json.loads(path.read_text())
+        reference = "assets/images/missing.png"
+        document["scenes"][0][field] = [reference] if field == "reference_images" else reference
+        path.write_text(json.dumps(document))
+>       with pytest.raises(migration.MigrationError, match="DANGLING_REFERENCE"):
+E       Failed: DID NOT RAISE MigrationError
+
+tests/contracts/test_asset_migration.py:311: Failed
+_ test_missing_project_relative_media_inputs_fail_before_copy[reference_image] _
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_r...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_relative_1/user-data'))
+field = 'reference_image'
+
+    @pytest.mark.parametrize("field", ["reference_images", "reference_image", "image_path", "video_path", "audio_path", "first_frame", "master_path"])
+    def test_missing_project_relative_media_inputs_fail_before_copy(legacy, field):
+        source, data = legacy
+        path = source / "projects/first-film/artifacts/scene_plan.json"
+        document = json.loads(path.read_text())
+        reference = "assets/images/missing.png"
+        document["scenes"][0][field] = [reference] if field == "reference_images" else reference
+        path.write_text(json.dumps(document))
+>       with pytest.raises(migration.MigrationError, match="DANGLING_REFERENCE"):
+E       Failed: DID NOT RAISE MigrationError
+
+tests/contracts/test_asset_migration.py:311: Failed
+___ test_missing_project_relative_media_inputs_fail_before_copy[image_path] ____
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_r...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_relative_2/user-data'))
+field = 'image_path'
+
+    @pytest.mark.parametrize("field", ["reference_images", "reference_image", "image_path", "video_path", "audio_path", "first_frame", "master_path"])
+    def test_missing_project_relative_media_inputs_fail_before_copy(legacy, field):
+        source, data = legacy
+        path = source / "projects/first-film/artifacts/scene_plan.json"
+        document = json.loads(path.read_text())
+        reference = "assets/images/missing.png"
+        document["scenes"][0][field] = [reference] if field == "reference_images" else reference
+        path.write_text(json.dumps(document))
+>       with pytest.raises(migration.MigrationError, match="DANGLING_REFERENCE"):
+E       Failed: DID NOT RAISE MigrationError
+
+tests/contracts/test_asset_migration.py:311: Failed
+___ test_missing_project_relative_media_inputs_fail_before_copy[video_path] ____
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_r...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_relative_3/user-data'))
+field = 'video_path'
+
+    @pytest.mark.parametrize("field", ["reference_images", "reference_image", "image_path", "video_path", "audio_path", "first_frame", "master_path"])
+    def test_missing_project_relative_media_inputs_fail_before_copy(legacy, field):
+        source, data = legacy
+        path = source / "projects/first-film/artifacts/scene_plan.json"
+        document = json.loads(path.read_text())
+        reference = "assets/images/missing.png"
+        document["scenes"][0][field] = [reference] if field == "reference_images" else reference
+        path.write_text(json.dumps(document))
+>       with pytest.raises(migration.MigrationError, match="DANGLING_REFERENCE"):
+E       Failed: DID NOT RAISE MigrationError
+
+tests/contracts/test_asset_migration.py:311: Failed
+___ test_missing_project_relative_media_inputs_fail_before_copy[audio_path] ____
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_r...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_relative_4/user-data'))
+field = 'audio_path'
+
+    @pytest.mark.parametrize("field", ["reference_images", "reference_image", "image_path", "video_path", "audio_path", "first_frame", "master_path"])
+    def test_missing_project_relative_media_inputs_fail_before_copy(legacy, field):
+        source, data = legacy
+        path = source / "projects/first-film/artifacts/scene_plan.json"
+        document = json.loads(path.read_text())
+        reference = "assets/images/missing.png"
+        document["scenes"][0][field] = [reference] if field == "reference_images" else reference
+        path.write_text(json.dumps(document))
+>       with pytest.raises(migration.MigrationError, match="DANGLING_REFERENCE"):
+E       Failed: DID NOT RAISE MigrationError
+
+tests/contracts/test_asset_migration.py:311: Failed
+___ test_missing_project_relative_media_inputs_fail_before_copy[first_frame] ___
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_r...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_relative_5/user-data'))
+field = 'first_frame'
+
+    @pytest.mark.parametrize("field", ["reference_images", "reference_image", "image_path", "video_path", "audio_path", "first_frame", "master_path"])
+    def test_missing_project_relative_media_inputs_fail_before_copy(legacy, field):
+        source, data = legacy
+        path = source / "projects/first-film/artifacts/scene_plan.json"
+        document = json.loads(path.read_text())
+        reference = "assets/images/missing.png"
+        document["scenes"][0][field] = [reference] if field == "reference_images" else reference
+        path.write_text(json.dumps(document))
+>       with pytest.raises(migration.MigrationError, match="DANGLING_REFERENCE"):
+E       Failed: DID NOT RAISE MigrationError
+
+tests/contracts/test_asset_migration.py:311: Failed
+___ test_missing_project_relative_media_inputs_fail_before_copy[master_path] ___
+
+legacy = (PosixPath('/private/var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_r...var/folders/mq/3hh1rf3n6p94q7zsj85xpyx00000gn/T/pytest-of-geesh/pytest-169/test_missing_project_relative_6/user-data'))
+field = 'master_path'
+
+    @pytest.mark.parametrize("field", ["reference_images", "reference_image", "image_path", "video_path", "audio_path", "first_frame", "master_path"])
+    def test_missing_project_relative_media_inputs_fail_before_copy(legacy, field):
+        source, data = legacy
+        path = source / "projects/first-film/artifacts/scene_plan.json"
+        document = json.loads(path.read_text())
+        reference = "assets/images/missing.png"
+        document["scenes"][0][field] = [reference] if field == "reference_images" else reference
+        path.write_text(json.dumps(document))
+>       with pytest.raises(migration.MigrationError, match="DANGLING_REFERENCE"):
+E       Failed: DID NOT RAISE MigrationError
+
+tests/contracts/test_asset_migration.py:311: Failed
+=========================== short test summary info ============================
+FAILED tests/contracts/test_asset_migration.py::test_missing_project_relative_media_inputs_fail_before_copy[reference_images]
+FAILED tests/contracts/test_asset_migration.py::test_missing_project_relative_media_inputs_fail_before_copy[reference_image]
+FAILED tests/contracts/test_asset_migration.py::test_missing_project_relative_media_inputs_fail_before_copy[image_path]
+FAILED tests/contracts/test_asset_migration.py::test_missing_project_relative_media_inputs_fail_before_copy[video_path]
+FAILED tests/contracts/test_asset_migration.py::test_missing_project_relative_media_inputs_fail_before_copy[audio_path]
+FAILED tests/contracts/test_asset_migration.py::test_missing_project_relative_media_inputs_fail_before_copy[first_frame]
+FAILED tests/contracts/test_asset_migration.py::test_missing_project_relative_media_inputs_fail_before_copy[master_path]
+7 failed, 28 passed in 2.84s
