@@ -37,12 +37,17 @@ jobs:
       - name: Install system dependencies
         timeout-minutes: 5
         run: |
-          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
-            sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
-            sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install --no-install-recommends -y ffmpeg
-          fi
-          ffmpeg -version
-          ffprobe -version
+          # Pin both the build and checksum; avoid depending on apt mirror availability.
+          ffmpeg_dir="$RUNNER_TEMP/ffmpeg"
+          mkdir -p "$ffmpeg_dir"
+          curl --fail --location --retry 2 --max-time 180 \
+            https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-11-11-12-39/ffmpeg-n9.0.2-49-gc179411bbb-linux64-gpl-9.0.tar.xz \
+            --output "$ffmpeg_dir/ffmpeg.tar.xz"
+          echo "ca1107e3a14a9de4c4712f9405bb720a47dac41426cf2a1da09acb4811805758  $ffmpeg_dir/ffmpeg.tar.xz" | sha256sum --check
+          tar -xJf "$ffmpeg_dir/ffmpeg.tar.xz" --strip-components=1 -C "$ffmpeg_dir"
+          echo "$ffmpeg_dir/bin" >> "$GITHUB_PATH"
+          "$ffmpeg_dir/bin/ffmpeg" -version
+          "$ffmpeg_dir/bin/ffprobe" -version
 
       - name: Install dependencies
         run: make install-dev
